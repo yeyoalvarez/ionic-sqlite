@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "ionic-sqlite-crud",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}
