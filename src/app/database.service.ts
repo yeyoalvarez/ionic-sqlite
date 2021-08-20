@@ -31,12 +31,14 @@ export class DatabaseService {
 
   async createTables() {
     await this.databaseObj.executeSql(
-      `CREATE TABLE IF NOT EXISTS ${this.tables.productos} (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(255) NOT NULL UNIQUE)`,
+      `CREATE TABLE IF NOT EXISTS ${this.tables.productos} (id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name VARCHAR(255) NOT NULL UNIQUE)`,
       []
     );
 
     await this.databaseObj.executeSql(
-      `CREATE TABLE IF NOT EXISTS ${this.tables.clientes} (id INTEGER PRIMARY KEY AUTOINCREMENT, productos_id INTEGER UNSIGNED NOT NULL, name VARCHAR(255) NOT NULL)`,
+      `CREATE TABLE IF NOT EXISTS ${this.tables.clientes} (id INTEGER PRIMARY KEY AUTOINCREMENT,
+      productosId INTEGER UNSIGNED NOT NULL, name VARCHAR(255) NOT NULL)`,
       []
     );
   }
@@ -86,14 +88,14 @@ export class DatabaseService {
           return 'producto ya existe';
         }
 
-        return 'error on updating category ' + JSON.stringify(e);
+        return 'error al actualizar producto' + JSON.stringify(e);
       });
   }
 
-  async addClientes(name: string, productos_id: number) {
+  async addClientes(name: string, productosId: number) {
     return this.databaseObj
       .executeSql(
-        `INSERT INTO ${this.tables.clientes} (name, productos_id) VALUES ('${name}', ${productos_id})`,
+        `INSERT INTO ${this.tables.clientes} (name, productosId) VALUES ('${name}', ${productosId})`,
         []
       )
       .then(() => 'Crear cliente')
@@ -103,7 +105,9 @@ export class DatabaseService {
   async getClientes() {
     return this.databaseObj
       .executeSql(
-        `SELECT clientes.id, clientes.productos_id, clientes.name as clientes, productos.name as producto FROM clientes INNER JOIN productos ON productos.id = clientes.productos_id ORDER BY clientes ASC`,
+        `SELECT clientes.id, clientes.productosId, clientes.name as clientes,
+        productos.name as producto FROM clientes INNER JOIN productos ON productos.id = clientes.productosId
+        ORDER BY clientes ASC`,
         []
       )
       .then((res) => res)
@@ -117,10 +121,10 @@ export class DatabaseService {
       .catch((e) => 'error al eliminar cliente' + JSON.stringify(e));
   }
 
-  async editClientes(name: string, productos_id: number, id: number) {
+  async editClientes(name: string, productosId: number, id: number) {
     return this.databaseObj
       .executeSql(
-        `UPDATE ${this.tables.clientes} SET name = '${name}', productos_id = ${productos_id} WHERE id = ${id}`,
+        `UPDATE ${this.tables.clientes} SET name = '${name}', productosId = ${productosId} WHERE id = ${id}`,
         []
       )
       .then(() => 'cliente actualizado')

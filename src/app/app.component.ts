@@ -5,9 +5,10 @@ import { Component } from '@angular/core';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
+  public selectedIndex = 0;
   public appPages = [
     { title: 'productos', url: '/productos', icon: 'mail' },
-    { title: 'Person', url: '/person', icon: 'mail' },
+    { title: 'clientes', url: '/clientes', icon: 'mail' },
     // { title: 'Inbox', url: '/folder/Inbox', icon: 'mail' },
     // { title: 'Outbox', url: '/folder/Outbox', icon: 'paper-plane' },
     // { title: 'Favorites', url: '/folder/Favorites', icon: 'heart' },

@@ -10,38 +10,38 @@
 <ion-content>
   <ion-list>
     <ion-item>
-      <ion-label>Select category</ion-label>
-      <ion-select value="{{ selected_productos_id }}" [(ngModel)]="productos_id">
+      <ion-label>Seleccionar Producto</ion-label>
+      <ion-select value="{{ selectedProductosId }}" [(ngModel)]="productosId">
         <ion-select-option
-          *ngFor="let category of productos"
-          value="{{ category.id }}"
-        >{{ category.nombre }}</ion-select-option
+          *ngFor="let producto of productos"
+          value="{{ producto.id }}"
+        >{{ producto.name }}</ion-select-option
         >
       </ion-select>
     </ion-item>
 
     <ion-item>
-      <ion-label position="floating">Name</ion-label>
+      <ion-label position="floating">Nombre del Cliente</ion-label>
       <ion-input [(ngModel)]="clienteNombre"></ion-input>
     </ion-item>
 
-    <ion-button expand="block" (click)="addClientes()">Submit</ion-button>
+    <ion-button expand="block" (click)="addClientes()">Añadir</ion-button>
   </ion-list>
 
   <ion-list>
-    <ion-item-sliding *ngFor="let person of clientes">
+    <ion-item-sliding *ngFor="let cliente of clientes">
       <ion-item-options side="start">
-        <ion-item-option (click)="editClientes(person)">Edit</ion-item-option>
+        <ion-item-option (click)="editClientes(cliente)">Editar</ion-item-option>
       </ion-item-options>
 
       <ion-item>
-        <ion-label>{{ person.person }}</ion-label>
-        <ion-badge color="primary">{{ clientes.productos }}</ion-badge>
+        <ion-label>{{ cliente.clientes }}</ion-label>
+        <ion-badge color="primary">{{ clientes.producto }}</ion-badge>
       </ion-item>
 
       <ion-item-options side="end">
-        <ion-item-option color="danger" (click)="deleteClientes(person.id)"
-        >Delete</ion-item-option
+        <ion-item-option color="danger" (click)="deleteClientes(cliente.id)"
+        >Eliminar</ion-item-option
         >
       </ion-item-options>
     </ion-item-sliding>

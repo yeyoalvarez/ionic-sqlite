@@ -9,11 +9,11 @@ import { DatabaseService } from '../database.service';
 export class ClientesPage implements OnInit {
   clienteNombre = '';
   clientes: any = [];
-  productos_id = 0;
+  productosId = 0;
   productos: any = [];
 
   editMode = false;
-  selected_productos_id = 0;
+  selectedProductosId = 0;
   editId = 0;
 
   constructor(public database: DatabaseService) {
@@ -40,29 +40,29 @@ export class ClientesPage implements OnInit {
       return;
     }
 
-    if (this.productos_id === 0) {
+    if (this.productosId === 0) {
       alert('Seleccionar cliente');
       return;
     }
 
     if (this.editMode) {
       this.database
-        .editClientes(this.clienteNombre, this.productos_id, this.editId)
+        .editClientes(this.clienteNombre, this.productosId, this.editId)
         .then((data) => {
           this.clienteNombre = '';
           this.editMode = false;
           this.editId = 0;
-          this.selected_productos_id = 0;
+          this.selectedProductosId = 0;
           alert(data);
           this.getClientes();
         });
     } else {
       // add
       this.database
-        .addClientes(this.clienteNombre, this.productos_id)
+        .addClientes(this.clienteNombre, this.productosId)
         .then((data) => {
           this.clienteNombre = '';
-          this.productos_id = 0;
+          this.productosId = 0;
           alert(data);
           this.getClientes();
         });
@@ -89,7 +89,7 @@ export class ClientesPage implements OnInit {
 
   editClientes(clientes: any) {
     this.editMode = true;
-    this.selected_productos_id = clientes.productos_id;
+    this.selectedProductosId = clientes.productosId;
     this.clienteNombre = clientes.clientes;
     this.editId = clientes.id;
   }
