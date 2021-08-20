@@ -7,8 +7,8 @@ import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 export class DatabaseService {
   databaseObj: SQLiteObject;
   tables = {
-    categories: 'categories',
-    persons: 'persons',
+    productos: 'productos',
+    clientes: 'clientes',
   };
 
   constructor(private sqlite: SQLite) {}
@@ -31,63 +31,100 @@ export class DatabaseService {
 
   async createTables() {
     await this.databaseObj.executeSql(
-      `CREATE TABLE IF NOT EXISTS ${this.tables.categories} (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(255) NOT NULL UNIQUE)`,
+      `CREATE TABLE IF NOT EXISTS ${this.tables.productos} (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(255) NOT NULL UNIQUE)`,
       []
     );
 
     await this.databaseObj.executeSql(
-      `CREATE TABLE IF NOT EXISTS ${this.tables.persons} (id INTEGER PRIMARY KEY AUTOINCREMENT, category_id INTEGER UNSIGNED NOT NULL, name VARCHAR(255) NOT NULL)`,
+      `CREATE TABLE IF NOT EXISTS ${this.tables.clientes} (id INTEGER PRIMARY KEY AUTOINCREMENT, productos_id INTEGER UNSIGNED NOT NULL, name VARCHAR(255) NOT NULL)`,
       []
     );
   }
 
-  async addCategory(name: string) {
+  async addProductos(name: string) {
     return this.databaseObj
       .executeSql(
-        `INSERT INTO ${this.tables.categories} (name) VALUES ('${name}')`,
+        `INSERT INTO ${this.tables.productos} (name) VALUES ('${name}')`,
         []
       )
-      .then(() => 'category created')
+      .then(() => 'Producto Creado')
       .catch((e) => {
         if (e.code === 6) {
-          return 'category already exists';
+          return 'Producto ya existe';
         }
 
-        return 'error on creating category ' + JSON.stringify(e);
+        return 'error al crear producto' + JSON.stringify(e);
       });
   }
 
-  async getCategories() {
+  async getProductos() {
     return this.databaseObj
       .executeSql(
-        `SELECT * FROM ${this.tables.categories} ORDER BY name ASC`,
+        `SELECT * FROM ${this.tables.productos} ORDER BY name ASC`,
         []
       )
       .then((res) => res)
-      .catch((e) => 'error on getting categories ' + JSON.stringify(e));
+      .catch((e) => 'error al obtener productos' + JSON.stringify(e));
   }
 
-  async deleteCategory(id: number) {
+  async deleteProductos(id: number) {
     return this.databaseObj
-      .executeSql(`DELETE FROM ${this.tables.categories} WHERE id = ${id}`, [])
-      .then(() => 'category deleted')
-      .catch((e) => 'error on deleting category ' + JSON.stringify(e));
+      .executeSql(`DELETE FROM ${this.tables.productos} WHERE id = ${id}`, [])
+      .then(() => 'eliminar productos')
+      .catch((e) => 'error al eliminar producto' + JSON.stringify(e));
   }
 
-  async editCategory(name: string, id: number) {
+  async editProductos(name: string, id: number) {
     return this.databaseObj
       .executeSql(
-        `UPDATE ${this.tables.categories} SET name = '${name}' WHERE id = ${id}`,
+        `UPDATE ${this.tables.productos} SET name = '${name}' WHERE id = ${id}`,
         []
       )
-      .then(() => 'category updated')
+      .then(() => 'actualizar producto')
       .catch((e) => {
         if (e.code === 6) {
-          return 'category already exist';
+          return 'producto ya existe';
         }
 
         return 'error on updating category ' + JSON.stringify(e);
       });
+  }
+
+  async addClientes(name: string, productos_id: number) {
+    return this.databaseObj
+      .executeSql(
+        `INSERT INTO ${this.tables.clientes} (name, productos_id) VALUES ('${name}', ${productos_id})`,
+        []
+      )
+      .then(() => 'Crear cliente')
+      .catch((e) => 'error al crear cliente ' + JSON.stringify(e));
+  }
+
+  async getClientes() {
+    return this.databaseObj
+      .executeSql(
+        `SELECT clientes.id, clientes.productos_id, clientes.name as clientes, productos.name as producto FROM clientes INNER JOIN productos ON productos.id = clientes.productos_id ORDER BY clientes ASC`,
+        []
+      )
+      .then((res) => res)
+      .catch((e) => 'error al obtener clientes' + JSON.stringify(e));
+  }
+
+  async deleteClientes(id: number) {
+    return this.databaseObj
+      .executeSql(`DELETE FROM ${this.tables.clientes} WHERE id = ${id}`, [])
+      .then(() => 'cliente eliminado')
+      .catch((e) => 'error al eliminar cliente' + JSON.stringify(e));
+  }
+
+  async editClientes(name: string, productos_id: number, id: number) {
+    return this.databaseObj
+      .executeSql(
+        `UPDATE ${this.tables.clientes} SET name = '${name}', productos_id = ${productos_id} WHERE id = ${id}`,
+        []
+      )
+      .then(() => 'cliente actualizado')
+      .catch((e) => 'error al actualizar cliente ' + JSON.stringify(e));
   }
 
 }
