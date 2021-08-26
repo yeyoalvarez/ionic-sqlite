@@ -41,7 +41,7 @@ export class ClientesPage implements OnInit {
     }
 
     if (this.productosId === 0) {
-      alert('Seleccionar cliente');
+      alert('Seleccionar el producto');
       return;
     }
 

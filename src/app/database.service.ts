@@ -9,6 +9,7 @@ export class DatabaseService {
   tables = {
     productos: 'productos',
     clientes: 'clientes',
+    deudas: 'deudas',
   };
 
   constructor(private sqlite: SQLite) {}
@@ -16,7 +17,7 @@ export class DatabaseService {
   async createDatabase() {
     await this.sqlite
       .create({
-        name: 'ionic_sqlite_crud',
+        name: 'database',
         location: 'default',
       })
       .then((db: SQLiteObject) => {
@@ -41,6 +42,14 @@ export class DatabaseService {
       productosId INTEGER UNSIGNED NOT NULL, name VARCHAR(255) NOT NULL)`,
       []
     );
+
+    await this.databaseObj.executeSql(
+      `CREATE TABLE IF NOT EXISTS ${this.tables.deudas} (id INTEGER PRIMARY KEY AUTOINCREMENT,
+      productosId INTEGER UNSIGNED NOT NULL, clientesId INTEGER UNSIGNED NOT NULL,
+      monto INTEGER UNSIGNED NOT NULL)`,
+      []
+    );
+
   }
 
   async addProductos(name: string) {
@@ -130,5 +139,43 @@ export class DatabaseService {
       .then(() => 'cliente actualizado')
       .catch((e) => 'error al actualizar cliente ' + JSON.stringify(e));
   }
+
+  async addDeudas(clientesId: number, productosId: number, monto: number) {
+    return this.databaseObj
+      .executeSql(
+        `INSERT INTO ${this.tables.deudas} (clientesId, productosId, monto)
+         VALUES ('${clientesId}', ${productosId}, ${monto})`,
+        []
+      )
+      .then(() => 'Crear deuda')
+      .catch((e) => 'error al crear deuda ' + JSON.stringify(e));
+  }
+
+  async getDeudas() {
+    return this.databaseObj
+      .executeSql(
+        `SELECT clientes.id, clientes.productosId, clientes.name as clientes,
+        deudas.monto as deudas
+        FROM clientes JOIN productos ON productos.id = clientes.productosId
+        JOIN deudas ON  deudas.clientesId = clientes.id
+        ORDER BY clientes ASC`,
+        []
+      )
+      .then((res) => res)
+      .catch((e) => 'error al obtener deudas' + JSON.stringify(e));
+  }
+
+  async editDeudas(clientesId: number, productosId: number, monto: number, id: number) {
+    return this.databaseObj
+      .executeSql(
+        `UPDATE ${this.tables.deudas} SET name = '${monto}',
+         productosId = ${productosId}, clientesId = ${clientesId}
+          WHERE id = ${id}`,
+        []
+      )
+      .then(() => 'deuda actualizada')
+      .catch((e) => 'error al actualizar deuda ' + JSON.stringify(e));
+  }
+
 
 }
