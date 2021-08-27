@@ -101,10 +101,10 @@ export class DatabaseService {
       });
   }
 
-  async addClientes(name: string, productosId: number) {
+  async addClientes(name: string) {
     return this.databaseObj
       .executeSql(
-        `INSERT INTO ${this.tables.clientes} (name, productosId) VALUES ('${name}', ${productosId})`,
+        `INSERT INTO ${this.tables.clientes} (name) VALUES ('${name}')`,
         []
       )
       .then(() => 'Crear cliente')
@@ -114,9 +114,7 @@ export class DatabaseService {
   async getClientes() {
     return this.databaseObj
       .executeSql(
-        `SELECT clientes.id, clientes.productosId, clientes.name as clientes,
-        productos.name as producto FROM clientes INNER JOIN productos ON productos.id = clientes.productosId
-        ORDER BY clientes ASC`,
+        `SELECT * FROM ${this.tables.clientes} ORDER BY name ASC`,
         []
       )
       .then((res) => res)
@@ -130,10 +128,10 @@ export class DatabaseService {
       .catch((e) => 'error al eliminar cliente' + JSON.stringify(e));
   }
 
-  async editClientes(name: string, productosId: number, id: number) {
+  async editClientes(name: string, id: number) {
     return this.databaseObj
       .executeSql(
-        `UPDATE ${this.tables.clientes} SET name = '${name}', productosId = ${productosId} WHERE id = ${id}`,
+        `UPDATE ${this.tables.clientes} SET name = '${name}' WHERE id = ${id}`,
         []
       )
       .then(() => 'cliente actualizado')

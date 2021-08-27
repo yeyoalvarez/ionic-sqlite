@@ -9,16 +9,7 @@
 
 <ion-content>
   <ion-list>
-    <ion-item>
-      <ion-label>Seleccionar Producto</ion-label>
-      <ion-select value="{{ selectedProductosId }}" [(ngModel)]="productosId">
-        <ion-select-option
-          *ngFor="let producto of productos"
-          value="{{ producto.id }}"
-        >{{ producto.name }}</ion-select-option
-        >
-      </ion-select>
-    </ion-item>
+
 
     <ion-item>
       <ion-label position="floating">Nombre del Cliente</ion-label>
@@ -36,7 +27,6 @@
 
       <ion-item>
         <ion-label>{{ cliente.clientes }}</ion-label>
-        <ion-badge color="primary">{{ cliente.producto }}</ion-badge>
       </ion-item>
 
       <ion-item-options side="end">
