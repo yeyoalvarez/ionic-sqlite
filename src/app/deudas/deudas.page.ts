@@ -7,17 +7,17 @@ import {DatabaseService} from '../database.service';
   styleUrls: ['./deudas.page.scss'],
 })
 export class DeudasPage implements OnInit {
-  clienteNombre = '';
   clientes: any = [];
+  clientesId = 0;
   productosId = 0;
   productos: any = [];
-  clientesId = 0;
   deudas: any = [];
-  montoDeuda = 0;
+
 
   editMode = false;
   selectedProductosId = 0;
   selectedClientesId = 0;
+  montoDeuda = 0;
   editId = 0;
 
   constructor(public database: DatabaseService) {
@@ -38,7 +38,6 @@ export class DeudasPage implements OnInit {
       }
     });
   }
-
 
   getClientes() {
     this.database.getClientes().then((data) => {
@@ -108,8 +107,15 @@ export class DeudasPage implements OnInit {
     this.editMode = true;
     this.selectedClientesId = deudas.clientesId;
     this.selectedProductosId = deudas.productosId;
-    this.montoDeuda = deudas.deudas;
+    this.montoDeuda = deudas.montoDeuda;
     this.editId = deudas.id;
+  }
+
+  deleteDeudas(id: number) {
+    this.database.deleteDeudas(id).then((data) => {
+      alert(data);
+      this.getDeudas();
+    });
   }
 
 }

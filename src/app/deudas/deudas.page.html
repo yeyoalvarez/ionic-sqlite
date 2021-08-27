@@ -48,10 +48,16 @@
 
       <ion-item>
         <ion-label>{{ deuda.clientes }}</ion-label>
-        <ion-label>{{ deuda.deudas }}</ion-label>
+        <ion-label>{{ deuda.monto }}</ion-label>
+        <ion-label>{{ deuda.productos }}</ion-label>
         <!-- producto si no aparece ver el nombre en el insert a la tabla -->
-        <ion-badge color="primary">{{ deuda.producto }}</ion-badge>
       </ion-item>
+
+      <ion-item-options side="end">
+        <ion-item-option color="danger" (click)="deleteDeudas(deuda.id)"
+        >Eliminar</ion-item-option
+        >
+      </ion-item-options>
 
 
     </ion-item-sliding>

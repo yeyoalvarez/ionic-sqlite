@@ -39,7 +39,7 @@ export class DatabaseService {
 
     await this.databaseObj.executeSql(
       `CREATE TABLE IF NOT EXISTS ${this.tables.clientes} (id INTEGER PRIMARY KEY AUTOINCREMENT,
-      productosId INTEGER UNSIGNED NOT NULL, name VARCHAR(255) NOT NULL)`,
+       name VARCHAR(255) NOT NULL)`,
       []
     );
 
@@ -81,7 +81,7 @@ export class DatabaseService {
   async deleteProductos(id: number) {
     return this.databaseObj
       .executeSql(`DELETE FROM ${this.tables.productos} WHERE id = ${id}`, [])
-      .then(() => 'eliminar productos')
+      .then(() => 'producto eliminado')
       .catch((e) => 'error al eliminar producto' + JSON.stringify(e));
   }
 
@@ -107,8 +107,14 @@ export class DatabaseService {
         `INSERT INTO ${this.tables.clientes} (name) VALUES ('${name}')`,
         []
       )
-      .then(() => 'Crear cliente')
-      .catch((e) => 'error al crear cliente ' + JSON.stringify(e));
+      .then(() => 'Cliente Creado')
+      .catch((e) => {
+        if (e.code === 6) {
+          return 'cliente ya existe';
+        }
+
+        return 'error al crear cliente' + JSON.stringify(e);
+      });
   }
 
   async getClientes() {
@@ -134,8 +140,14 @@ export class DatabaseService {
         `UPDATE ${this.tables.clientes} SET name = '${name}' WHERE id = ${id}`,
         []
       )
-      .then(() => 'cliente actualizado')
-      .catch((e) => 'error al actualizar cliente ' + JSON.stringify(e));
+      .then(() => 'actualizar cliente')
+      .catch((e) => {
+        if (e.code === 6) {
+          return 'cliente ya existe';
+        }
+
+        return 'error al actualizar cliente' + JSON.stringify(e);
+      });
   }
 
   async addDeudas(clientesId: number, productosId: number, monto: number) {
@@ -145,17 +157,19 @@ export class DatabaseService {
          VALUES ('${clientesId}', ${productosId}, ${monto})`,
         []
       )
-      .then(() => 'Crear deuda')
+      .then(() => 'deuda creada')
       .catch((e) => 'error al crear deuda ' + JSON.stringify(e));
   }
 
   async getDeudas() {
     return this.databaseObj
       .executeSql(
-        `SELECT clientes.id, clientes.productosId, clientes.name as clientes,
-        deudas.monto as deudas
-        FROM clientes JOIN productos ON productos.id = clientes.productosId
-        JOIN deudas ON  deudas.clientesId = clientes.id
+        `SELECT deudas.id, deudas.productosId, deudas.clientesid,
+         deudas.monto as monto, clientes.name as clientes,
+         productos.name as productos
+        FROM deudas
+        JOIN productos ON productos.id = deudas.productosId
+        JOIN clientes ON  clientes.id = deudas.clientesid
         ORDER BY clientes ASC`,
         []
       )
@@ -166,7 +180,7 @@ export class DatabaseService {
   async editDeudas(clientesId: number, productosId: number, monto: number, id: number) {
     return this.databaseObj
       .executeSql(
-        `UPDATE ${this.tables.deudas} SET name = '${monto}',
+        `UPDATE ${this.tables.deudas} SET monto = '${monto}',
          productosId = ${productosId}, clientesId = ${clientesId}
           WHERE id = ${id}`,
         []
@@ -175,5 +189,11 @@ export class DatabaseService {
       .catch((e) => 'error al actualizar deuda ' + JSON.stringify(e));
   }
 
+  async deleteDeudas(id: number) {
+    return this.databaseObj
+      .executeSql(`DELETE FROM ${this.tables.deudas} WHERE id = ${id}`, [])
+      .then(() => 'deuda eliminada')
+      .catch((e) => 'error al eliminar deuda ' + JSON.stringify(e));
+  }
 
 }
