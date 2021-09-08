@@ -39,7 +39,7 @@ export class DatabaseService {
 
     await this.databaseObj.executeSql(
       `CREATE TABLE IF NOT EXISTS ${this.tables.clientes} (id INTEGER PRIMARY KEY AUTOINCREMENT,
-       name VARCHAR(255) NOT NULL)`,
+       name VARCHAR(255) NOT NULL, telefono INTEGER UNSIGNED NOT NULL)`,
       []
     );
 
@@ -101,10 +101,10 @@ export class DatabaseService {
       });
   }
 
-  async addClientes(name: string) {
+  async addClientes(name: string, telefono: number) {
     return this.databaseObj
       .executeSql(
-        `INSERT INTO ${this.tables.clientes} (name) VALUES ('${name}')`,
+        `INSERT INTO ${this.tables.clientes} (name, telefono) VALUES ('${name}',${telefono})`,
         []
       )
       .then(() => 'Cliente Creado')
@@ -134,10 +134,12 @@ export class DatabaseService {
       .catch((e) => 'error al eliminar cliente' + JSON.stringify(e));
   }
 
-  async editClientes(name: string, id: number) {
+  async editClientes(name: string, id: number, telefono: number) {
     return this.databaseObj
       .executeSql(
-        `UPDATE ${this.tables.clientes} SET name = '${name}' WHERE id = ${id}`,
+        `UPDATE ${this.tables.clientes} SET name = '${name}',
+         telefono = ${telefono}
+         WHERE id = ${id}`,
         []
       )
       .then(() => 'actualizar cliente')

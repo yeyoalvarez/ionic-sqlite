@@ -9,6 +9,8 @@ import { DatabaseService } from '../database.service';
 export class ClientesPage implements OnInit {
   clienteNombre = '';
   clientes: any = [];
+  telefonos: any = [];
+  telefono=0;
 
   editMode = false;
   editId = 0;
@@ -24,21 +26,28 @@ export class ClientesPage implements OnInit {
       alert('Ingrese el nombre del cliente');
       return;
     }
+    if (this.telefono === 0) {
+      alert('ingrese un numero de telefono');
+      return;
+    }
 
     if (this.editMode) {
       // edit category
       this.database
-        .editClientes(this.clienteNombre, this.editId)
+        .editClientes(this.clienteNombre, this.editId, this.telefono)
         .then((data) => {
           this.clienteNombre = '';
-          (this.editMode = false), (this.editId = 0);
+          this.telefono = 0;
+          this.editMode = false;
+          this.editId = 0;
           alert(data);
           this.getClientes();
         });
     } else {
       // add category
-      this.database.addClientes(this.clienteNombre).then((data) => {
+      this.database.addClientes(this.clienteNombre, this.telefono).then((data) => {
         this.clienteNombre = '';
+        this.telefono = 0;
         alert(data);
         this.getClientes();
       });
@@ -66,6 +75,7 @@ export class ClientesPage implements OnInit {
   editClientes(cliente: any) {
     this.editMode = true;
     this.clienteNombre = cliente.name;
+    this.telefono = cliente.telefono;
     this.editId = cliente.id;
   }
 }
