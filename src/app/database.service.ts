@@ -46,7 +46,7 @@ export class DatabaseService {
     await this.databaseObj.executeSql(
       `CREATE TABLE IF NOT EXISTS ${this.tables.deudas} (id INTEGER PRIMARY KEY AUTOINCREMENT,
       productosId INTEGER UNSIGNED NOT NULL, clientesId INTEGER UNSIGNED NOT NULL,
-      monto INTEGER UNSIGNED NOT NULL)`,
+      monto INTEGER UNSIGNED NOT NULL), fecha VARCHAR(255)`,
       []
     );
 
@@ -152,11 +152,11 @@ export class DatabaseService {
       });
   }
 
-  async addDeudas(clientesId: number, productosId: number, monto: number) {
+  async addDeudas(clientesId: number, productosId: number, monto: number, fecha: Date) {
     return this.databaseObj
       .executeSql(
-        `INSERT INTO ${this.tables.deudas} (clientesId, productosId, monto)
-         VALUES ('${clientesId}', ${productosId}, ${monto})`,
+        `INSERT INTO ${this.tables.deudas} (clientesId, productosId, monto, fecha)
+         VALUES ('${clientesId}', ${productosId}, ${monto},${fecha})`,
         []
       )
       .then(() => 'deuda creada')
@@ -167,8 +167,9 @@ export class DatabaseService {
     return this.databaseObj
       .executeSql(
         `SELECT deudas.id, deudas.productosId, deudas.clientesid,
-         deudas.monto as monto, clientes.name as clientes,
-         productos.name as productos
+        deudas.monto as monto,
+        clientes.name as clientes,
+        productos.name as productos, deudas.fecha as fecha
         FROM deudas
         JOIN productos ON productos.id = deudas.productosId
         JOIN clientes ON  clientes.id = deudas.clientesid
@@ -179,11 +180,11 @@ export class DatabaseService {
       .catch((e) => 'error al obtener deudas' + JSON.stringify(e));
   }
 
-  async editDeudas(clientesId: number, productosId: number, monto: number, id: number) {
+  async editDeudas(clientesId: number, productosId: number, monto: number, id: number, fecha: Date) {
     return this.databaseObj
       .executeSql(
         `UPDATE ${this.tables.deudas} SET monto = '${monto}',
-         productosId = ${productosId}, clientesId = ${clientesId}
+         productosId = ${productosId}, clientesId = ${clientesId}, fecha = ${fecha}
           WHERE id = ${id}`,
         []
       )

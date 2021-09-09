@@ -10,7 +10,7 @@ export class ClientesPage implements OnInit {
   clienteNombre = '';
   clientes: any = [];
   telefonos: any = [];
-  telefono=0;
+  telefono=8;
 
   editMode = false;
   editId = 0;

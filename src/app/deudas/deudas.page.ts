@@ -12,6 +12,7 @@ export class DeudasPage implements OnInit {
   productosId = 0;
   productos: any = [];
   deudas: any = [];
+  fecha: Date = new Date();
 
 
   editMode = false;
@@ -20,6 +21,7 @@ export class DeudasPage implements OnInit {
   montoDeuda = 0;
   editId = 0;
 
+
   constructor(public database: DatabaseService) {
     this.getProductos();
     this.getClientes();
@@ -27,6 +29,12 @@ export class DeudasPage implements OnInit {
   }
 
   ngOnInit() {}
+
+  cambioFecha(event){
+    console.log('ionChange', event);
+    console.log('Date', new Date (event.detail.value));
+  }
+
 
   getProductos() {
     this.database.getProductos().then((data) => {
@@ -68,24 +76,26 @@ export class DeudasPage implements OnInit {
 
     if (this.editMode) {
       this.database
-        .editDeudas(this.clientesId, this.productosId, this.montoDeuda, this.editId)
+        .editDeudas(this.clientesId, this.productosId, this.montoDeuda, this.editId, this.fecha)
         .then((data) => {
           this.montoDeuda = 0;
           this.editMode = false;
           this.editId = 0;
           this.selectedProductosId = 0;
           this.selectedClientesId = 0;
+          this.fecha = new Date();
           alert(data);
           this.getDeudas();
         });
     } else {
       // add
       this.database
-        .addDeudas(this.clientesId, this.productosId, this.montoDeuda)
+        .addDeudas(this.clientesId, this.productosId, this.montoDeuda, this.fecha)
         .then((data) => {
           this.montoDeuda = 0;
           this.productosId = 0;
           this.clientesId = 0;
+          this.fecha = new Date();
           alert(data);
           this.getDeudas();
         });
@@ -109,6 +119,7 @@ export class DeudasPage implements OnInit {
     this.selectedProductosId = deudas.productosId;
     this.montoDeuda = deudas.montoDeuda;
     this.editId = deudas.id;
+    this.fecha = deudas.fecha;
   }
 
   deleteDeudas(id: number) {

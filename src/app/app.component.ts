@@ -7,6 +7,7 @@ import { Component } from '@angular/core';
 export class AppComponent {
   public selectedIndex = 0;
   public appPages = [
+    { title: 'inicio', url: '/inicio', icon: 'heart' },
     { title: 'productos', url: '/productos', icon: 'mail' },
     { title: 'clientes', url: '/clientes', icon: 'archive' },
     { title: 'deudas', url: '/deudas', icon: 'warning' },

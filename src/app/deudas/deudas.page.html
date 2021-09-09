@@ -37,6 +37,16 @@
       <ion-input [(ngModel)]="montoDeuda"></ion-input>
     </ion-item>
 
+    <ion-item>
+      <ion-label>Fecha de la deuda</ion-label>
+      <ion-datetime placeholder="DD MM YY"
+                    display-format="DD MMMM YY"
+                    cancel-text="atras"
+                    [ngModel]="fecha.toISOString()"
+                    (ionChange)="cambioFecha($event)"
+      ></ion-datetime>
+    </ion-item>
+
     <ion-button expand="block" (click)="addDeudas()">Añadir</ion-button>
   </ion-list>
 
@@ -47,9 +57,10 @@
       </ion-item-options>
 
       <ion-item>
-        <ion-label>{{ deuda.clientes }}</ion-label>
-        <ion-label>{{ deuda.monto }}</ion-label>
+        <ion-grid>{{ deuda.clientes }}</ion-grid>
+        <ion-grid>{{ deuda.monto }}</ion-grid>
         <ion-label>{{ deuda.productos }}</ion-label>
+        <ion-label>{{ deuda.fecha }}</ion-label>
         <!-- producto si no aparece ver el nombre en el insert a la tabla -->
       </ion-item>
 
@@ -62,4 +73,6 @@
 
     </ion-item-sliding>
   </ion-list>
+
+
 </ion-content>
