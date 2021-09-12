@@ -40,7 +40,7 @@
     <ion-item>
       <ion-label>Fecha de la deuda</ion-label>
       <ion-datetime placeholder="DD MM YY"
-                    display-format="DD MMMM YY"
+                    display-format="DD MMM YY"
                     cancel-text="atras"
                     [ngModel]="fecha.toISOString()"
                     (ionChange)="cambioFecha($event)"
@@ -56,10 +56,27 @@
         <ion-item-option (click)="editDeudas(deuda)">Editar</ion-item-option>
       </ion-item-options>
 
+      <ion-grid>
+        <ion-row>
+          <ion-col col-2>
+            Cliente
+          </ion-col>
+          <ion-col col-2>
+            Producto
+          </ion-col>
+          <ion-col col-2>
+            Monto
+          </ion-col>
+          <ion-col col-2>
+            Fecha
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
       <ion-item>
         <ion-grid>{{ deuda.clientes }}</ion-grid>
-        <ion-grid>{{ deuda.monto }}</ion-grid>
-        <ion-label>{{ deuda.productos }}</ion-label>
+        <ion-grid>{{ deuda.productos}}</ion-grid>
+        <ion-label>{{ deuda.monto }}</ion-label>
         <ion-label>{{ deuda.fecha }}</ion-label>
         <!-- producto si no aparece ver el nombre en el insert a la tabla -->
       </ion-item>
@@ -73,6 +90,26 @@
 
     </ion-item-sliding>
   </ion-list>
+
+
+
+  <ion-grid>
+    <ion-row>
+      <ion-col col-2>
+        clientes
+      </ion-col>
+      <ion-col col-2>
+        Producto
+      </ion-col>
+      <ion-col col-2>
+        Monto
+      </ion-col>
+      <ion-col col-2>
+        Fecha
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
 
 
 </ion-content>

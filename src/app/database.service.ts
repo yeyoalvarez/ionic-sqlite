@@ -46,7 +46,7 @@ export class DatabaseService {
     await this.databaseObj.executeSql(
       `CREATE TABLE IF NOT EXISTS ${this.tables.deudas} (id INTEGER PRIMARY KEY AUTOINCREMENT,
       productosId INTEGER UNSIGNED NOT NULL, clientesId INTEGER UNSIGNED NOT NULL,
-      monto INTEGER UNSIGNED NOT NULL), fecha VARCHAR(255)`,
+      monto INTEGER UNSIGNED NOT NULL, fecha VARCHAR(255))`,
       []
     );
 
@@ -156,7 +156,7 @@ export class DatabaseService {
     return this.databaseObj
       .executeSql(
         `INSERT INTO ${this.tables.deudas} (clientesId, productosId, monto, fecha)
-         VALUES ('${clientesId}', ${productosId}, ${monto},${fecha})`,
+         VALUES ('${clientesId}', ${productosId}, ${monto},'${fecha}')`,
         []
       )
       .then(() => 'deuda creada')
@@ -184,7 +184,7 @@ export class DatabaseService {
     return this.databaseObj
       .executeSql(
         `UPDATE ${this.tables.deudas} SET monto = '${monto}',
-         productosId = ${productosId}, clientesId = ${clientesId}, fecha = ${fecha}
+         productosId = ${productosId}, clientesId = ${clientesId}, fecha = '${fecha}'
           WHERE id = ${id}`,
         []
       )
