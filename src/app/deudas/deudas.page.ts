@@ -1,19 +1,26 @@
 import { Component, OnInit } from '@angular/core';
 import {DatabaseService} from '../database.service';
+import { IonicSelectableComponent } from 'ionic-selectable';
 
 @Component({
   selector: 'app-deudas',
   templateUrl: './deudas.page.html',
   styleUrls: ['./deudas.page.scss'],
 })
+
 export class DeudasPage implements OnInit {
+
   clientes: any = [];
   clientesId = 0;
   productosId = 0;
-  productos: any = [];
+
   deudas: any = [];
   fecha: Date = new Date();
 
+  seleccionarCli = 0;
+  seleccionarPro = 0;
+  productos: any = [];
+  aux: any = [];
 
   editMode = false;
   selectedProductosId = 0;
@@ -28,6 +35,8 @@ export class DeudasPage implements OnInit {
     this.getDeudas();
   }
 
+
+
   ngOnInit() {}
 
   cambioFecha(event){
@@ -35,6 +44,23 @@ export class DeudasPage implements OnInit {
     console.log('Date', new Date (event.detail.value));
   }
 
+  portChangeC(event: {
+    component: IonicSelectableComponent,
+    value: any;
+  }) {
+    console.log(event.value);
+    this.aux = event.value;
+    this.clientesId = this.aux.id;
+  }
+
+  portChangeP(event: {
+    component: IonicSelectableComponent,
+    value: any;
+  }) {
+    console.log(event.value);
+    this.aux = event.value;
+    this.productosId = this.aux.id;
+  }
 
   getProductos() {
     this.database.getProductos().then((data) => {

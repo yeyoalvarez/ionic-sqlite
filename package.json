@@ -34,6 +34,7 @@
     "@ionic/angular": "^5.5.2",
     "@react-native-community/cli-platform-android": "^5.0.1",
     "cordova-sqlite-storage": "^6.0.0",
+    "ionic-selectable": "^4.9.0",
     "moment": "^2.29.1",
     "rxjs": "~6.6.0",
     "tslib": "^2.2.0",

@@ -9,26 +9,30 @@
 
 <ion-content>
   <ion-list>
+
     <ion-item>
       <ion-label>Seleccionar Producto</ion-label>
-      <ion-select value="{{ selectedProductosId }}" [(ngModel)]="productosId">
-        <ion-select-option
-          *ngFor="let producto of productos"
-          value="{{ producto.id }}"
-        >{{ producto.name }}</ion-select-option
-        >
-      </ion-select>
+      <ionic-selectable
+        [(ngModel)]="seleccionarPro"
+        [items]="productos"
+        itemValueField="id"
+        itemTextField="name"
+        (onChange)="portChangeP($event)"
+      >
+      </ionic-selectable>
     </ion-item>
+
 
     <ion-item>
       <ion-label>Seleccionar un cliente</ion-label>
-      <ion-select value="{{ selectedClientesId }}" [(ngModel)]="clientesId">
-        <ion-select-option
-          *ngFor="let cliente of clientes"
-          value="{{ cliente.id }}"
-        >{{ cliente.name }}</ion-select-option
-        >
-      </ion-select>
+      <ionic-selectable
+        [(ngModel)]="seleccionarCli"
+        [items]="clientes"
+        itemValueField="id"
+        itemTextField="name"
+        (onChange)="portChangeC($event)"
+      >
+      </ionic-selectable>
     </ion-item>
 
 
@@ -39,7 +43,7 @@
 
     <ion-item>
       <ion-label>Fecha de la deuda</ion-label>
-      <ion-datetime placeholder="DD MM YY"
+      <ion-datetime placeholder="D MM YY"
                     display-format="DD MMM YY"
                     cancel-text="atras"
                     [ngModel]="fecha.toISOString()"
@@ -58,7 +62,7 @@
 
       <ion-grid>
         <ion-row>
-          <ion-col col-2>
+          <ion-col col-2 style="background-color: lightskyblue">
             Cliente
           </ion-col>
           <ion-col col-2>
@@ -87,29 +91,7 @@
         >
       </ion-item-options>
 
-
     </ion-item-sliding>
   </ion-list>
-
-
-
-  <ion-grid>
-    <ion-row>
-      <ion-col col-2>
-        clientes
-      </ion-col>
-      <ion-col col-2>
-        Producto
-      </ion-col>
-      <ion-col col-2>
-        Monto
-      </ion-col>
-      <ion-col col-2>
-        Fecha
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-
-
 
 </ion-content>
