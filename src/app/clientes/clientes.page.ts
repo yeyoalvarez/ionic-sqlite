@@ -10,7 +10,8 @@ export class ClientesPage implements OnInit {
   clienteNombre = '';
   clientes: any = [];
   telefonos: any = [];
-  telefono=8;
+  telefono=9;
+  paisCodigo = '595';
 
   editMode = false;
   editId = 0;
@@ -26,7 +27,7 @@ export class ClientesPage implements OnInit {
       alert('Ingrese el nombre del cliente');
       return;
     }
-    if (this.telefono === 0) {
+    if (this.telefono === 9) {
       alert('ingrese un numero de telefono');
       return;
     }
@@ -37,7 +38,7 @@ export class ClientesPage implements OnInit {
         .editClientes(this.clienteNombre, this.editId, this.telefono)
         .then((data) => {
           this.clienteNombre = '';
-          this.telefono = 0;
+          this.telefono = 9;
           this.editMode = false;
           this.editId = 0;
           alert(data);
@@ -47,7 +48,7 @@ export class ClientesPage implements OnInit {
       // add category
       this.database.addClientes(this.clienteNombre, this.telefono).then((data) => {
         this.clienteNombre = '';
-        this.telefono = 0;
+        this.telefono = 9;
         alert(data);
         this.getClientes();
       });

@@ -1,9 +1,9 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
+      <ion-back-button text="atras" default-href="/deudas"></ion-back-button>
     </ion-buttons>
-    <ion-title>Deudas</ion-title>
+    <ion-title>Añadir Deuda</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -46,52 +46,12 @@
       <ion-datetime placeholder="D MM YY"
                     display-format="DD MMM YY"
                     cancel-text="atras"
-                    [ngModel]="fecha.toISOString()"
-                    (ionChange)="cambioFecha($event)"
+                    [ngModel]="fecha"
       ></ion-datetime>
     </ion-item>
 
     <ion-button expand="block" (click)="addDeudas()">Añadir</ion-button>
   </ion-list>
 
-  <ion-list>
-    <ion-item-sliding *ngFor="let deuda of deudas">
-      <ion-item-options side="start">
-        <ion-item-option (click)="editDeudas(deuda)">Editar</ion-item-option>
-      </ion-item-options>
-
-      <ion-grid>
-        <ion-row>
-          <ion-col col-2 style="background-color: lightskyblue">
-            Cliente
-          </ion-col>
-          <ion-col col-2>
-            Producto
-          </ion-col>
-          <ion-col col-2>
-            Monto
-          </ion-col>
-          <ion-col col-2>
-            Fecha
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-
-      <ion-item>
-        <ion-grid>{{ deuda.clientes }}</ion-grid>
-        <ion-grid>{{ deuda.productos}}</ion-grid>
-        <ion-label>{{ deuda.monto }}</ion-label>
-        <ion-label>{{ deuda.fecha }}</ion-label>
-        <!-- producto si no aparece ver el nombre en el insert a la tabla -->
-      </ion-item>
-
-      <ion-item-options side="end">
-        <ion-item-option color="danger" (click)="deleteDeudas(deuda.id)"
-        >Eliminar</ion-item-option
-        >
-      </ion-item-options>
-
-    </ion-item-sliding>
-  </ion-list>
 
 </ion-content>

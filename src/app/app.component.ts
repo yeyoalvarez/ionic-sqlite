@@ -8,9 +8,9 @@ export class AppComponent {
   public selectedIndex = 0;
   public appPages = [
     { title: 'inicio', url: '/inicio', icon: 'heart' },
-    { title: 'productos', url: '/productos', icon: 'mail' },
-    { title: 'clientes', url: '/clientes', icon: 'archive' },
-    { title: 'deudas', url: '/deudas', icon: 'warning' },
+    { title: 'Productos', url: '/productos', icon: 'mail' },
+    { title: 'Clientes', url: '/clientes', icon: 'archive' },
+    { title: 'Deudas', url: '/deudas-activas', icon: 'warning' },
     // { title: 'Inbox', url: '/folder/Inbox', icon: 'mail' },
     // { title: 'Outbox', url: '/folder/Outbox', icon: 'paper-plane' },
     // { title: 'Favorites', url: '/folder/Favorites', icon: 'heart' },

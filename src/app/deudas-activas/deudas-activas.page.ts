@@ -1,23 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import {DatabaseService} from '../database.service';
-import { IonicSelectableComponent } from 'ionic-selectable';
+import {IonicSelectableComponent} from 'ionic-selectable';
 import * as moment from 'moment';
+moment.locale('es');
 
 @Component({
-  selector: 'app-deudas',
-  templateUrl: './deudas.page.html',
-  styleUrls: ['./deudas.page.scss'],
+  selector: 'app-deudas-activas',
+  templateUrl: './deudas-activas.page.html',
+  styleUrls: ['./deudas-activas.page.scss'],
 })
-
-export class DeudasPage implements OnInit {
+export class DeudasActivasPage implements OnInit {
 
   clientes: any = [];
   clientesId = 0;
   productosId = 0;
 
   deudas: any = [];
-  fecha = moment();
-  estado = false;
+  fecha: string;
 
   seleccionarCli = 0;
   seleccionarPro = 0;
@@ -30,38 +29,14 @@ export class DeudasPage implements OnInit {
   montoDeuda = 0;
   editId = 0;
 
+
   constructor(public database: DatabaseService) {
     this.getProductos();
     this.getClientes();
     this.getDeudas();
   }
 
-
-
-  ngOnInit() {}
-
-  cambioFecha(event){
-    console.log('ionChange', event);
-    console.log('Date', new Date (event.detail.value.format('Do MM YY')));
-
-  }
-
-  portChangeC(event: {
-    component: IonicSelectableComponent,
-    value: any;
-  }) {
-    console.log(event.value);
-    this.aux = event.value;
-    this.clientesId = this.aux.id;
-  }
-
-  portChangeP(event: {
-    component: IonicSelectableComponent,
-    value: any;
-  }) {
-    console.log(event.value);
-    this.aux = event.value;
-    this.productosId = this.aux.id;
+  ngOnInit() {
   }
 
   getProductos() {
@@ -103,29 +78,27 @@ export class DeudasPage implements OnInit {
     }
 
     if (this.editMode) {
-      if (this.estado === true){
       this.database
-        .editDeudas(this.clientesId, this.productosId, this.montoDeuda, this.editId,
-          this.fecha.format('Do MM YY'))
+        .editDeudas(this.clientesId, this.productosId, this.montoDeuda, this.editId, this.fecha)
         .then((data) => {
           this.montoDeuda = 0;
           this.editMode = false;
           this.editId = 0;
           this.selectedProductosId = 0;
           this.selectedClientesId = 0;
-
+          this.fecha = '';
           alert(data);
           this.getDeudas();
         });
-      }} else {
+    } else {
       // add
       this.database
-        .addDeudas(this.clientesId, this.productosId, this.montoDeuda,
-          this.fecha.format('Do MM YY'))
+        .addDeudas(this.clientesId, this.productosId, this.montoDeuda, this.fecha)
         .then((data) => {
           this.montoDeuda = 0;
           this.productosId = 0;
           this.clientesId = 0;
+          this.fecha = '';
           alert(data);
           this.getDeudas();
         });
@@ -159,5 +132,5 @@ export class DeudasPage implements OnInit {
     });
   }
 
-}
 
+}

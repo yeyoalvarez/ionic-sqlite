@@ -18,6 +18,7 @@
 
     <ion-item>
       <ion-label position="floating">Celular del Cliente</ion-label>
+      <ion-label>{{ paisCodigo }}</ion-label>
       <ion-input [(ngModel)]="telefono"></ion-input>
     </ion-item>
 
@@ -32,6 +33,7 @@
 
       <ion-item>
         <ion-label>{{ cliente.name }}</ion-label>
+        <ion-label>{{ paisCodigo }}</ion-label>
         <ion-label>{{ cliente.telefono }}</ion-label>
       </ion-item>
 

@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Deudas Activas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+
+  <ion-list>
+    <ion-item-sliding *ngFor="let deuda of deudas">
+      <ion-item-options side="start">
+        <ion-item-option (click)="editDeudas(deuda)">Editar</ion-item-option>
+      </ion-item-options>
+
+      <ion-grid>
+        <ion-row>
+          <ion-col col-2 style="background-color: lightskyblue">
+            Cliente
+          </ion-col>
+          <ion-col col-2 style="background-color: lightskyblue">
+            Producto
+          </ion-col>
+          <ion-col col-2 style="background-color: lightskyblue">
+            Monto
+          </ion-col>
+          <ion-col col-2 style="background-color: lightskyblue">
+            Fecha
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <ion-item>
+        <ion-grid>{{ deuda.clientes }}</ion-grid>
+        <ion-grid>{{ deuda.productos}}</ion-grid>
+        <ion-label>{{ deuda.monto }}</ion-label>
+        <ion-label>{{ deuda.fecha }}</ion-label>
+        <!-- producto si no aparece ver el nombre en el insert a la tabla -->
+      </ion-item>
+
+      <ion-item-options side="end">
+        <ion-item-option color="danger" (click)="deleteDeudas(deuda.id)"
+        >Eliminar</ion-item-option
+        >
+      </ion-item-options>
+
+    </ion-item-sliding>
+  </ion-list>
+
+  <ion-content side="end">
+    <ion-button expand="block" [routerLink]="['/deudas']"> Añadir Deuda</ion-button>
+  </ion-content>
+
+</ion-content>

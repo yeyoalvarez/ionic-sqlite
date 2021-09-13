@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
+import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root',
@@ -46,7 +47,7 @@ export class DatabaseService {
     await this.databaseObj.executeSql(
       `CREATE TABLE IF NOT EXISTS ${this.tables.deudas} (id INTEGER PRIMARY KEY AUTOINCREMENT,
       productosId INTEGER UNSIGNED NOT NULL, clientesId INTEGER UNSIGNED NOT NULL,
-      monto INTEGER UNSIGNED NOT NULL, fecha VARCHAR(255))`,
+      monto INTEGER UNSIGNED NOT NULL, fecha VARCHAR(255),estado BOOLEAN)`,
       []
     );
 
@@ -152,11 +153,11 @@ export class DatabaseService {
       });
   }
 
-  async addDeudas(clientesId: number, productosId: number, monto: number, fecha: Date) {
+  async addDeudas(clientesId: number, productosId: number, monto: number, fecha: string) {
     return this.databaseObj
       .executeSql(
-        `INSERT INTO ${this.tables.deudas} (clientesId, productosId, monto, fecha)
-         VALUES ('${clientesId}', ${productosId}, ${monto},'${fecha}')`,
+        `INSERT INTO ${this.tables.deudas} (clientesId, productosId, monto, fecha, estado)
+         VALUES ('${clientesId}', ${productosId}, ${monto},'${fecha}',TRUE)`,
         []
       )
       .then(() => 'deuda creada')
@@ -173,6 +174,7 @@ export class DatabaseService {
         FROM deudas
         JOIN productos ON productos.id = deudas.productosId
         JOIN clientes ON  clientes.id = deudas.clientesid
+        where deudas.estado == true
         ORDER BY clientes ASC`,
         []
       )
@@ -180,11 +182,10 @@ export class DatabaseService {
       .catch((e) => 'error al obtener deudas' + JSON.stringify(e));
   }
 
-  async editDeudas(clientesId: number, productosId: number, monto: number, id: number, fecha: Date) {
+  async editDeudas(clientesId: number, productosId: number, monto: number, id: number, fecha: string) {
     return this.databaseObj
       .executeSql(
-        `UPDATE ${this.tables.deudas} SET monto = '${monto}',
-         productosId = ${productosId}, clientesId = ${clientesId}, fecha = '${fecha}'
+        `UPDATE ${this.tables.deudas} SET monto = ${monto}
           WHERE id = ${id}`,
         []
       )
