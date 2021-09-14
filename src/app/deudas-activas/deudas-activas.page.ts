@@ -29,6 +29,7 @@ export class DeudasActivasPage implements OnInit {
   montoDeuda = 0;
   editId = 0;
 
+  items: any[] = [];
 
   constructor(public database: DatabaseService) {
     this.getProductos();
@@ -38,6 +39,14 @@ export class DeudasActivasPage implements OnInit {
 
   ngOnInit() {
   }
+
+  doRefresh(event){
+    setTimeout(() =>{
+
+      this.deudas = Array(255);
+      event.target.complete();
+   }, 1500);
+ }
 
   getProductos() {
     this.database.getProductos().then((data) => {

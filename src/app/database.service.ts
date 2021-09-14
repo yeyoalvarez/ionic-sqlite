@@ -11,6 +11,7 @@ export class DatabaseService {
     productos: 'productos',
     clientes: 'clientes',
     deudas: 'deudas',
+    historial: 'historial',
   };
 
   constructor(private sqlite: SQLite) {}
@@ -48,6 +49,13 @@ export class DatabaseService {
       `CREATE TABLE IF NOT EXISTS ${this.tables.deudas} (id INTEGER PRIMARY KEY AUTOINCREMENT,
       productosId INTEGER UNSIGNED NOT NULL, clientesId INTEGER UNSIGNED NOT NULL,
       monto INTEGER UNSIGNED NOT NULL, fecha VARCHAR(255),estado BOOLEAN)`,
+      []
+    );
+
+    await this.databaseObj.executeSql(
+      `CREATE TABLE IF NOT EXISTS ${this.tables.historial} (id INTEGER PRIMARY KEY AUTOINCREMENT,
+      idProducto INTEGER UNSIGNED NOT NULL, idCliente INTEGER UNSIGNED NOT NULL,
+      montos INTEGER UNSIGNED NOT NULL, fechas VARCHAR(255))`,
       []
     );
 
