@@ -1,18 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import {DatabaseService} from '../database.service';
-import {IonicSelectableComponent} from 'ionic-selectable';
-import * as moment from 'moment';
-moment.locale('es');
-import {NavController, ModalController,NavParams } from '@ionic/angular';
-
-
+import {NavController} from '@ionic/angular';
 
 @Component({
-  selector: 'app-deudas-activas',
-  templateUrl: './deudas-activas.page.html',
-  styleUrls: ['./deudas-activas.page.scss'],
+  selector: 'app-editar-deudas',
+  templateUrl: './editar-deudas.page.html',
+  styleUrls: ['./editar-deudas.page.scss'],
 })
-export class DeudasActivasPage implements OnInit {
+export class EditarDeudasPage implements OnInit {
 
   clientes: any = [];
   clientesId = 0;
@@ -35,9 +30,7 @@ export class DeudasActivasPage implements OnInit {
 
   items: any[] = [];
 
-  constructor(public database: DatabaseService,
-              private navCtrl: NavController,
-              public modalCtrl: ModalController) {
+  constructor(public database: DatabaseService) {
     this.getProductos();
     this.getClientes();
     this.getDeudas();
@@ -147,10 +140,5 @@ export class DeudasActivasPage implements OnInit {
       this.getDeudas();
     });
   }
-
-  editarDeuda(deudas: any){
-    this.navCtrl.navigateForward('/editar-deudas', deudas);
-
-}
 
 }

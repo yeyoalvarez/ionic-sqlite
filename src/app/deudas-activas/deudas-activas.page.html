@@ -4,16 +4,12 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-
-  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)")>
-    <ion-refresher-content></ion-refresher-content>
-    </ion-refresher>
+<ion-content padding>
 
   <ion-list>
-    <ion-item-sliding *ngFor="let deuda of deudas">
+    <ion-item-sliding *ngFor="let deuda of deudas" >
       <ion-item-options side="start">
-        <ion-item-option (click)="editDeudas(deuda)">Detalles</ion-item-option>
+        <ion-item-option (click)="editarDeuda(deuda)">Detalles</ion-item-option>
       </ion-item-options>
 
       <ion-grid>
@@ -25,9 +21,6 @@
             Producto
           </ion-col>
           <ion-col col-2 style="background-color: lightskyblue">
-            Monto
-          </ion-col>
-          <ion-col col-2 style="background-color: lightskyblue">
             Fecha
           </ion-col>
         </ion-row>
@@ -36,10 +29,21 @@
       <ion-item>
         <ion-grid>{{ deuda.clientes }}</ion-grid>
         <ion-grid>{{ deuda.productos}}</ion-grid>
-        <ion-label>{{ deuda.monto }}</ion-label>
         <ion-label>{{ deuda.fecha }}</ion-label>
-        <!-- producto si no aparece ver el nombre en el insert a la tabla -->
       </ion-item>
+
+        <ion-row>
+          <ion-col col-2 style="background-color: lightskyblue">
+            Monto
+          </ion-col>
+        </ion-row>
+
+      <ion-item>
+        <ion-label>{{ moneda(deuda.monto) }}</ion-label>
+      </ion-item>
+
+        <!-- producto si no aparece ver el nombre en el insert a la tabla -->
+
 
       <ion-item-options side="end">
         <ion-item-option color="danger" (click)="deleteDeudas(deuda.id)"
@@ -48,6 +52,7 @@
       </ion-item-options>
 
     </ion-item-sliding>
+
   </ion-list>
 
   <ion-content side="end">
