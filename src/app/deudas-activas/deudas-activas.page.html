@@ -4,12 +4,12 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content>
 
   <ion-list>
     <ion-item-sliding *ngFor="let deuda of deudas" >
       <ion-item-options side="start">
-        <ion-item-option (click)="editarDeuda(deuda)">Detalles</ion-item-option>
+        <ion-card [routerLink]="['/deudas-detalles',deuda.id]">Detalles</ion-card>
       </ion-item-options>
 
       <ion-grid>

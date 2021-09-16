@@ -34,7 +34,12 @@ const routes: Routes = [
   {
     path: 'editar-deudas',
     loadChildren: () => import('./editar-deudas/editar-deudas.module').then( m => m.EditarDeudasPageModule)
+  },
+  {
+    path: 'deudas-detalles',
+    loadChildren: () => import('./deudas-detalles/deudas-detalles.module').then( m => m.DeudasDetallesPageModule)
   }
+
 
 
 

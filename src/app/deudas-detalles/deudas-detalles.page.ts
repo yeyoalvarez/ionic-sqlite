@@ -1,19 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import {DatabaseService} from '../database.service';
-import {IonicSelectableComponent} from 'ionic-selectable';
-import * as moment from 'moment';
-moment.locale('es');
-import {NavController, ModalController,NavParams } from '@ionic/angular';
-
-
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
-  selector: 'app-deudas-activas',
-  templateUrl: './deudas-activas.page.html',
-  styleUrls: ['./deudas-activas.page.scss'],
+  selector: 'app-deudas-detalles',
+  templateUrl: './deudas-detalles.page.html',
+  styleUrls: ['./deudas-detalles.page.scss'],
 })
-export class DeudasActivasPage implements OnInit {
+export class DeudasDetallesPage implements OnInit {
 
+  id: any;
   clientes: any = [];
   clientesId = 0;
   productosId = 0;
@@ -36,8 +32,7 @@ export class DeudasActivasPage implements OnInit {
   items: any[] = [];
 
   constructor(public database: DatabaseService,
-              private navCtrl: NavController,
-              public modalCtrl: ModalController) {
+              private activatedRoute: ActivatedRoute) {
     this.getProductos();
     this.getClientes();
     this.getDeudas();
@@ -45,11 +40,10 @@ export class DeudasActivasPage implements OnInit {
 
 
   ngOnInit() {
+    this.id = this.activatedRoute.snapshot.paramMap.get('id]');
+    console.log(this.id);
   }
 
-  ionViewWillEnter() {
-    this.getDeudas();
-  }
 
   moneda(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
@@ -147,5 +141,6 @@ export class DeudasActivasPage implements OnInit {
       this.getDeudas();
     });
   }
+
 
 }

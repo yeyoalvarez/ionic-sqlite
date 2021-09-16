@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {DatabaseService} from '../database.service';
-import {NavController} from '@ionic/angular';
+import {NavController, NavParams} from '@ionic/angular';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-editar-deudas',
@@ -9,6 +10,7 @@ import {NavController} from '@ionic/angular';
 })
 export class EditarDeudasPage implements OnInit {
 
+  id: any;
   clientes: any = [];
   clientesId = 0;
   productosId = 0;
@@ -30,19 +32,20 @@ export class EditarDeudasPage implements OnInit {
 
   items: any[] = [];
 
-  constructor(public database: DatabaseService) {
-    this.getProductos();
-    this.getClientes();
-    this.getDeudas();
+  constructor(public database: DatabaseService,
+              private navParams: NavParams,
+              private activatedRoute: ActivatedRoute) {
+   this.getProductos();
+   this.getClientes();
+   this.getDeudas();
   }
 
 
   ngOnInit() {
+    this.id = this.activatedRoute.snapshot.paramMap.get('id');
+    console.log(this.id);
   }
 
-  ionViewWillEnter() {
-    this.getDeudas();
-  }
 
   moneda(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
@@ -140,5 +143,7 @@ export class EditarDeudasPage implements OnInit {
       this.getDeudas();
     });
   }
+
+
 
 }

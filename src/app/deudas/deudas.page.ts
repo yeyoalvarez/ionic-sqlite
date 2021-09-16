@@ -121,7 +121,7 @@ export class DeudasPage implements OnInit {
       // add
       this.database
         .addDeudas(this.clientesId, this.productosId, this.montoDeuda,
-          this.fecha.format('Do MM YY'))
+          this.fecha.format('L'))
         .then((data) => {
           this.montoDeuda = 0;
           this.productosId = 0;
