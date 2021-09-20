@@ -9,7 +9,7 @@
   <ion-list>
     <ion-item-sliding *ngFor="let deuda of deudas" >
       <ion-item-options side="start">
-        <ion-card [routerLink]="['/deudas-detalles',deuda.id]">Detalles</ion-card>
+        <ion-item-option [routerLink]="['/deudas-detalles',deuda.id]">Detalles</ion-item-option>
       </ion-item-options>
 
       <ion-grid>

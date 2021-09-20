@@ -32,11 +32,7 @@ const routes: Routes = [
     loadChildren: () => import('./deudas-activas/deudas-activas.module').then( m => m.DeudasActivasPageModule)
   },
   {
-    path: 'editar-deudas',
-    loadChildren: () => import('./editar-deudas/editar-deudas.module').then( m => m.EditarDeudasPageModule)
-  },
-  {
-    path: 'deudas-detalles',
+    path: 'deudas-detalles/:id',
     loadChildren: () => import('./deudas-detalles/deudas-detalles.module').then( m => m.DeudasDetallesPageModule)
   }
 

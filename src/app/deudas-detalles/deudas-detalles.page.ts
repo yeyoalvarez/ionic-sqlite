@@ -40,13 +40,23 @@ export class DeudasDetallesPage implements OnInit {
 
 
   ngOnInit() {
-    this.id = this.activatedRoute.snapshot.paramMap.get('id]');
+    this.id = this.activatedRoute.snapshot.paramMap.get('id');
     console.log(this.id);
+    Number(this.id);
+
+  }
+
+  ionViewWillEnter() {
+    this.getDeudas();
   }
 
 
   moneda(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  }
+
+  convertNumero(x){
+    return Number(x);
   }
 
   getProductos() {
@@ -116,11 +126,12 @@ export class DeudasDetallesPage implements OnInit {
   }
 
   getDeudas() {
-    this.database.getDeudas().then((data) => {
+    this.database.getDeudas2(this.id).then((data) => {
       this.deudas = [];
+      this.aux = [];
       if (data.rows.length > 0) {
         for (let i = 0; i < data.rows.length; i++) {
-          this.deudas.push(data.rows.item(i));
+           this.deudas.push(data.rows.item(i));
         }
       }
     });
@@ -141,6 +152,5 @@ export class DeudasDetallesPage implements OnInit {
       this.getDeudas();
     });
   }
-
 
 }

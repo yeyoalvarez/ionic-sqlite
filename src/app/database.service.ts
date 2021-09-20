@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
-import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root',
@@ -183,6 +182,24 @@ export class DatabaseService {
         JOIN productos ON productos.id = deudas.productosId
         JOIN clientes ON  clientes.id = deudas.clientesid
         where deudas.estado == true
+        ORDER BY clientes ASC`,
+        []
+      )
+      .then((res) => res)
+      .catch((e) => 'error al obtener deudas' + JSON.stringify(e));
+  }
+
+  async getDeudas2(id: number) {
+    return this.databaseObj
+      .executeSql(
+        `SELECT deudas.id, deudas.productosId, deudas.clientesid,
+        deudas.monto as monto,
+        clientes.name as clientes,
+        productos.name as productos, deudas.fecha as fecha
+        FROM deudas
+        JOIN productos ON productos.id = deudas.productosId
+        JOIN clientes ON  clientes.id = deudas.clientesid
+        where deudas.estado == true and deudas.id == ${id}
         ORDER BY clientes ASC`,
         []
       )

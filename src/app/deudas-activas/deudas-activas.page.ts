@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {DatabaseService} from '../database.service';
-import {IonicSelectableComponent} from 'ionic-selectable';
 import * as moment from 'moment';
 moment.locale('es');
-import {NavController, ModalController,NavParams } from '@ionic/angular';
+import {NavController, ModalController } from '@ionic/angular';
 
 
 
