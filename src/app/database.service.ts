@@ -189,24 +189,6 @@ export class DatabaseService {
       .catch((e) => 'error al obtener deudas' + JSON.stringify(e));
   }
 
-  async getDeudas2(id: number) {
-    return this.databaseObj
-      .executeSql(
-        `SELECT deudas.id, deudas.productosId, deudas.clientesid,
-        deudas.monto as monto,
-        clientes.name as clientes,
-        productos.name as productos, deudas.fecha as fecha
-        FROM deudas
-        JOIN productos ON productos.id = deudas.productosId
-        JOIN clientes ON  clientes.id = deudas.clientesid
-        where deudas.estado == true and deudas.id == ${id}
-        ORDER BY clientes ASC`,
-        []
-      )
-      .then((res) => res)
-      .catch((e) => 'error al obtener deudas' + JSON.stringify(e));
-  }
-
   async editDeudas(clientesId: number, productosId: number, monto: number, id: number, fecha: string) {
     return this.databaseObj
       .executeSql(

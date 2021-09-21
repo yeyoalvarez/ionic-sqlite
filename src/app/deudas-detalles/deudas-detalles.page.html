@@ -11,27 +11,26 @@
     <ion-item-sliding *ngFor="let deuda of deudas" >
 
       esto es el id: {{ id }}
-      es el id convertido {{convertNumero(deuda.id)}}
-      <ng-container>
+      <ng-container *ngIf="deuda.id === llamarDato()">
       <ion-grid>
         <ion-row>
-          <ion-col col -2 style="background-color: lightskyblue">
+          <ion-col col-13 style="background-color: lightskyblue">
             Cliente: {{ deuda.clientes }}
           </ion-col>
-          <ion-col col -2 style="background-color: lightskyblue">
-            Producto: {{ deuda.productos}}
+          <ion-col col-13 style="background-color: lightskyblue">
+            Producto: {{ deuda.productos }}
           </ion-col>
-          <ion-col col-2 style="background-color: lightskyblue">
+          <ion-col col-13 style="background-color: lightskyblue">
             Fecha: {{ deuda.fecha }}
           </ion-col>
           <ion-col col-13 style="background-color: lightskyblue">
-            Monto: {{ moneda(deuda.monto) }}
+            Fecha: {{ moneda(deuda.monto) }}
           </ion-col>
         </ion-row>
       </ion-grid>
-        </ng-container>
+      </ng-container>
 
-      </ion-item-sliding>
+    </ion-item-sliding>
   </ion-list>
 
 
