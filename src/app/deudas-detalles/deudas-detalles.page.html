@@ -9,29 +9,41 @@
   <ion-list>
 
     <ion-item-sliding *ngFor="let deuda of deudas" >
+      <ion-item-sliding *ngFor="let cliente of clientes">
 
-      esto es el id: {{ id }}
-      <ng-container *ngIf="deuda.id === llamarDato()">
-      <ion-grid>
-        <ion-row>
-          <ion-col col-13 style="background-color: lightskyblue">
-            Cliente: {{ deuda.clientes }}
-          </ion-col>
-          <ion-col col-13 style="background-color: lightskyblue">
-            Producto: {{ deuda.productos }}
-          </ion-col>
-          <ion-col col-13 style="background-color: lightskyblue">
-            Fecha: {{ deuda.fecha }}
-          </ion-col>
-          <ion-col col-13 style="background-color: lightskyblue">
-            Fecha: {{ moneda(deuda.monto) }}
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-      </ng-container>
+        <ng-container *ngIf="deuda.id === llamarDato() && deuda.idCliente === cliente.id">
 
+          <ion-grid>
+            <ion-row>
+              <ion-col>
+                Cliente:   {{ deuda.clientes }}<br/>
+              </ion-col>
+              <br/>Producto:  {{ deuda.productos }}
+              <p>
+                Fecha:     {{ deuda.fecha }}<br>
+              </p>
+              <ion-col col-2 style="background-color: lightskyblue">
+                Deuda:
+              </ion-col>
+              <ion-col>
+                {{ moneda(deuda.monto) }}
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+            <p>Telefono: {{paisCodigo}} {{cliente.telefono}}</p>
+            <ion-button href={{url+cliente.telefono}} color="success">
+              <ion-icon name="logo-whatsapp"></ion-icon>
+            </ion-button>
+
+
+        </ng-container>
+        </ion-item-sliding>
     </ion-item-sliding>
   </ion-list>
+
+  <ion-content side="end">
+    <ion-button (click)="capturaPantalla()"> Screen de Pantalla</ion-button>
+  </ion-content>
 
 
 </ion-content>

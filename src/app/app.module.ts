@@ -10,6 +10,9 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { SQLite } from '@ionic-native/sqlite/ngx';
 import { IonicSelectableModule } from 'ionic-selectable';
+import { Screenshot } from '@ionic-native/screenshot/ngx';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
+
 
 
 @NgModule({
@@ -20,7 +23,7 @@ import { IonicSelectableModule } from 'ionic-selectable';
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    SQLite,
+    SQLite,Screenshot,AndroidPermissions
   ],
   bootstrap: [AppComponent],
 })

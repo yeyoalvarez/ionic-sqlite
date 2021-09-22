@@ -174,7 +174,8 @@ export class DatabaseService {
   async getDeudas() {
     return this.databaseObj
       .executeSql(
-        `SELECT deudas.id, deudas.productosId, deudas.clientesid,
+        `SELECT deudas.id, deudas.productosId,
+        deudas.clientesid as idCliente,
         deudas.monto as monto,
         clientes.name as clientes,
         productos.name as productos, deudas.fecha as fecha

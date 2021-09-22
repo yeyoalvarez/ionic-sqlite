@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {DatabaseService} from '../database.service';
 import {ActivatedRoute} from '@angular/router';
+import { Screenshot } from '@ionic-native/screenshot/ngx';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 
 @Component({
   selector: 'app-deudas-detalles',
@@ -8,6 +10,9 @@ import {ActivatedRoute} from '@angular/router';
   styleUrls: ['./deudas-detalles.page.scss'],
 })
 export class DeudasDetallesPage implements OnInit {
+
+  paisCodigo = '595';
+  url = 'https://api.whatsapp.com/send?phone='+this.paisCodigo;
 
   id: string;
   clientes: any = [];
@@ -32,17 +37,17 @@ export class DeudasDetallesPage implements OnInit {
   items: any[] = [];
 
   constructor(public database: DatabaseService,
-              private activatedRoute: ActivatedRoute) {
+              private activatedRoute: ActivatedRoute,
+              public screenshot: Screenshot,
+              private androidPermissions: AndroidPermissions) {
     this.getProductos();
     this.getClientes();
     this.getDeudas();
   }
 
-
   ngOnInit() {
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
     console.log(this.id);
-
   }
 
   llamarDato(){
@@ -149,5 +154,13 @@ export class DeudasDetallesPage implements OnInit {
       this.getDeudas();
     });
   }
+
+  capturaPantalla(){
+    this.screenshot.save('jpg', 80, 'deuda.jpg').then(() => {
+      alert('Guardado en el telefono');
+      }).catch(e => console.log(e));
+  }
+
+
 
 }
