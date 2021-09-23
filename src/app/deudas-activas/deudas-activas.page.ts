@@ -37,9 +37,10 @@ export class DeudasActivasPage implements OnInit {
   constructor(public database: DatabaseService,
               private navCtrl: NavController,
               public modalCtrl: ModalController) {
-    this.getProductos();
-    this.getClientes();
-    this.getDeudas();
+    this.database.createDatabase().then(() => {
+      // will call get categories
+      this.getDeudas();
+    });
   }
 
 

@@ -190,6 +190,35 @@ export class DatabaseService {
       .catch((e) => 'error al obtener deudas' + JSON.stringify(e));
   }
 
+  async addHistorial(clientesId: number, productosId: number, monto: number, fecha: string) {
+    return this.databaseObj
+      .executeSql(
+        `INSERT INTO ${this.tables.historial} (idCliente, idProducto, montos, fechas)
+         VALUES ('${clientesId}', ${productosId}, ${monto},'${fecha}')`,
+        []
+      )
+      .then(() => 'Historial Creado')
+      .catch((e) => 'error al crear historial' + JSON.stringify(e));
+  }
+
+  async getHistorial() {
+    return this.databaseObj
+      .executeSql(
+        `SELECT historial.id, historial.idProducto,
+        historial.idCliente as cliente,
+        historial.montos as montos,
+        clientes.name as clientes,
+        productos.name as productos, historial.fechas as fechas
+        FROM deudas
+        JOIN productos ON productos.id = historial.idProducto
+        JOIN clientes ON  clientes.id = historial.idCliente
+        ORDER BY clientes ASC`,
+        []
+      )
+      .then((res) => res)
+      .catch((e) => 'error al obtener historial' + JSON.stringify(e));
+  }
+
   async editDeudas(clientesId: number, productosId: number, monto: number, id: number, fecha: string) {
     return this.databaseObj
       .executeSql(

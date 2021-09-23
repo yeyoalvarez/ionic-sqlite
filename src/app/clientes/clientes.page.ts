@@ -17,7 +17,10 @@ export class ClientesPage implements OnInit {
   editId = 0;
 
   constructor(public database: DatabaseService) {
-    this.getClientes();
+    this.database.createDatabase().then(() => {
+      // will call get categories
+      this.getClientes();
+    });
   }
 
   ngOnInit() {}

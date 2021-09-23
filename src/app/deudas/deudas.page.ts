@@ -113,7 +113,6 @@ export class DeudasPage implements OnInit {
           this.editId = 0;
           this.selectedProductosId = 0;
           this.selectedClientesId = 0;
-
           alert(data);
           this.getDeudas();
         });

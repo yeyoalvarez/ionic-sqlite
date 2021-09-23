@@ -10,40 +10,47 @@
 
     <ion-item-sliding *ngFor="let deuda of deudas" >
       <ion-item-sliding *ngFor="let cliente of clientes">
+        <ion-item-sliding *ngFor="let historial of historiales">
 
-        <ng-container *ngIf="deuda.id === llamarDato() && deuda.idCliente === cliente.id">
+        <ng-container *ngIf="deuda.id === llamarDato() && deuda.idCliente === cliente.id &&
+            historial.idCliente === cliente.id">
 
-          <ion-grid>
-            <ion-row>
-              <ion-col>
-                Cliente:   {{ deuda.clientes }}<br/>
-              </ion-col>
-              <br/>Producto:  {{ deuda.productos }}
-              <p>
-                Fecha:     {{ deuda.fecha }}<br>
-              </p>
-              <ion-col col-2 style="background-color: lightskyblue">
-                Deuda:
-              </ion-col>
-              <ion-col>
-                {{ moneda(deuda.monto) }}
-              </ion-col>
-            </ion-row>
-          </ion-grid>
-            <p>Telefono: {{paisCodigo}} {{cliente.telefono}}</p>
-            <ion-button href={{url+cliente.telefono}} color="success">
-              <ion-icon name="logo-whatsapp"></ion-icon>
-            </ion-button>
+            <ion-grid>
+              <ion-row>
+                <p>
+                  Cliente:   {{ deuda.clientes }}<br />
+                  Producto:  {{ deuda.productos }} <br/>
+                  Fecha:     {{ historial.fecha }}<br/>
+                  Deuda:{{ moneda(historial.monto) }}
+                </p>
+              </ion-row>
+            </ion-grid>
+              <p>Telefono: {{paisCodigo}} {{cliente.telefono}}</p>
+              <ion-button href={{url+cliente.telefono}} color="success">
+                <ion-icon name="logo-whatsapp"></ion-icon>
+              </ion-button>
 
+
+            <ion-list>
+              <ion-item>
+                <ion-label position="floating">Añadir Monto</ion-label>
+                <ion-input [(ngModel)]="montoDeuda"></ion-input>
+              </ion-item>
+
+              <ion-button expand="block" (click)="editDeudas(deuda)">Realizar Pago</ion-button>
+
+            </ion-list>
 
         </ng-container>
+         </ion-item-sliding>
         </ion-item-sliding>
     </ion-item-sliding>
   </ion-list>
 
-  <ion-content side="end">
+  <ion-content side="start">
     <ion-button (click)="capturaPantalla()"> Screen de Pantalla</ion-button>
   </ion-content>
+
 
 
 </ion-content>

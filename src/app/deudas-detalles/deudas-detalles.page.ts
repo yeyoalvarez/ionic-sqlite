@@ -3,6 +3,7 @@ import {DatabaseService} from '../database.service';
 import {ActivatedRoute} from '@angular/router';
 import { Screenshot } from '@ionic-native/screenshot/ngx';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-deudas-detalles',
@@ -20,7 +21,10 @@ export class DeudasDetallesPage implements OnInit {
   productosId = 0;
 
   deudas: any = [];
-  fecha: string;
+  historiales: any = [];
+  //fecha: string;
+  fecha = moment();
+  estado = false;
 
 
   seleccionarCli = 0;
@@ -38,7 +42,7 @@ export class DeudasDetallesPage implements OnInit {
 
   constructor(public database: DatabaseService,
               private activatedRoute: ActivatedRoute,
-              public screenshot: Screenshot,
+              private screenshot: Screenshot,
               private androidPermissions: AndroidPermissions) {
     this.getProductos();
     this.getClientes();
@@ -56,6 +60,13 @@ export class DeudasDetallesPage implements OnInit {
 
   ionViewWillEnter() {
     this.getDeudas();
+    this.getHistorial();
+  }
+
+  cambioFecha(event){
+    console.log('ionChange', event);
+    console.log('Date', new Date (event.detail.value.format('Do MM YY')));
+
   }
 
   moneda(x) {
@@ -84,48 +95,36 @@ export class DeudasDetallesPage implements OnInit {
     });
   }
 
-  addDeudas() {
-    if (this.clientesId === 0) {
-      alert('Seleccionar el cliente');
-      return;
-    }
+  editDeudas(deudas: any) {
 
-    if (this.productosId === 0) {
-      alert('Seleccionar el producto');
-      return;
-    }
-
-    if (this.montoDeuda === 0) {
+    console.log(deudas);
+    if (this.montoDeuda <= deudas.montoDeuda && this.montoDeuda > 0) {
       alert('Ingrese el Monto de la Deuda');
       return;
     }
-
-    if (this.editMode) {
       this.database
-        .editDeudas(this.clientesId, this.productosId, this.montoDeuda, this.editId, this.fecha)
+        .editDeudas(deudas.idCliente, deudas.productosId, this.montoDeuda, deudas.id,
+          this.fecha.format('Do MM YY'))
         .then((data) => {
+          this.addHistorial(deudas);
           this.montoDeuda = 0;
-          this.editMode = false;
-          this.editId = 0;
           this.selectedProductosId = 0;
           this.selectedClientesId = 0;
-          this.fecha = '';
           alert(data);
-          this.getDeudas();
         });
-    } else {
-      // add
-      this.database
-        .addDeudas(this.clientesId, this.productosId, this.montoDeuda, this.fecha)
-        .then((data) => {
-          this.montoDeuda = 0;
-          this.productosId = 0;
-          this.clientesId = 0;
-          this.fecha = '';
-          alert(data);
-          this.getDeudas();
-        });
-    }
+  }
+
+  addHistorial(deudas: any) {
+    // add
+    this.database
+      .addHistorial(deudas.idCliente, deudas.productosId, this.montoDeuda,
+        this.fecha.format('L'))
+      .then((data) => {
+        this.montoDeuda = 0;
+        this.productosId = 0;
+        this.clientesId = 0;
+        alert(data);
+      });
   }
 
   getDeudas() {
@@ -139,13 +138,15 @@ export class DeudasDetallesPage implements OnInit {
     });
   }
 
-  editDeudas(deudas: any) {
-    this.editMode = true;
-    this.selectedClientesId = deudas.clientesId;
-    this.selectedProductosId = deudas.productosId;
-    this.montoDeuda = deudas.montoDeuda;
-    this.editId = deudas.id;
-    this.fecha = deudas.fecha;
+  getHistorial() {
+    this.database.getHistorial().then((data) => {
+      this.historiales = [];
+      if (data.rows.length > 0) {
+        for (let i = 0; i < data.rows.length; i++) {
+          this.historiales.push(data.rows.item(i));
+        }
+      }
+    });
   }
 
   deleteDeudas(id: number) {
