@@ -16,6 +16,7 @@ export class DeudasPage implements OnInit {
   productosId = 0;
 
   deudas: any = [];
+  historiales: any = [];
   fecha = moment();
   estado = false;
 
@@ -117,6 +118,15 @@ export class DeudasPage implements OnInit {
           this.getDeudas();
         });
       }} else {
+      this.database
+        .addHistorial(this.clientesId, this.productosId, this.montoDeuda,
+          this.fecha.format('L'))
+        .then((data) => {
+          this.montoDeuda = 0;
+          this.productosId = 0;
+          this.clientesId = 0;
+          alert(data);
+        });
       // add
       this.database
         .addDeudas(this.clientesId, this.productosId, this.montoDeuda,
@@ -156,6 +166,19 @@ export class DeudasPage implements OnInit {
       alert(data);
       this.getDeudas();
     });
+  }
+
+  addHistorial(deudas: any) {
+    // add
+    this.database
+      .addHistorial(deudas.idCliente, deudas.productosId, this.montoDeuda,
+        this.fecha.format('L'))
+      .then((data) => {
+        this.montoDeuda = 0;
+        this.productosId = 0;
+        this.clientesId = 0;
+        alert(data);
+      });
   }
 
 }

@@ -175,7 +175,7 @@ export class DatabaseService {
     return this.databaseObj
       .executeSql(
         `SELECT deudas.id, deudas.productosId,
-        deudas.clientesid as idCliente,
+        deudas.clientesid,
         deudas.monto as monto,
         clientes.name as clientes,
         productos.name as productos, deudas.fecha as fecha
@@ -197,7 +197,6 @@ export class DatabaseService {
          VALUES ('${clientesId}', ${productosId}, ${monto},'${fecha}')`,
         []
       )
-      .then(() => 'Historial Creado')
       .catch((e) => 'error al crear historial' + JSON.stringify(e));
   }
 
@@ -209,7 +208,7 @@ export class DatabaseService {
         historial.montos as montos,
         clientes.name as clientes,
         productos.name as productos, historial.fechas as fechas
-        FROM deudas
+        FROM historial
         JOIN productos ON productos.id = historial.idProducto
         JOIN clientes ON  clientes.id = historial.idCliente
         ORDER BY clientes ASC`,

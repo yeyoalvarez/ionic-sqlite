@@ -9,13 +9,13 @@
   <ion-list>
     <ion-item-sliding *ngFor="let deuda of deudas" >
       <ion-item-options side="start">
-        <ion-item-option [routerLink]="['/deudas-detalles',deuda.id]">Detalles</ion-item-option>
+        <ion-item-option [routerLink]="['/deudas-detalles',deuda.clientesId]">Detalles</ion-item-option>
       </ion-item-options>
 
       <ion-grid>
         <ion-row>
           <ion-col col-1 style="background-color: lightskyblue">
-            Cliente
+            Cliente {{deuda.clientesId}}
           </ion-col>
           <ion-col col-1 style="background-color: lightskyblue">
             Producto

@@ -16,6 +16,7 @@ export class DeudasDetallesPage implements OnInit {
   url = 'https://api.whatsapp.com/send?phone='+this.paisCodigo;
 
   id: string;
+  idrecibido: string;
   clientes: any = [];
   clientesId = 0;
   productosId = 0;
@@ -47,24 +48,30 @@ export class DeudasDetallesPage implements OnInit {
     this.getProductos();
     this.getClientes();
     this.getDeudas();
+    this.getHistorial();
   }
 
   ngOnInit() {
-    this.id = this.activatedRoute.snapshot.paramMap.get('id');
-    console.log(this.id);
+    this.idrecibido = this.activatedRoute.snapshot.paramMap.get('id');
+    console.log('dato recibido');
+    console.log(this.idrecibido);
   }
 
-  llamarDato(){
+  getIdDeuda(){
     return Number(this.id);
+  }
+
+  getIdcliente(){
+    return Number(this.idrecibido);
   }
 
   ionViewWillEnter() {
     this.getDeudas();
     this.getHistorial();
+    console.log('ionChange', this.historiales);
   }
 
   cambioFecha(event){
-    console.log('ionChange', event);
     console.log('Date', new Date (event.detail.value.format('Do MM YY')));
 
   }
@@ -161,7 +168,5 @@ export class DeudasDetallesPage implements OnInit {
       alert('Guardado en el telefono');
       }).catch(e => console.log(e));
   }
-
-
 
 }
