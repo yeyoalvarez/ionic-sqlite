@@ -8,18 +8,16 @@
 
   <ion-list>
 
-    {{this.idrecibido}}
-    {{idrecibido}}
 
     <ion-item-sliding *ngFor="let deuda of historiales" >
       <ion-item-sliding *ngFor="let cliente of clientes">
 
-        <ng-container *ngIf="deuda.clientesId === getIdcliente()">
+        <ng-container *ngIf="deuda.idCliente === getIdcliente() && getIdcliente() === cliente.id">
 
             <ion-grid>
               <ion-row>
                 <p>
-                  Cliente:   {{ deuda.cliente }}<br />
+                  Cliente:   {{ deuda.clientes }}<br />
                   Producto:  {{ deuda.productos }} <br/>
                   Fecha:     {{ deuda.fechas }}<br/>
                   Deuda:{{ moneda(deuda.montos) }}

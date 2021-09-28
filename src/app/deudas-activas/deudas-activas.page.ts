@@ -35,7 +35,6 @@ export class DeudasActivasPage implements OnInit {
   items: any[] = [];
 
   constructor(public database: DatabaseService,
-              private navCtrl: NavController,
               public modalCtrl: ModalController) {
     this.database.createDatabase().then(() => {
       // will call get categories

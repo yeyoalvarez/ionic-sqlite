@@ -45,20 +45,12 @@ export class DeudasDetallesPage implements OnInit {
               private activatedRoute: ActivatedRoute,
               private screenshot: Screenshot,
               private androidPermissions: AndroidPermissions) {
-    this.getProductos();
     this.getClientes();
-    this.getDeudas();
     this.getHistorial();
   }
 
   ngOnInit() {
     this.idrecibido = this.activatedRoute.snapshot.paramMap.get('id');
-    console.log('dato recibido');
-    console.log(this.idrecibido);
-  }
-
-  getIdDeuda(){
-    return Number(this.id);
   }
 
   getIdcliente(){
@@ -66,9 +58,8 @@ export class DeudasDetallesPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    this.getDeudas();
     this.getHistorial();
-    console.log('ionChange', this.historiales);
+    this.getClientes();
   }
 
   cambioFecha(event){
@@ -103,15 +94,19 @@ export class DeudasDetallesPage implements OnInit {
   }
 
   editDeudas(deudas: any) {
-
     console.log(deudas);
-    if (this.montoDeuda <= deudas.montoDeuda && this.montoDeuda > 0) {
-      alert('Ingrese el Monto de la Deuda');
+    console.log(this.montoDeuda);
+    if (this.montoDeuda > deudas.montos) {
+      alert('error al ingresar monto');
+      return;
+    }
+    if (this.montoDeuda < 1) {
+      alert('error al ingresar monto');
       return;
     }
       this.database
         .editDeudas(deudas.idCliente, deudas.productosId, this.montoDeuda, deudas.id,
-          this.fecha.format('Do MM YY'))
+          moment().format('L'))
         .then((data) => {
           this.addHistorial(deudas);
           this.montoDeuda = 0;
@@ -122,10 +117,9 @@ export class DeudasDetallesPage implements OnInit {
   }
 
   addHistorial(deudas: any) {
-    // add
     this.database
-      .addHistorial(deudas.idCliente, deudas.productosId, this.montoDeuda,
-        this.fecha.format('L'))
+      .addHistorial(deudas.idCliente, deudas.idProducto, this.montoDeuda,
+        moment().format('L'))
       .then((data) => {
         this.montoDeuda = 0;
         this.productosId = 0;
