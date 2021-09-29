@@ -14,6 +14,9 @@ export class DeudasPage implements OnInit {
   clientes: any = [];
   clientesId = 0;
   productosId = 0;
+  idDeuda: any = [];
+  id = 0;
+  auxId =0;
 
   deudas: any = [];
   historiales: any = [];
@@ -35,6 +38,7 @@ export class DeudasPage implements OnInit {
     this.getProductos();
     this.getClientes();
     this.getDeudas();
+    this.getLastDeuda();
   }
 
 
@@ -47,9 +51,16 @@ export class DeudasPage implements OnInit {
 
   }
 
+  ionViewWillEnter() {
+    this.getLastDeuda();
+  }
+
+  getId(x){
+    this.auxId = Number(x);
+  }
+
   portChangeC(event: {
-    component: IonicSelectableComponent,
-    value: any;
+    component: IonicSelectableComponent;value: any;
   }) {
     console.log(event.value);
     this.aux = event.value;
@@ -57,8 +68,7 @@ export class DeudasPage implements OnInit {
   }
 
   portChangeP(event: {
-    component: IonicSelectableComponent,
-    value: any;
+    component: IonicSelectableComponent;value: any;
   }) {
     console.log(event.value);
     this.aux = event.value;
@@ -118,8 +128,9 @@ export class DeudasPage implements OnInit {
           this.getDeudas();
         });
       }} else {
+      this.getLastDeuda();
       this.database
-        .addHistorial(this.clientesId, this.productosId, this.montoDeuda,
+        .addHistorial(this.clientesId, this.productosId,this.auxId+1,this.montoDeuda,
           this.fecha.format('L'))
         .then((data) => {
           this.montoDeuda = 0;
@@ -168,18 +179,15 @@ export class DeudasPage implements OnInit {
     });
   }
 
-  addHistorial(deudas: any) {
-    // add
-    this.database
-      .addHistorial(deudas.idCliente, deudas.productosId, this.montoDeuda,
-        this.fecha.format('L'))
-      .then((data) => {
-        this.montoDeuda = 0;
-        this.productosId = 0;
-        this.clientesId = 0;
-        alert(data);
-      });
+  getLastDeuda() {
+    this.database.getLastDeuda().then((data) => {
+      this.idDeuda = [];
+      if (data.rows.length > 0) {
+        for (let i = 0; i < data.rows.length; i++) {
+          this.idDeuda.push(data.rows.item(i));
+        }
+      }
+    });
   }
-
 }
 

@@ -52,8 +52,9 @@ export class DatabaseService {
     );
 
     await this.databaseObj.executeSql(
-      `CREATE TABLE IF NOT EXISTS ${this.tables.historial} (id INTEGER PRIMARY KEY AUTOINCREMENT,
+      `CREATE TABLE IF NOT EXISTS historial(id INTEGER PRIMARY KEY AUTOINCREMENT,
       idProducto INTEGER UNSIGNED NOT NULL, idCliente INTEGER UNSIGNED NOT NULL,
+      idDeuda INTEGER UNSIGNED NOT NULL, estado BOOLEAN,
       montos INTEGER UNSIGNED NOT NULL, fechas VARCHAR(255))`,
       []
     );
@@ -164,7 +165,7 @@ export class DatabaseService {
     return this.databaseObj
       .executeSql(
         `INSERT INTO ${this.tables.deudas} (clientesId, productosId, monto, fecha, estado)
-         VALUES ('${clientesId}', ${productosId}, ${monto},'${fecha}',TRUE)`,
+         VALUES ('${clientesId}', ${productosId}, ${monto},'${fecha}','TRUE')`,
         []
       )
       .then(() => 'deuda creada')
@@ -178,11 +179,12 @@ export class DatabaseService {
         deudas.clientesid,
         deudas.monto as monto,
         clientes.name as clientes,
-        productos.name as productos, deudas.fecha as fecha
+        productos.name as productos, deudas.fecha as fecha,
+        clientes.telefono as telefono
         FROM deudas
         JOIN productos ON productos.id = deudas.productosId
         JOIN clientes ON  clientes.id = deudas.clientesid
-        where deudas.estado == true
+        where deudas.estado =='TRUE'
         ORDER BY clientes ASC`,
         []
       )
@@ -208,11 +210,11 @@ export class DatabaseService {
       .catch((e) => 'error al eliminar deuda ' + JSON.stringify(e));
   }
 
-  async addHistorial(clientesId: number, productosId: number, monto: number, fecha: string) {
+  async addHistorial(clientesId: number, productosId: number, idDeuda: number, monto: number, fecha: string) {
     return this.databaseObj
       .executeSql(
-        `INSERT INTO ${this.tables.historial} (idCliente, idProducto, montos, fechas)
-         VALUES ('${clientesId}', ${productosId}, ${monto},'${fecha}')`,
+        `INSERT INTO ${this.tables.historial} (idCliente, idProducto, idDeuda, montos, fechas,estado)
+         VALUES ('${clientesId}', ${productosId},${idDeuda}, ${monto},'${fecha}','TRUE')`,
         []
       )
       .then(() => 'Historial actualizado')
@@ -222,11 +224,13 @@ export class DatabaseService {
   async getHistorial() {
     return this.databaseObj
       .executeSql(
-        `SELECT historial.id, historial.idProducto,
+        `SELECT historial.id, historial.idProducto, historial.idDeuda,
         historial.idCliente,
         historial.montos as montos,
         clientes.name as clientes,
-        productos.name as productos, historial.fechas as fechas
+        productos.name as productos, historial.fechas as fechas,
+        clientes.telefono as telefono,
+        historial.estado AS estado
         FROM historial
         JOIN productos ON productos.id = historial.idProducto
         JOIN clientes ON  clientes.id = historial.idCliente
@@ -237,4 +241,13 @@ export class DatabaseService {
       .catch((e) => 'error al obtener historial' + JSON.stringify(e));
   }
 
+  async getLastDeuda() {
+    return this.databaseObj
+      .executeSql(
+        `SELECT MAX(id) AS id from deudas`,
+        []
+      )
+      .then((res) => res)
+      .catch((e) => 'error al obtener deudas' + JSON.stringify(e));
+  }
 }

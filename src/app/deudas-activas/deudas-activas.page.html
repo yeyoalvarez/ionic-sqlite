@@ -9,7 +9,7 @@
   <ion-list>
     <ion-item-sliding *ngFor="let deuda of deudas" >
       <ion-item-options side="start">
-        <ion-item-option [routerLink]="['/deudas-detalles',deuda.clientesId]">Detalles</ion-item-option>
+        <ion-item-option [routerLink]="['/deudas-detalles',deuda.id]">Detalles</ion-item-option>
       </ion-item-options>
 
       <ion-grid>
@@ -39,9 +39,8 @@
         <!-- producto si no aparece ver el nombre en el insert a la tabla -->
 
       <ion-item-options side="end">
-        <ion-item-option color="danger" (click)="deleteDeudas(deuda.id)"
-        >Eliminar</ion-item-option
-        >
+        <ion-item-option color="danger" (click)="deleteDeudas(deuda.id)">Eliminar
+        </ion-item-option>
       </ion-item-options>
 
     </ion-item-sliding>

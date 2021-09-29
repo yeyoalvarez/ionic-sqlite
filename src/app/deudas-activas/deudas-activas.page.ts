@@ -19,6 +19,7 @@ export class DeudasActivasPage implements OnInit {
 
   deudas: any = [];
   fecha: string;
+  idVariable = 0;
 
 
   seleccionarCli = 0;
@@ -53,6 +54,7 @@ export class DeudasActivasPage implements OnInit {
   moneda(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   }
+
 
   getProductos() {
     this.database.getProductos().then((data) => {

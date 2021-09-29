@@ -53,7 +53,7 @@ export class DeudasDetallesPage implements OnInit {
     this.idrecibido = this.activatedRoute.snapshot.paramMap.get('id');
   }
 
-  getIdcliente(){
+  getDeuda(){
     return Number(this.idrecibido);
   }
 
@@ -105,7 +105,7 @@ export class DeudasDetallesPage implements OnInit {
       return;
     }
       this.database
-        .editDeudas(deudas.idCliente, deudas.productosId, this.montoDeuda, deudas.id,
+        .editDeudas(deudas.idCliente, deudas.productosId, deudas.montos-this.montoDeuda, deudas.id,
           moment().format('L'))
         .then((data) => {
           this.addHistorial(deudas);
@@ -118,7 +118,7 @@ export class DeudasDetallesPage implements OnInit {
 
   addHistorial(deudas: any) {
     this.database
-      .addHistorial(deudas.idCliente, deudas.idProducto, this.montoDeuda,
+      .addHistorial(deudas.idCliente, deudas.idProducto, deudas.id,deudas.montos-this.montoDeuda,
         moment().format('L'))
       .then((data) => {
         this.montoDeuda = 0;
