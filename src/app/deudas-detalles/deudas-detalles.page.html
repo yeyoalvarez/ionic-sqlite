@@ -10,8 +10,7 @@
 
 
     <ion-item-sliding *ngFor="let deuda of historiales" >
-{{this.idrecibido}}
-      {{idrecibido}}
+
         <ng-container *ngIf="deuda.idDeuda === getDeuda()">
 
             <ion-grid>
@@ -34,8 +33,9 @@
                 <ion-input [(ngModel)]="montoDeuda"></ion-input>
               </ion-item>
 
+              <ng-container *ngIf="deuda.idDeuda === getDeuda()">
               <ion-button expand="block" (click)="editDeudas(deuda)">Realizar Pago</ion-button>
-
+              </ng-container>
             </ion-list>
 
         </ng-container>

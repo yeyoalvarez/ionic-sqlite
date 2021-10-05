@@ -250,4 +250,17 @@ export class DatabaseService {
       .then((res) => res)
       .catch((e) => 'error al obtener deudas' + JSON.stringify(e));
   }
+
+  async getLastMonto(idDeuda: number) {
+    return this.databaseObj
+      .executeSql(
+        `SELECT min(montos) AS monto
+        from historial
+        WHERE id = ${idDeuda}`,
+        []
+      )
+      .then((res) => res)
+      .catch((e) => 'error al obtener deudas' + JSON.stringify(e));
+  }
+
 }

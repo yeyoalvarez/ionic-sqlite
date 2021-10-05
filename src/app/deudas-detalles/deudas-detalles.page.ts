@@ -22,6 +22,7 @@ export class DeudasDetallesPage implements OnInit {
   productosId = 0;
 
   deudas: any = [];
+  lastDeudas: any = [];
   historiales: any = [];
   //fecha: string;
   fecha = moment();
@@ -57,9 +58,13 @@ export class DeudasDetallesPage implements OnInit {
     return Number(this.idrecibido);
   }
 
+  getMonto(){
+    return Number(this.idrecibido);
+  }
+
   ionViewWillEnter() {
     this.getHistorial();
-    this.getClientes();
+    this.getLastDeuda();
   }
 
   cambioFecha(event){
@@ -94,8 +99,6 @@ export class DeudasDetallesPage implements OnInit {
   }
 
   editDeudas(deudas: any) {
-    console.log(deudas);
-    console.log(this.montoDeuda);
     if (this.montoDeuda > deudas.montos) {
       alert('error al ingresar monto');
       return;
@@ -105,7 +108,7 @@ export class DeudasDetallesPage implements OnInit {
       return;
     }
       this.database
-        .editDeudas(deudas.idCliente, deudas.productosId, deudas.montos-this.montoDeuda, deudas.id,
+        .editDeudas(deudas.idCliente, deudas.productosId, deudas.montos-this.montoDeuda, this.getDeuda(),
           moment().format('L'))
         .then((data) => {
           this.addHistorial(deudas);
@@ -118,7 +121,7 @@ export class DeudasDetallesPage implements OnInit {
 
   addHistorial(deudas: any) {
     this.database
-      .addHistorial(deudas.idCliente, deudas.idProducto, deudas.id,deudas.montos-this.montoDeuda,
+      .addHistorial(deudas.idCliente, deudas.idProducto, this.getDeuda(),deudas.montos-this.montoDeuda,
         moment().format('L'))
       .then((data) => {
         this.montoDeuda = 0;
@@ -161,6 +164,17 @@ export class DeudasDetallesPage implements OnInit {
     this.screenshot.save('jpg', 80, 'deuda.jpg').then(() => {
       alert('Guardado en el telefono');
       }).catch(e => console.log(e));
+  }
+
+  getLastDeuda() {
+    this.database.getLastDeuda().then((data) => {
+      this.lastDeudas = [];
+      if (data.rows.length > 0) {
+        for (let i = 0; i < data.rows.length; i++) {
+          this.lastDeudas.push(data.rows.item(i));
+        }
+      }
+    });
   }
 
 }
