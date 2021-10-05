@@ -22,8 +22,9 @@
       </ionic-selectable>
     </ion-item>
 
-    <ion-item-sliding     *ngFor="let deuda of idDeuda" >
+    <ion-item-sliding *ngFor="let deuda of idDeuda" >
       <script > getId(deuda.id)</script>
+      {{getId(deuda.id)}}
     </ion-item-sliding>
 
 

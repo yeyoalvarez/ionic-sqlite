@@ -38,7 +38,6 @@ export class DeudasPage implements OnInit {
     this.getProductos();
     this.getClientes();
     this.getDeudas();
-    this.getLastDeuda();
   }
 
 
@@ -128,8 +127,7 @@ export class DeudasPage implements OnInit {
           this.getDeudas();
         });
       }} else {
-      this.getLastDeuda();
-      this.database
+this.database
         .addHistorial(this.clientesId, this.productosId,this.auxId+1,this.montoDeuda,
           this.fecha.format('L'))
         .then((data) => {

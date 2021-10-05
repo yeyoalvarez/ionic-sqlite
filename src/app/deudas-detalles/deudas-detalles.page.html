@@ -10,7 +10,8 @@
 
 
     <ion-item-sliding *ngFor="let deuda of historiales" >
-
+{{this.idrecibido}}
+      {{idrecibido}}
         <ng-container *ngIf="deuda.idDeuda === getDeuda()">
 
             <ion-grid>
@@ -18,10 +19,10 @@
                   Cliente:   {{ deuda.clientes }}<br />
                   Producto:  {{ deuda.productos }} <br/>
                   Fecha:     {{ deuda.fechas }}<br/>
-                  Deuda:{{ moneda(deuda.montos) }}
+                  Deuda:{{ moneda(deuda.montos) }}<br/>
+                  Telefono: {{paisCodigo}} {{deuda.telefono}}
                 </p>
             </ion-grid>
-              <p>Telefono: {{paisCodigo}} {{deuda.telefono}}</p>
               <ion-button href={{url+deuda.telefono}} color="success">
                 <ion-icon name="logo-whatsapp"></ion-icon>
               </ion-button>
