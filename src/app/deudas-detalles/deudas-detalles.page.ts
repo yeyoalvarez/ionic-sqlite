@@ -23,6 +23,7 @@ export class DeudasDetallesPage implements OnInit {
 
   deudas: any = [];
   lastDeudas: any = [];
+  lastMonto: any = [];
   historiales: any = [];
   //fecha: string;
   fecha = moment();
@@ -64,7 +65,6 @@ export class DeudasDetallesPage implements OnInit {
 
   ionViewWillEnter() {
     this.getHistorial();
-    this.getLastDeuda();
   }
 
   cambioFecha(event){
@@ -151,6 +151,10 @@ export class DeudasDetallesPage implements OnInit {
         }
       }
     });
+    console.log(this.idrecibido);
+    this.getLastMontos();
+    console.log('monto');
+    console.log(this.lastMonto);
   }
 
   deleteDeudas(id: number) {
@@ -174,6 +178,15 @@ export class DeudasDetallesPage implements OnInit {
           this.lastDeudas.push(data.rows.item(i));
         }
       }
+    });
+  }
+
+  getLastMontos() {
+    this.database.getLastMonto(Number(this.idrecibido)).then((data) => {
+      this.lastMonto = [];
+        for (let i = 0; i < data.rows.length; i++) {
+          this.lastMonto.push(data.rows.item(i));
+        }
     });
   }
 

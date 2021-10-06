@@ -256,7 +256,7 @@ export class DatabaseService {
       .executeSql(
         `SELECT min(montos) AS monto
         from historial
-        WHERE id = ${idDeuda}`,
+        WHERE idDeuda = ${idDeuda}`,
         []
       )
       .then((res) => res)
