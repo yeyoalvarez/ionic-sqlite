@@ -11,10 +11,8 @@
 
     <ion-item-sliding *ngFor="let deuda of historiales" >
         <ng-container *ngIf="deuda.idDeuda === getDeuda()">
-          <ion-item-sliding *ngFor="let monto of lastMonto">
-            getlastmon: monto
-          </ion-item-sliding>
-            <ion-grid>
+
+          <ion-grid>
                 <p>
                   Cliente:   {{ deuda.clientes }}<br />
                   Producto:  {{ deuda.productos }} <br/>
@@ -22,6 +20,7 @@
                   Deuda:{{ moneda(deuda.montos) }}<br/>
                   Telefono: {{paisCodigo}} {{deuda.telefono}}<br/>
                 </p>
+            mmon {{lastMonto}}
             </ion-grid>
               <ion-button href={{url+deuda.telefono}} color="success">
                 <ion-icon name="logo-whatsapp"></ion-icon>
@@ -36,7 +35,6 @@
               <ion-button expand="block" (click)="editDeudas(deuda)">Realizar Pago</ion-button>
               </ng-container>
             </ion-list>
-
         </ng-container>
     </ion-item-sliding>
   </ion-list>

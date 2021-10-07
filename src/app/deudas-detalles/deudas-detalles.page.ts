@@ -24,6 +24,7 @@ export class DeudasDetallesPage implements OnInit {
   deudas: any = [];
   lastDeudas: any = [];
   lastMonto: any = [];
+  aux = 0;
   historiales: any = [];
   //fecha: string;
   fecha = moment();
@@ -33,7 +34,6 @@ export class DeudasDetallesPage implements OnInit {
   seleccionarCli = 0;
   seleccionarPro = 0;
   productos: any = [];
-  aux: any = [];
 
   editMode = false;
   selectedProductosId = 0;
@@ -53,6 +53,7 @@ export class DeudasDetallesPage implements OnInit {
 
   ngOnInit() {
     this.idrecibido = this.activatedRoute.snapshot.paramMap.get('id');
+    this.getLastMonto();
   }
 
   getDeuda(){
@@ -151,10 +152,8 @@ export class DeudasDetallesPage implements OnInit {
         }
       }
     });
-    console.log(this.idrecibido);
-    this.getLastMontos();
-    console.log('monto');
-    console.log(this.lastMonto);
+    console.log('historial');
+    console.log(this.historiales);
   }
 
   deleteDeudas(id: number) {
@@ -181,13 +180,15 @@ export class DeudasDetallesPage implements OnInit {
     });
   }
 
-  getLastMontos() {
+  getLastMonto() {
+    console.log('pasa por aca');
+    console.log(Number(this.idrecibido));
     this.database.getLastMonto(Number(this.idrecibido)).then((data) => {
-      this.lastMonto = [];
-        for (let i = 0; i < data.rows.length; i++) {
-          this.lastMonto.push(data.rows.item(i));
-        }
-    });
+          this.lastMonto.push(data.rows.item(0));
+      });
+    console.log(this.lastMonto);
+
+
   }
 
 }

@@ -260,7 +260,7 @@ export class DatabaseService {
         []
       )
       .then((res) => res)
-      .catch((e) => 'error al obtener deudas' + JSON.stringify(e));
+      .catch((e) => 'error al obtener ultimo monto' + JSON.stringify(e));
   }
 
 }
