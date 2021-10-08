@@ -20,6 +20,8 @@ export class DeudasDetallesPage implements OnInit {
   clientes: any = [];
   clientesId = 0;
   productosId = 0;
+  ultimoMonto = 0;
+  ciclos = 0;
 
   deudas: any = [];
   lastDeudas: any = [];
@@ -66,6 +68,11 @@ export class DeudasDetallesPage implements OnInit {
 
   ionViewWillEnter() {
     this.getHistorial();
+  }
+
+  sumar(){
+    this.ciclos++;
+    return this.ciclos;
   }
 
   cambioFecha(event){
@@ -181,13 +188,10 @@ export class DeudasDetallesPage implements OnInit {
   }
 
   getLastMonto() {
-    console.log('pasa por aca');
-    console.log(Number(this.idrecibido));
     this.database.getLastMonto(Number(this.idrecibido)).then((data) => {
           this.lastMonto.push(data.rows.item(0));
+        this.ultimoMonto = this.lastMonto[0].monto;
       });
-    console.log(this.lastMonto);
-
 
   }
 
