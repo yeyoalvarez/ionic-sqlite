@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {DatabaseService} from '../database.service';
 import {ActivatedRoute} from '@angular/router';
 import { Screenshot } from '@ionic-native/screenshot/ngx';
@@ -21,7 +21,6 @@ export class DeudasDetallesPage implements OnInit {
   clientesId = 0;
   productosId = 0;
   ultimoMonto = 0;
-  ciclos = 0;
 
   deudas: any = [];
   lastDeudas: any = [];
@@ -31,6 +30,7 @@ export class DeudasDetallesPage implements OnInit {
   //fecha: string;
   fecha = moment();
   estado = false;
+  permiso = true;
 
 
   seleccionarCli = 0;
@@ -48,17 +48,24 @@ export class DeudasDetallesPage implements OnInit {
   constructor(public database: DatabaseService,
               private activatedRoute: ActivatedRoute,
               private screenshot: Screenshot,
-              private androidPermissions: AndroidPermissions) {
-    this.getClientes();
-    this.getHistorial();
+              private androidPermissions: AndroidPermissions,
+              private cdRef: ChangeDetectorRef) {
   }
 
   ngOnInit() {
     this.idrecibido = this.activatedRoute.snapshot.paramMap.get('id');
-    this.getLastMonto();
+    this.getHistorial();
   }
 
-  getDeuda(){
+  ionViewWillEnter() {
+    this.getHistorial();
+  }
+
+  getDato(){
+    return 0;
+  }
+
+  getIdDeuda(){
     return Number(this.idrecibido);
   }
 
@@ -66,13 +73,8 @@ export class DeudasDetallesPage implements OnInit {
     return Number(this.idrecibido);
   }
 
-  ionViewWillEnter() {
-    this.getHistorial();
-  }
-
-  sumar(){
-    this.ciclos++;
-    return this.ciclos;
+  ciclos(){
+    this.permiso = false;
   }
 
   cambioFecha(event){
@@ -82,28 +84,6 @@ export class DeudasDetallesPage implements OnInit {
 
   moneda(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  }
-
-  getProductos() {
-    this.database.getProductos().then((data) => {
-      this.productos = [];
-      if (data.rows.length > 0) {
-        for (let i = 0; i < data.rows.length; i++) {
-          this.productos.push(data.rows.item(i));
-        }
-      }
-    });
-  }
-
-  getClientes() {
-    this.database.getClientes().then((data) => {
-      this.clientes = [];
-      if (data.rows.length > 0) {
-        for (let i = 0; i < data.rows.length; i++) {
-          this.clientes.push(data.rows.item(i));
-        }
-      }
-    });
   }
 
   editDeudas(deudas: any) {
@@ -116,7 +96,7 @@ export class DeudasDetallesPage implements OnInit {
       return;
     }
       this.database
-        .editDeudas(deudas.idCliente, deudas.productosId, deudas.montos-this.montoDeuda, this.getDeuda(),
+        .editDeudas(deudas.idCliente, deudas.productosId, deudas.montos-this.montoDeuda, this.getIdDeuda(),
           moment().format('L'))
         .then((data) => {
           this.addHistorial(deudas);
@@ -129,7 +109,7 @@ export class DeudasDetallesPage implements OnInit {
 
   addHistorial(deudas: any) {
     this.database
-      .addHistorial(deudas.idCliente, deudas.idProducto, this.getDeuda(),deudas.montos-this.montoDeuda,
+      .addHistorial(deudas.idCliente, deudas.idProducto, this.getIdDeuda(),deudas.montos-this.montoDeuda,
         moment().format('L'))
       .then((data) => {
         this.montoDeuda = 0;
@@ -158,6 +138,8 @@ export class DeudasDetallesPage implements OnInit {
           this.historiales.push(data.rows.item(i));
         }
       }
+      console.log('historial dentro');
+      console.log(this.historiales);
     });
     console.log('historial');
     console.log(this.historiales);

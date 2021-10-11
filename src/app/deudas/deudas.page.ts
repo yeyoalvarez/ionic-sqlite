@@ -112,11 +112,12 @@ export class DeudasPage implements OnInit {
       return;
     }
 
+    console.log(this.fecha);
     if (this.editMode) {
       if (this.estado === true){
       this.database
         .editDeudas(this.clientesId, this.productosId, this.montoDeuda, this.editId,
-          this.fecha.format('Do MM YY'))
+          this.fecha.format('L'))
         .then((data) => {
           this.montoDeuda = 0;
           this.editMode = false;

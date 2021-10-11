@@ -9,23 +9,24 @@
   <ion-list>
 
 
-    <ion-item-sliding *ngFor="let deuda of historiales" >
-        <ng-container *ngIf="deuda.idDeuda === getDeuda()">
+    <ion-item-sliding *ngFor="let historial of historiales" >
+        <ng-container *ngIf="historial.idDeuda === getIdDeuda()">
 
-          <ng-container *ngIf=" sumar() === 1 ">
-            Cliente:   {{ deuda.clientes }}<br />
-            Producto:  {{ deuda.productos }} <br/>
-          </ng-container>
+          <ion-list *ngIf="permiso">
+            Cliente:   {{ historial.clientes }}<br/>
+            Producto:  {{ historial.productos }} <br/>
+            {{ciclos()}}
+          </ion-list>
 
           <ion-grid>
                 <p>
-                  Fecha:     {{ deuda.fechas }}<br/>
-                  Deuda:{{ moneda(deuda.montos) }}<br/>
+                  Fecha:     {{ historial.fechas }}<br/>
+                  Deuda:{{ moneda(historial.montos) }}<br/>
                 </p>
             </ion-grid>
 
-          <ng-container *ngIf="deuda.montos === ultimoMonto">
-            <p>Telefono: {{paisCodigo}} {{deuda.telefono}}<br/></p>
+          <ng-container *ngIf="historial.montos === ultimoMonto">
+            <p>Telefono: {{paisCodigo}} {{historial.telefono}}<br/></p>
               <ion-button href={{url+deuda.telefono}} color="success">
                 <ion-icon name="logo-whatsapp"></ion-icon>
               </ion-button>
@@ -35,8 +36,8 @@
                 <ion-label position="floating">Añadir Monto</ion-label>
                 <ion-input [(ngModel)]="montoDeuda"></ion-input>
               </ion-item>
-              <ng-container *ngIf="deuda.idDeuda === getDeuda()">
-              <ion-button expand="block" (click)="editDeudas(deuda)">Realizar Pago</ion-button>
+              <ng-container *ngIf="historial.idDeuda === getIdDeuda()">
+              <ion-button expand="block" (click)="editDeudas(historial)">Realizar Pago</ion-button>
               </ng-container>
             </ion-list>
           </ng-container>
