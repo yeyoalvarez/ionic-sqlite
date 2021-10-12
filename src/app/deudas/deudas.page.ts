@@ -16,7 +16,7 @@ export class DeudasPage implements OnInit {
   productosId = 0;
   idDeuda: any = [];
   id = 0;
-  auxId =0;
+  auxId = 0;
 
   deudas: any = [];
   historiales: any = [];
@@ -42,7 +42,9 @@ export class DeudasPage implements OnInit {
 
 
 
-  ngOnInit() {}
+  ngOnInit() {
+
+  }
 
   cambioFecha(event){
     console.log('ionChange', event);
@@ -109,7 +111,6 @@ export class DeudasPage implements OnInit {
       return;
     }
 
-    console.log(this.fecha);
     if (this.editMode) {
       if (this.estado === true){
       this.database
@@ -122,7 +123,6 @@ export class DeudasPage implements OnInit {
           this.selectedProductosId = 0;
           this.selectedClientesId = 0;
           alert(data);
-          this.getDeudas();
         });
       }} else {
       this.database
@@ -133,9 +133,11 @@ export class DeudasPage implements OnInit {
           this.productosId = 0;
           this.clientesId = 0;
           alert(data);
-          this.getDeudas();
         });
-      this.getLastDeuda();
+
+      console.log('funcion await');
+      this.getIdMax();
+
       this.database
         .addHistorial(this.clientesId, this.productosId,this.auxId+1,this.montoDeuda,
           this.fecha.format('L'))
@@ -145,7 +147,6 @@ export class DeudasPage implements OnInit {
           this.clientesId = 0;
           alert(data);
         });
-      // add
 
     }
   }
@@ -181,13 +182,17 @@ export class DeudasPage implements OnInit {
     this.database.getLastDeuda().then((data) => {
       this.idDeuda = [];
           this.idDeuda.push(data.rows.item(0));
-        this.auxId = this.idDeuda[0].id;
-      console.log('idDeuda');
-      console.log(this.idDeuda);
+        return this.idDeuda[0].id;
     });
-    console.log('auxid');
-    console.log(this.auxId);
-    console.log(this.idDeuda);
+  };
+
+  async getIdMax(){
+    try{
+      const datos = await this.getLastDeuda();
+      console.log(datos);
+    }catch (err){
+      console.log(err);
+    }
   }
 
 }

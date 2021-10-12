@@ -159,16 +159,6 @@ export class DeudasDetallesPage implements OnInit {
       }).catch(e => console.log(e));
   }
 
-  getLastDeuda() {
-    this.database.getLastDeuda().then((data) => {
-      this.lastDeudas = [];
-      if (data.rows.length > 0) {
-        for (let i = 0; i < data.rows.length; i++) {
-          this.lastDeudas.push(data.rows.item(i));
-        }
-      }
-    });
-  }
 
   getLastMonto() {
     this.database.getLastMonto(Number(this.idrecibido)).then((data) => {
