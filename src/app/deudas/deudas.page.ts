@@ -51,7 +51,6 @@ export class DeudasPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    this.getLastDeuda();
   }
 
   getId(x){
@@ -61,7 +60,6 @@ export class DeudasPage implements OnInit {
   portChangeC(event: {
     component: IonicSelectableComponent;value: any;
   }) {
-    console.log(event.value);
     this.aux = event.value;
     this.clientesId = this.aux.id;
   }
@@ -69,7 +67,6 @@ export class DeudasPage implements OnInit {
   portChangeP(event: {
     component: IonicSelectableComponent;value: any;
   }) {
-    console.log(event.value);
     this.aux = event.value;
     this.productosId = this.aux.id;
   }
@@ -128,16 +125,6 @@ export class DeudasPage implements OnInit {
           this.getDeudas();
         });
       }} else {
-this.database
-        .addHistorial(this.clientesId, this.productosId,this.auxId+1,this.montoDeuda,
-          this.fecha.format('L'))
-        .then((data) => {
-          this.montoDeuda = 0;
-          this.productosId = 0;
-          this.clientesId = 0;
-          alert(data);
-        });
-      // add
       this.database
         .addDeudas(this.clientesId, this.productosId, this.montoDeuda,
           this.fecha.format('L'))
@@ -148,6 +135,18 @@ this.database
           alert(data);
           this.getDeudas();
         });
+      this.getLastDeuda();
+      this.database
+        .addHistorial(this.clientesId, this.productosId,this.auxId+1,this.montoDeuda,
+          this.fecha.format('L'))
+        .then((data) => {
+          this.montoDeuda = 0;
+          this.productosId = 0;
+          this.clientesId = 0;
+          alert(data);
+        });
+      // add
+
     }
   }
 
@@ -181,12 +180,15 @@ this.database
   getLastDeuda() {
     this.database.getLastDeuda().then((data) => {
       this.idDeuda = [];
-      if (data.rows.length > 0) {
-        for (let i = 0; i < data.rows.length; i++) {
-          this.idDeuda.push(data.rows.item(i));
-        }
-      }
+          this.idDeuda.push(data.rows.item(0));
+        this.auxId = this.idDeuda[0].id;
+      console.log('idDeuda');
+      console.log(this.idDeuda);
     });
+    console.log('auxid');
+    console.log(this.auxId);
+    console.log(this.idDeuda);
   }
+
 }
 

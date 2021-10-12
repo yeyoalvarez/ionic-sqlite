@@ -59,6 +59,7 @@ export class DeudasDetallesPage implements OnInit {
 
   ionViewWillEnter() {
     this.getHistorial();
+    this.getLastMonto();
   }
 
   getDato(){

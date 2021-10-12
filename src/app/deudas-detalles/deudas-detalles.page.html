@@ -15,7 +15,6 @@
           <ion-list *ngIf="permiso">
             Cliente:   {{ historial.clientes }}<br/>
             Producto:  {{ historial.productos }} <br/>
-            {{ciclos()}}
           </ion-list>
 
           <ion-grid>
@@ -27,7 +26,7 @@
 
           <ng-container *ngIf="historial.montos === ultimoMonto">
             <p>Telefono: {{paisCodigo}} {{historial.telefono}}<br/></p>
-              <ion-button href={{url+deuda.telefono}} color="success">
+              <ion-button href={{url+historial.telefono}} color="success">
                 <ion-icon name="logo-whatsapp"></ion-icon>
               </ion-button>
 
