@@ -135,8 +135,11 @@ export class DeudasPage implements OnInit {
           alert(data);
         });
 
+
+      console.log('valor de la promesa?');
+      console.log(this.idDeuda);
       console.log('funcion await');
-      this.getIdMax();
+      console.log(this.getLastDeuda());
 
       this.database
         .addHistorial(this.clientesId, this.productosId,this.auxId+1,this.montoDeuda,
@@ -178,22 +181,17 @@ export class DeudasPage implements OnInit {
     });
   }
 
-  getLastDeuda() {
-    this.database.getLastDeuda().then((data) => {
+ async getLastDeuda() {
+   try{
+    const data = await this.database.getLastDeuda();
       this.idDeuda = [];
           this.idDeuda.push(data.rows.item(0));
         return this.idDeuda[0].id;
-    });
-  };
-
-  async getIdMax(){
-    try{
-      const datos = await this.getLastDeuda();
-      console.log(datos);
     }catch (err){
-      console.log(err);
+    console.log(err);
     }
   }
+
 
 }
 
