@@ -11,12 +11,8 @@
 
     <ion-item-sliding *ngFor="let historial of historiales" >
         <ng-container *ngIf="historial.idDeuda === getIdDeuda()">
-
-          <ion-list *ngIf="permiso">
-            Cliente:   {{ historial.clientes }}<br/>
-            Producto:  {{ historial.productos }} <br/>
-          </ion-list>
-
+               Cliente:   {{ historial.clientes }}<br/>
+               Producto:  {{ historial.productos }} <br/>
           <ion-grid>
                 <p>
                   Fecha:     {{ historial.fechas }}<br/>

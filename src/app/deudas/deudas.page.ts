@@ -113,17 +113,17 @@ export class DeudasPage implements OnInit {
 
     if (this.editMode) {
       if (this.estado === true){
-      this.database
-        .editDeudas(this.clientesId, this.productosId, this.montoDeuda, this.editId,
-          this.fecha.format('L'))
-        .then((data) => {
-          this.montoDeuda = 0;
-          this.editMode = false;
-          this.editId = 0;
-          this.selectedProductosId = 0;
-          this.selectedClientesId = 0;
-          alert(data);
-        });
+        this.database
+          .editDeudas(this.clientesId, this.productosId, this.montoDeuda, this.editId,
+            this.fecha.format('L'))
+          .then((data) => {
+            this.montoDeuda = 0;
+            this.editMode = false;
+            this.editId = 0;
+            this.selectedProductosId = 0;
+            this.selectedClientesId = 0;
+            alert(data);
+          });
       }} else {
       this.database
         .addDeudas(this.clientesId, this.productosId, this.montoDeuda,
@@ -135,14 +135,8 @@ export class DeudasPage implements OnInit {
           alert(data);
         });
 
-
-      console.log('valor de la promesa?');
-      console.log(this.idDeuda);
-      console.log('funcion await');
-      console.log(this.getLastDeuda());
-
       this.database
-        .addHistorial(this.clientesId, this.productosId,this.auxId+1,this.montoDeuda,
+        .addHistorialNuevo(this.clientesId, this.productosId,this.montoDeuda,
           this.fecha.format('L'))
         .then((data) => {
           this.montoDeuda = 0;
@@ -179,17 +173,6 @@ export class DeudasPage implements OnInit {
       alert(data);
       this.getDeudas();
     });
-  }
-
- async getLastDeuda() {
-   try{
-    const data = await this.database.getLastDeuda();
-      this.idDeuda = [];
-          this.idDeuda.push(data.rows.item(0));
-        return this.idDeuda[0].id;
-    }catch (err){
-    console.log(err);
-    }
   }
 
 

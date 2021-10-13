@@ -210,11 +210,11 @@ export class DatabaseService {
       .catch((e) => 'error al eliminar deuda ' + JSON.stringify(e));
   }
 
-  async addHistorial(clientesId: number, productosId: number, idDeuda: number, monto: number, fecha: string) {
+  async addHistorialNuevo(clientesId: number, productosId: number, monto: number, fecha: string) {
     return this.databaseObj
       .executeSql(
         `INSERT INTO ${this.tables.historial} (idCliente, idProducto, idDeuda, montos, fechas,estado)
-         VALUES ('${clientesId}', ${productosId},${idDeuda}, ${monto},'${fecha}','TRUE')`,
+         VALUES ('${clientesId}', ${productosId},(SELECT MAX(id) AS id from deudas), ${monto},'${fecha}','TRUE')`,
         []
       )
       .then(() => 'Historial actualizado')
@@ -241,14 +241,15 @@ export class DatabaseService {
       .catch((e) => 'error al obtener historial' + JSON.stringify(e));
   }
 
-  async getLastDeuda() {
+  async addHistorial(clientesId: number, productosId: number, idDeuda: number, monto: number, fecha: string) {
     return this.databaseObj
       .executeSql(
-        `SELECT MAX(id) AS id from deudas`,
+        `INSERT INTO ${this.tables.historial} (idCliente, idProducto, idDeuda, montos, fechas,estado)
+         VALUES ('${clientesId}', ${productosId},${idDeuda}, ${monto},'${fecha}','TRUE')`,
         []
       )
-      .then((res) => res)
-      .catch((e) => 'error al obtener deudas' + JSON.stringify(e));
+      .then(() => 'Historial actualizado')
+      .catch((e) => 'error al crear historial' + JSON.stringify(e));
   }
 
   async getLastMonto(idDeuda: number) {

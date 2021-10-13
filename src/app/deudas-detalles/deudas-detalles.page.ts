@@ -139,11 +139,7 @@ export class DeudasDetallesPage implements OnInit {
           this.historiales.push(data.rows.item(i));
         }
       }
-      console.log('historial dentro');
-      console.log(this.historiales);
     });
-    console.log('historial');
-    console.log(this.historiales);
   }
 
   deleteDeudas(id: number) {
@@ -165,7 +161,6 @@ export class DeudasDetallesPage implements OnInit {
           this.lastMonto.push(data.rows.item(0));
         this.ultimoMonto = this.lastMonto[0].monto;
       });
-
   }
 
 }
