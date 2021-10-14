@@ -8,6 +8,9 @@
 
   <ion-list>
 
+<ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+  <ion-refresher-content></ion-refresher-content>
+</ion-refresher>
 
     <ion-item-sliding *ngFor="let historial of historiales" >
         <ng-container *ngIf="historial.idDeuda === getIdDeuda()">
@@ -39,12 +42,8 @@
 
         </ng-container>
     </ion-item-sliding>
+
   </ion-list>
-
-  <ion-content side="start">
-    <ion-button (click)="capturaPantalla()"> Screen de Pantalla</ion-button>
-  </ion-content>
-
 
 
 </ion-content>

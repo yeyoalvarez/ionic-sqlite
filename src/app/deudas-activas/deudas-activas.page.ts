@@ -93,21 +93,6 @@ export class DeudasActivasPage implements OnInit {
       alert('Ingrese el Monto de la Deuda');
       return;
     }
-
-    if (this.editMode) {
-      this.database
-        .editDeudas(this.clientesId, this.productosId, this.montoDeuda, this.editId, this.fecha)
-        .then((data) => {
-          this.montoDeuda = 0;
-          this.editMode = false;
-          this.editId = 0;
-          this.selectedProductosId = 0;
-          this.selectedClientesId = 0;
-          this.fecha = '';
-          alert(data);
-          this.getDeudas();
-        });
-    } else {
       // add
       this.database
         .addDeudas(this.clientesId, this.productosId, this.montoDeuda, this.fecha)
@@ -119,7 +104,6 @@ export class DeudasActivasPage implements OnInit {
           alert(data);
           this.getDeudas();
         });
-    }
   }
 
   getDeudas() {

@@ -192,7 +192,7 @@ export class DatabaseService {
       .catch((e) => 'error al obtener deudas' + JSON.stringify(e));
   }
 
-  async editDeudas(clientesId: number, productosId: number, monto: number, id: number, fecha: string) {
+  async editDeudas(monto: number, id: number) {
     return this.databaseObj
       .executeSql(
         `UPDATE ${this.tables.deudas} SET monto = ${monto}
@@ -201,6 +201,17 @@ export class DatabaseService {
       )
       .then(() => 'deuda actualizada')
       .catch((e) => 'error al actualizar deuda ' + JSON.stringify(e));
+  }
+
+  async deudaCancelada(monto: number, id: number) {
+    return this.databaseObj
+      .executeSql(
+        `UPDATE ${this.tables.deudas} SET monto = 0, estado = 'FALSE'
+          WHERE id = ${id} and ${monto} = 0`,
+        []
+      )
+      .then(() => 'Deuda Cancelada')
+      .catch((e) => 'error al cancelar deuda' + JSON.stringify(e));
   }
 
   async deleteDeudas(id: number) {

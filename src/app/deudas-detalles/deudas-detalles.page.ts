@@ -29,7 +29,7 @@ export class DeudasDetallesPage implements OnInit {
   historiales: any = [];
   //fecha: string;
   fecha = moment();
-  estado = false;
+  estadoDeuda = false;
   permiso = true;
 
 
@@ -44,6 +44,8 @@ export class DeudasDetallesPage implements OnInit {
   editId = 0;
 
   items: any[] = [];
+
+
 
   constructor(public database: DatabaseService,
               private activatedRoute: ActivatedRoute,
@@ -78,6 +80,13 @@ export class DeudasDetallesPage implements OnInit {
     this.permiso = false;
   }
 
+  doRefresh(event){
+    setTimeout(() =>{
+      this.getHistorial();
+      event.target.complete();
+    },2000);
+  }
+
   cambioFecha(event){
     console.log('Date', new Date (event.detail.value.format('Do MM YY')));
 
@@ -96,9 +105,13 @@ export class DeudasDetallesPage implements OnInit {
       alert('error al ingresar monto');
       return;
     }
+
+    console.log(this.montoDeuda);
+    console.log('monto a pagar');
+    console.log(deudas.montos);
+    if (Number(deudas.montos) === Number(this.montoDeuda)){
       this.database
-        .editDeudas(deudas.idCliente, deudas.productosId, deudas.montos-this.montoDeuda, this.getIdDeuda(),
-          moment().format('L'))
+        .deudaCancelada(0, this.getIdDeuda())
         .then((data) => {
           this.addHistorial(deudas);
           this.montoDeuda = 0;
@@ -106,6 +119,19 @@ export class DeudasDetallesPage implements OnInit {
           this.selectedClientesId = 0;
           alert(data);
         });
+
+    }else{
+
+      this.database
+        .editDeudas(deudas.montos-this.montoDeuda, this.getIdDeuda())
+        .then((data) => {
+          this.addHistorial(deudas);
+          this.montoDeuda = 0;
+          this.selectedProductosId = 0;
+          this.selectedClientesId = 0;
+          alert(data);
+        });
+    }
   }
 
   addHistorial(deudas: any) {
@@ -148,13 +174,6 @@ export class DeudasDetallesPage implements OnInit {
       this.getDeudas();
     });
   }
-
-  capturaPantalla(){
-    this.screenshot.save('jpg', 80, 'deuda.jpg').then(() => {
-      alert('Guardado en el telefono');
-      }).catch(e => console.log(e));
-  }
-
 
   getLastMonto() {
     this.database.getLastMonto(Number(this.idrecibido)).then((data) => {

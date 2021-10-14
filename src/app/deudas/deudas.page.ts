@@ -114,8 +114,7 @@ export class DeudasPage implements OnInit {
     if (this.editMode) {
       if (this.estado === true){
         this.database
-          .editDeudas(this.clientesId, this.productosId, this.montoDeuda, this.editId,
-            this.fecha.format('L'))
+          .editDeudas(this.montoDeuda, this.editId)
           .then((data) => {
             this.montoDeuda = 0;
             this.editMode = false;
