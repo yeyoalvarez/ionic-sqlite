@@ -13,7 +13,7 @@ import * as moment from 'moment';
 export class DeudasDetallesPage implements OnInit {
 
   paisCodigo = '595';
-  url = 'https://api.whatsapp.com/send?phone='+this.paisCodigo;
+  url = 'https://api.whatsapp.com/send?phone=' + this.paisCodigo;
 
   id: string;
   idrecibido: string;
@@ -27,10 +27,8 @@ export class DeudasDetallesPage implements OnInit {
   lastMonto: any = [];
   aux = 0;
   historiales: any = [];
-  //fecha: string;
   fecha = moment();
-  estadoDeuda = false;
-  permiso = true;
+  valor = 1;
 
 
   seleccionarCli = 0;
@@ -42,9 +40,14 @@ export class DeudasDetallesPage implements OnInit {
   selectedClientesId = 0;
   montoDeuda = 0;
   editId = 0;
+  nombre: any;
+  firstMonto: any = [];
+  primermonto = 0;
+  diferenciaMonto = 0;
+  deudaActual = 0;
+
 
   items: any[] = [];
-
 
 
   constructor(public database: DatabaseService,
@@ -62,33 +65,27 @@ export class DeudasDetallesPage implements OnInit {
   ionViewWillEnter() {
     this.getHistorial();
     this.getLastMonto();
+    this.getFirstMonto();
   }
 
-  getDato(){
-    return 0;
-  }
 
-  getIdDeuda(){
+  getIdDeuda() {
     return Number(this.idrecibido);
   }
 
-  getMonto(){
+  getMonto() {
     return Number(this.idrecibido);
   }
 
-  ciclos(){
-    this.permiso = false;
-  }
-
-  doRefresh(event){
-    setTimeout(() =>{
+  doRefresh(event) {
+    setTimeout(() => {
       this.getHistorial();
       event.target.complete();
-    },2000);
+    }, 2000);
   }
 
-  cambioFecha(event){
-    console.log('Date', new Date (event.detail.value.format('Do MM YY')));
+  cambioFecha(event) {
+    console.log('Date', new Date(event.detail.value.format('Do MM YY')));
 
   }
 
@@ -137,12 +134,11 @@ export class DeudasDetallesPage implements OnInit {
   addHistorial(deudas: any) {
     this.database
       .addHistorial(deudas.idCliente, deudas.idProducto, this.getIdDeuda(),deudas.montos-this.montoDeuda,
-        moment().format('L'))
-      .then((data) => {
+        moment().format('DD/MM/YY'))
+      .then(() => {
         this.montoDeuda = 0;
         this.productosId = 0;
         this.clientesId = 0;
-        alert(data);
       });
   }
 
@@ -182,4 +178,21 @@ export class DeudasDetallesPage implements OnInit {
       });
   }
 
+  getFirstMonto() {
+    this.database.getFirsMonto(Number(this.idrecibido)).then((data) => {
+      this.firstMonto.push(data.rows.item(0));
+      this.primermonto = this.firstMonto[0].monto;
+      this.deudaActual = this.primermonto;
+    });
+  }
+
+  pagoAnterior(x){
+    if (x === this.deudaActual){
+      return 0;
+    }else{
+      this.diferenciaMonto = this.deudaActual-x;
+      this.deudaActual = this.deudaActual - this.diferenciaMonto;
+    }
+    return this.diferenciaMonto;
+  }
 }

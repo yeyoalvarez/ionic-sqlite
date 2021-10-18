@@ -12,16 +12,36 @@
   <ion-refresher-content></ion-refresher-content>
 </ion-refresher>
 
+
+
     <ion-item-sliding *ngFor="let historial of historiales" >
         <ng-container *ngIf="historial.idDeuda === getIdDeuda()">
-               Cliente:   {{ historial.clientes }}<br/>
-               Producto:  {{ historial.productos }} <br/>
-          <ion-grid>
-                <p>
-                  Fecha:     {{ historial.fechas }}<br/>
-                  Deuda:{{ moneda(historial.montos) }}<br/>
-                </p>
-            </ion-grid>
+          <p *ngIf="historial.montos === primermonto">
+            <ion-item>
+              <ion-row>
+                <ion-col size="12">
+                  Cliente: {{historial.clientes}}
+                </ion-col>
+                <ion-col size="12">
+                  Producto: {{historial.productos}}
+                </ion-col>
+              </ion-row>
+            </ion-item>
+          </p>
+
+          <ion-item>
+            <ion-row>
+              <ion-col size="6">
+                Fecha: {{historial.fechas}}
+              </ion-col>
+              <ion-col size="6">
+                Pago: {{moneda(pagoAnterior(historial.montos))}}
+              </ion-col>
+              <ion-col size="7">
+                Deuda: {{ moneda(historial.montos) }}
+              </ion-col>
+            </ion-row>
+          </ion-item>
 
           <ng-container *ngIf="historial.montos === ultimoMonto">
             <p>Telefono: {{paisCodigo}} {{historial.telefono}}<br/></p>

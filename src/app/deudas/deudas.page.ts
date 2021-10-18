@@ -126,7 +126,7 @@ export class DeudasPage implements OnInit {
       }} else {
       this.database
         .addDeudas(this.clientesId, this.productosId, this.montoDeuda,
-          this.fecha.format('L'))
+          this.fecha.format('DD/MM/YY'))
         .then((data) => {
           this.montoDeuda = 0;
           this.productosId = 0;
@@ -136,12 +136,11 @@ export class DeudasPage implements OnInit {
 
       this.database
         .addHistorialNuevo(this.clientesId, this.productosId,this.montoDeuda,
-          this.fecha.format('L'))
-        .then((data) => {
+          this.fecha.format('DD/MM/YY'))
+        .then(() => {
           this.montoDeuda = 0;
           this.productosId = 0;
           this.clientesId = 0;
-          alert(data);
         });
 
     }

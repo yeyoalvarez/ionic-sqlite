@@ -228,7 +228,6 @@ export class DatabaseService {
          VALUES ('${clientesId}', ${productosId},(SELECT MAX(id) AS id from deudas), ${monto},'${fecha}','TRUE')`,
         []
       )
-      .then(() => 'Historial actualizado')
       .catch((e) => 'error al crear historial' + JSON.stringify(e));
   }
 
@@ -259,7 +258,6 @@ export class DatabaseService {
          VALUES ('${clientesId}', ${productosId},${idDeuda}, ${monto},'${fecha}','TRUE')`,
         []
       )
-      .then(() => 'Historial actualizado')
       .catch((e) => 'error al crear historial' + JSON.stringify(e));
   }
 
@@ -267,6 +265,18 @@ export class DatabaseService {
     return this.databaseObj
       .executeSql(
         `SELECT min(montos) AS monto
+        from historial
+        WHERE idDeuda = ${idDeuda}`,
+        []
+      )
+      .then((res) => res)
+      .catch((e) => 'error al obtener ultimo monto' + JSON.stringify(e));
+  }
+
+  async getFirsMonto(idDeuda: number) {
+    return this.databaseObj
+      .executeSql(
+        `SELECT max(montos) AS monto
         from historial
         WHERE idDeuda = ${idDeuda}`,
         []
