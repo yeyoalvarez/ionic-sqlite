@@ -37,7 +37,7 @@
               <ion-col size="6">
                 Pago: {{moneda(pagoAnterior(historial.montos))}}
               </ion-col>
-              <ion-col size="7">
+              <ion-col size="6">
                 Deuda: {{ moneda(historial.montos) }}
               </ion-col>
             </ion-row>
@@ -55,7 +55,7 @@
                 <ion-input [(ngModel)]="montoDeuda"></ion-input>
               </ion-item>
               <ng-container *ngIf="historial.idDeuda === getIdDeuda()">
-              <ion-button expand="block" (click)="editDeudas(historial)">Realizar Pago</ion-button>
+              <ion-button expand="block" (click)="editDeudas(historial)" [routerLink]="['/deudas-activas']">Realizar Pago</ion-button>
               </ng-container>
             </ion-list>
           </ng-container>

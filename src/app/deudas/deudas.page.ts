@@ -20,7 +20,7 @@ export class DeudasPage implements OnInit {
 
   deudas: any = [];
   historiales: any = [];
-  fecha = moment();
+  fecha: any = [];
   estado = false;
 
   seleccionarCli = 0;
@@ -126,7 +126,7 @@ export class DeudasPage implements OnInit {
       }} else {
       this.database
         .addDeudas(this.clientesId, this.productosId, this.montoDeuda,
-          this.fecha.format('DD/MM/YY'))
+          this.fecha)
         .then((data) => {
           this.montoDeuda = 0;
           this.productosId = 0;
@@ -136,7 +136,7 @@ export class DeudasPage implements OnInit {
 
       this.database
         .addHistorialNuevo(this.clientesId, this.productosId,this.montoDeuda,
-          this.fecha.format('DD/MM/YY'))
+          this.fecha)
         .then(() => {
           this.montoDeuda = 0;
           this.productosId = 0;
