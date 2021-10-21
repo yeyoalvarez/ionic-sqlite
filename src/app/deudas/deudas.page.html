@@ -43,9 +43,10 @@
     <ion-item>
       <ion-label>Fecha de la deuda</ion-label>
       <ion-datetime placeholder="DD/MM/YY"
-                    display-format="DD-MM-YY"
+                    display-format="DD-MMM-YY"
                     cancel-text="atras"
-                    [ngModel]="fecha"
+                    [ngModel]="auxfecha.toDateString()"
+                    (ionChange)="cambioFecha($event)"
       ></ion-datetime>
     </ion-item>
 

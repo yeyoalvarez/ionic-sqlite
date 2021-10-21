@@ -21,6 +21,7 @@ export class DeudasPage implements OnInit {
   deudas: any = [];
   historiales: any = [];
   fecha: any = [];
+  auxfecha: Date = new Date();
   estado = false;
 
   seleccionarCli = 0;
@@ -47,9 +48,8 @@ export class DeudasPage implements OnInit {
   }
 
   cambioFecha(event){
-    console.log('ionChange', event);
-    console.log('Date', new Date (event.detail.value.format('Do MM YY')));
-
+    this.fecha = moment(event.detail.value).format('DD/MM/YY');
+    console.log('solo fecha', this.fecha);
   }
 
   ionViewWillEnter() {
