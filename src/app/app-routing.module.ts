@@ -34,7 +34,11 @@ const routes: Routes = [
   {
     path: 'deudas-detalles/:id',
     loadChildren: () => import('./deudas-detalles/deudas-detalles.module').then( m => m.DeudasDetallesPageModule)
+  },  {
+    path: 'ajustes',
+    loadChildren: () => import('./ajustes/ajustes.module').then( m => m.AjustesPageModule)
   }
+
 
 
 

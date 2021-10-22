@@ -17,7 +17,7 @@
     <ion-item-sliding *ngFor="let historial of historiales" >
         <ng-container *ngIf="historial.idDeuda === getIdDeuda()">
           <p *ngIf="historial.montos === primermonto">
-            <ion-item>
+            <ion-grid>
               <ion-row>
                 <ion-col size="12">
                   Cliente: {{historial.clientes}}
@@ -26,10 +26,10 @@
                   Producto: {{historial.productos}}
                 </ion-col>
               </ion-row>
-            </ion-item>
+            </ion-grid>
           </p>
 
-          <ion-item>
+          <ion-grid>
             <ion-row>
               <ion-col size="6">
                 Fecha: {{historial.fechas}}
@@ -41,7 +41,7 @@
                 Deuda: {{ moneda(historial.montos) }}
               </ion-col>
             </ion-row>
-          </ion-item>
+          </ion-grid>
 
           <ng-container *ngIf="historial.montos === ultimoMonto">
             <p>Telefono: {{paisCodigo}} {{historial.telefono}}<br/></p>
