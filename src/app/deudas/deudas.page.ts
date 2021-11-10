@@ -96,6 +96,7 @@ export class DeudasPage implements OnInit {
   }
 
   addDeudas() {
+
     if (this.clientesId === 0) {
       alert('Seleccionar el cliente');
       return;
@@ -108,6 +109,11 @@ export class DeudasPage implements OnInit {
 
     if (this.montoDeuda === 0) {
       alert('Ingrese el Monto de la Deuda');
+      return;
+    }
+
+    if ( this.fecha.length  === 0) {
+      alert('Ingrese la fecha');
       return;
     }
 
