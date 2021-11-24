@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { SqliteDbCopy } from '@ionic-native/sqlite-db-copy/ngx';
+import {ContactFieldType, Contacts, IContactFindOptions} from '@ionic-native/contacts/ngx';
+import {NavController} from '@ionic/angular';
 
 @Component({
   selector: 'app-ajustes',
@@ -8,15 +9,28 @@ import { SqliteDbCopy } from '@ionic-native/sqlite-db-copy/ngx';
 })
 export class AjustesPage implements OnInit {
 
-  constructor(private sqliteDbCopy: SqliteDbCopy) { }
+  ourtype: ContactFieldType[] = ['displayName'];
+  contactsFound = [];
+
+
+  constructor(public navCtrl: NavController, private  contacts: Contacts) {
+    this.search('');
+  }
 
   ngOnInit() {
   }
 
-  async backup() {
-    await   this.sqliteDbCopy.copy('database.db', 0)
-      .then((res: any) => console.log(res))
-      .catch((error: any) => console.error(error));
+  search(q){
+    const option: IContactFindOptions = {
+      filter:q
+    };
+    this.contacts.find(this.ourtype,option).then(conts =>{
+      this.contactsFound = conts;
+    });
+  }
+
+  onkeyUp(ev){
+    this.search(ev.target.value);
   }
 
 }

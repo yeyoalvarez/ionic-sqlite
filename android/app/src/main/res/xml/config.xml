@@ -10,6 +10,10 @@
     <param name="android-package" value="com.android.plugins.Permissions"/>
   </feature>
 
+  <feature name="Contacts">
+    <param name="android-package" value="org.apache.cordova.contacts.ContactManager"/>
+  </feature>
+
   <feature name="sqlDB">
     <param name="android-package" value="me.rahul.plugins.sqlDB.sqlDB"/>
   </feature>

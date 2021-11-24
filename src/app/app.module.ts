@@ -12,6 +12,7 @@ import { SQLite } from '@ionic-native/sqlite/ngx';
 import { IonicSelectableModule } from 'ionic-selectable';
 import { Screenshot } from '@ionic-native/screenshot/ngx';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
+import { Contacts } from '@ionic-native/contacts/ngx';
 
 
 

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DatabaseService } from '../database.service';
+import { Contacts, Contact, ContactField, ContactName } from '@ionic-native/contacts/ngx';
 
 @Component({
   selector: 'app-clientes',
@@ -15,11 +16,13 @@ export class ClientesPage implements OnInit {
 
   editMode = false;
   editId = 0;
+  contactList: Contact = this.contacts.create();
+  selectedItem: any;
 
-  constructor(public database: DatabaseService) {
+  constructor(public database: DatabaseService, private contacts: Contacts) {
     this.database.createDatabase().then(() => {
-      // will call get categories
-      this.getClientes();
+     // this.getClientes();
+      this.getContactos();
     });
   }
 
@@ -82,4 +85,13 @@ export class ClientesPage implements OnInit {
     this.telefono = cliente.telefono;
     this.editId = cliente.id;
   }
+
+  getContactos() {
+      this.contactList.pickContact().then(() => {
+        console.log('contacto', this.contactList.name, ' numero', this.contactList.phoneNumbers);
+      },()=>{
+        console.log('error del contacto');
+      });
+  }
+
 }

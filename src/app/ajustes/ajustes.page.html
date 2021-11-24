@@ -1,9 +1,16 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>ajustes</ion-title>
-  </ion-toolbar>
+    <ion-navbar>
+      <ion-searchbar (keyup)="onkeyUp($event)"></ion-searchbar>
+    </ion-navbar>
 </ion-header>
 
 <ion-content>
-  <ion-button expand="block" (click)="backup()">Realizar un backup</ion-button>
+<ion-list>
+  <ion-item *ngFor="let contact of contactsFound">
+    <h2>{{contact?.displayName}}</h2>
+    <p *ngFor="let num of contact?.phoneNumbers">
+      {{num.value}}
+    </p>
+  </ion-item>
+</ion-list>
 </ion-content>
