@@ -20,6 +20,10 @@ export class AjustesPage implements OnInit {
   ngOnInit() {
   }
 
+
+
+
+
   search(q){
     const option: IContactFindOptions = {
       filter:q
