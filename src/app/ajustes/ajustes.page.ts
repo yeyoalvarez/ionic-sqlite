@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {ContactFieldType, Contacts, IContactFindOptions} from '@ionic-native/contacts/ngx';
-import {NavController} from '@ionic/angular';
+import { Observable, of } from 'rxjs';
+import {Contact, Contacts} from '@capacitor-community/contacts';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-ajustes',
@@ -9,32 +10,42 @@ import {NavController} from '@ionic/angular';
 })
 export class AjustesPage implements OnInit {
 
-  ourtype: ContactFieldType[] = ['displayName'];
-  contactsFound = [];
+  // export interface PhoneContact {
+//   contactId: string;
+//   lookupKey: string;
+//   displayName: string;
+//   phoneNumbers: [string];
+//   emails: [string];
+// }
 
-
-  constructor(public navCtrl: NavController, private  contacts: Contacts) {
-    this.search('');
+  contacts: Observable<Contact[]>;
+  constructor(
+    private toastController: ToastController
+  ) {
   }
 
   ngOnInit() {
+    this.getPermissions();
+    this.getContacts();
   }
 
+  async getPermissions(): Promise<void> {
+    console.log('button clicked');
+    Contacts.getPermissions();
+  }
 
+  async getContacts(): Promise<void> {
+    console.log('tesbutton clicked');
+    this.getPermissions();
+    Contacts.getContacts().then(result => {
+      console.log('result is:' , result);
+      const phoneContacts: Contact[] = result.contacts;
+      this.contacts = of(phoneContacts);
 
-
-
-  search(q){
-    const option: IContactFindOptions = {
-      filter:q
-    };
-    this.contacts.find(this.ourtype,option).then(conts =>{
-      this.contactsFound = conts;
     });
   }
 
-  onkeyUp(ev){
-    this.search(ev.target.value);
-  }
+
+
 
 }

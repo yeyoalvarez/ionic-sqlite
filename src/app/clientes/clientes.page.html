@@ -8,51 +8,40 @@
 </ion-header>
 
 <ion-content>
-<!--  <ion-list>-->
-
-
-<!--    <ion-item>-->
-<!--      <ion-label position="floating">Nombre del Cliente</ion-label>-->
-<!--      <ion-input [(ngModel)]="clienteNombre"></ion-input>-->
-<!--    </ion-item>-->
-
-<!--    <ion-item>-->
-<!--      <ion-label position="floating">Celular del Cliente</ion-label>-->
-<!--      <ion-label>{{ paisCodigo }}</ion-label>-->
-<!--      <ion-input [(ngModel)]="telefono"></ion-input>-->
-<!--    </ion-item>-->
-
-<!--    <ion-button expand="block" (click)="addClientes()">Añadir</ion-button>-->
-<!--  </ion-list>-->
-
-<!--  <ion-list>-->
-<!--    <ion-item-sliding *ngFor="let cliente of clientes">-->
-<!--      <ion-item-options side="start">-->
-<!--        <ion-item-option (click)="editClientes(cliente)">Editar</ion-item-option>-->
-<!--      </ion-item-options>-->
-
-<!--      <ion-item>-->
-<!--        <ion-label>{{ cliente.name }}</ion-label>-->
-<!--        <ion-label>{{ paisCodigo }} {{ cliente.telefono }}</ion-label>-->
-<!--      </ion-item>-->
-
-<!--      <ion-item-options side="end">-->
-<!--        <ion-item-option color="danger" (click)="deleteClientes(cliente.id)"-->
-<!--        >Eliminar</ion-item-option-->
-<!--        >-->
-<!--      </ion-item-options>-->
-<!--    </ion-item-sliding>-->
-<!--  </ion-list>-->
-
-  <!-- obtener numeros de la lista de contactos-->
   <ion-list>
-    <ion-item-sliding *ngFor="let contacto of contactList">
+
+
+    <ion-item>
+      <ion-label position="floating">Nombre del Cliente</ion-label>
+      <ion-input [(ngModel)]="clienteNombre"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Celular del Cliente</ion-label>
+      <ion-label>{{ paisCodigo }}</ion-label>
+      <ion-input [(ngModel)]="telefono"></ion-input>
+    </ion-item>
+
+    <ion-button expand="block" (click)="addClientes()">Añadir</ion-button>
+  </ion-list>
+
+  <ion-list>
+    <ion-item-sliding *ngFor="let cliente of clientes">
+      <ion-item-options side="start">
+        <ion-item-option (click)="editClientes(cliente)">Editar</ion-item-option>
+      </ion-item-options>
 
       <ion-item>
-        <ion-label>{{ contacto.name }}</ion-label>
-        <ion-label>{{ contacto.phoneNumbers }}</ion-label>
+        <ion-label>{{ cliente.name }}</ion-label>
+        <ion-label>{{ paisCodigo }} {{ cliente.telefono }}</ion-label>
       </ion-item>
 
+      <ion-item-options side="end">
+        <ion-item-option color="danger" (click)="deleteClientes(cliente.id)"
+        >Eliminar</ion-item-option
+        >
+      </ion-item-options>
     </ion-item-sliding>
   </ion-list>
+
 </ion-content>
