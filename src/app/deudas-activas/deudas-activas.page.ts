@@ -34,6 +34,7 @@ export class DeudasActivasPage implements OnInit {
   editId = 0;
 
   items: any[] = [];
+  textoBuscar = '';
 
   constructor(public database: DatabaseService,
               public modalCtrl: ModalController) {

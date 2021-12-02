@@ -12,6 +12,8 @@ export class ProductosPage implements OnInit {
   productos: any = [];
   editMode = false;
   editId = 0;
+  textoBuscar = '';
+
 
   constructor(public database: DatabaseService, public platform: Platform) {
     this.database.createDatabase().then(() => {

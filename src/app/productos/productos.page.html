@@ -5,6 +5,10 @@
     </ion-buttons>
     <ion-title>Productos</ion-title>
   </ion-toolbar>
+  <ion-searchbar animated placeholder="Buscar Producto"
+                 showCancelButton="focus" cancelButtonText="Custom Cancel"
+                 [(ngModel)]="textoBuscar">
+  </ion-searchbar>
 </ion-header>
 
 <ion-content>
@@ -18,7 +22,7 @@
   </ion-list>
 
   <ion-list>
-    <ion-item-sliding *ngFor="let producto of productos">
+    <ion-item-sliding *ngFor="let producto of productos | filter:textoBuscar">
       <ion-item-options side="start">
         <ion-item-option (click)="editProductos(producto)">Edit</ion-item-option>
       </ion-item-options>

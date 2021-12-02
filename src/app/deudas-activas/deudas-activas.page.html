@@ -1,13 +1,20 @@
-<ion-header>
+<ion-header [translucent]="true">
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
     <ion-title>Deudas Activas</ion-title>
   </ion-toolbar>
+  <ion-searchbar animated placeholder="Buscar Deudor"
+                 showCancelButton="focus" cancelButtonText="Custom Cancel"
+                 [(ngModel)]="textoBuscar">
+  </ion-searchbar>
 </ion-header>
 
 <ion-content>
 
   <ion-list>
-    <ion-item-sliding *ngFor="let deuda of deudas" >
+    <ion-item-sliding *ngFor="let deuda of deudas | filter:textoBuscar" >
       <ion-item-options side="start">
         <ion-item-option [routerLink]="['/deudas-detalles',deuda.id]">Detalles</ion-item-option>
       </ion-item-options>

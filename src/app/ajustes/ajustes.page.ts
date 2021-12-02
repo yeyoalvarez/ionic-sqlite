@@ -18,6 +18,7 @@ export class AjustesPage implements OnInit {
 //   emails: [string];
 // }
 
+  textoBuscar = '';
   contacts: Observable<Contact[]>;
   constructor(
     private toastController: ToastController
@@ -44,8 +45,6 @@ export class AjustesPage implements OnInit {
 
     });
   }
-
-
 
 
 }

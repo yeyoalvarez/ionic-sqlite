@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { DeudasActivasPageRoutingModule } from './deudas-activas-routing.module';
 
 import { DeudasActivasPage } from './deudas-activas.page';
+import {Ng2SearchPipeModule} from 'ng2-search-filter';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    DeudasActivasPageRoutingModule
+    DeudasActivasPageRoutingModule,
+    Ng2SearchPipeModule
   ],
   declarations: [DeudasActivasPage]
 })

@@ -16,6 +16,7 @@ export class ClientesPage implements OnInit {
   editMode = false;
   editId = 0;
   selectedItem: any;
+  textoBuscar = '';
 
   constructor(public database: DatabaseService) {
     this.database.createDatabase().then(() => {
