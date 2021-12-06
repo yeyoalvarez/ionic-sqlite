@@ -59,6 +59,8 @@ export class ClientesPage implements OnInit {
     }
   }
 
+
+
   getClientes() {
     this.database.getClientes().then((data) => {
       this.clientes = [];

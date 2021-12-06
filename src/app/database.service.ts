@@ -126,6 +126,17 @@ export class DatabaseService {
       });
   }
 
+  async importarClientes(name: string, telefono: number) {
+    return this.databaseObj
+      .executeSql(
+        `INSERT INTO ${this.tables.clientes} (name, telefono)
+        SELECT '${name}', ${telefono}
+        WHERE NOT EXISTS(SELECT 1 FROM clientes WHERE telefono = ${telefono})`,
+        []
+      )
+      .catch((e) => 'error al crear clientes' + JSON.stringify(e));
+  }
+
   async getClientes() {
     return this.databaseObj
       .executeSql(

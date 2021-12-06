@@ -18,9 +18,10 @@
 <ion-content>
   <ion-list>
     <div class="ion-text-start">
-      <ion-button (click)="getContacts()" >
-        Obtener Contactos
-      </ion-button>
+        <ion-button (click)="getPermissions()" >
+          Obtener Contactos
+        </ion-button>
+        <ion-button (click)="permiso()">Importar</ion-button>
 
     </div>
     <ion-item *ngFor="let contact of contacts | async | filter:textoBuscar" >
@@ -34,8 +35,12 @@
         </ion-text>
         <ion-text color="medium" *ngFor="let number of contact.phoneNumbers">
           <p>{{number.label}}:{{number.number}}</p>
+          <ion-content *ngIf="permisoImportar">
+            {{insertarContactos(contact.displayName,number.number)}}
+          </ion-content>
         </ion-text>
       </ion-label>
     </ion-item>
+
   </ion-list>
 </ion-content>
