@@ -32,7 +32,8 @@
   </ion-list>
 
   <ion-list>
-    <ion-item-sliding *ngFor="let cliente of clientes | filter:textoBuscar">
+    <ion-item-sliding *ngFor="let cliente of clientes | filter:textoBuscar"
+    titulo ="loading">
       <ion-item-options side="start">
         <ion-item-option (click)="editClientes(cliente)">Editar</ion-item-option>
       </ion-item-options>

@@ -32,9 +32,10 @@
       <ion-label class="ion-text-wrap">
         <ion-text color="dark">
           <h3>{{contact.displayName}}</h3>
+          <h3>{{contact.phoneNumbers(1).number}}</h3>
         </ion-text>
         <ion-text color="medium" *ngFor="let number of contact.phoneNumbers">
-          <p>{{number.label}}:{{number.number}}</p>
+          <p>{{number.number}}</p>
           <ion-content *ngIf="permisoImportar">
             {{insertarContactos(contact.displayName,number.number)}}
           </ion-content>

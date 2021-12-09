@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DatabaseService } from '../database.service';
+import { LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-clientes',
@@ -18,13 +19,24 @@ export class ClientesPage implements OnInit {
   selectedItem: any;
   textoBuscar = '';
 
-  constructor(public database: DatabaseService) {
+  constructor(public database: DatabaseService,
+              public loadingController: LoadingController) {
     this.database.createDatabase().then(() => {
       this.getClientes();
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.pantallaEspera();
+  }
+
+  async pantallaEspera() {
+    const loading = await this.loadingController.create({
+      message: 'Cargando Clientes',
+      duration: 2000
+    });
+    await loading.present();
+  }
 
   addClientes() {
     if (!this.clienteNombre.length) {
