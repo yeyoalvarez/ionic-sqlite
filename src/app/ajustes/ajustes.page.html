@@ -14,13 +14,15 @@
 
 
 
-
 <ion-content>
   <ion-list>
     <div class="ion-text-start">
         <ion-button (click)="getPermissions()" >
-          Obtener Contactos
+          Permisos del Usuario
         </ion-button>
+      <ion-button (click)="getContacts()" >
+        Obtener Contactos
+      </ion-button>
         <ion-button (click)="permiso()">Importar</ion-button>
 
     </div>
@@ -30,16 +32,13 @@
         <ion-img [src]="contact.photoThumbnail"></ion-img>
       </ion-avatar>
       <ion-label class="ion-text-wrap">
-        <ion-text color="dark">
+        <ion-text *ngIf="contact.phoneNumbers.length > 0" color="dark">
           <h3>{{contact.displayName}}</h3>
-          <h3>{{contact.phoneNumbers(1).number}}</h3>
+          <h3>{{contact.phoneNumbers[0].number}}</h3>
         </ion-text>
-        <ion-text color="medium" *ngFor="let number of contact.phoneNumbers">
-          <p>{{number.number}}</p>
-          <ion-content *ngIf="permisoImportar">
-            {{insertarContactos(contact.displayName,number.number)}}
+          <ion-content *ngIf="permisoImportar && contact.phoneNumbers.length > 0">
+            {{insertarContactos(contact.displayName,contact.phoneNumbers[0].number)}}
           </ion-content>
-        </ion-text>
       </ion-label>
     </ion-item>
 

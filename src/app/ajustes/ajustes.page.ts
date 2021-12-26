@@ -39,8 +39,6 @@ export class AjustesPage implements OnInit {
   async getPermissions(): Promise<void> {
     console.log('button clicked');
     Contacts.getPermissions();
-    this.pantallaEspera('Obteniendo Contactos');
-    this.getContacts();
   }
 
   async getContacts(): Promise<void> {
@@ -52,9 +50,11 @@ export class AjustesPage implements OnInit {
   }
 
   async insertarContactos(nombre: string, telefono: string){
-    if (Number(telefono.substr(-9,9)) <= 999999999) {
+    const telefonoParsed = telefono.replace(" ", "");
+    console.log(`parsing ${telefono} => ${telefonoParsed}`);
+    if (Number(telefonoParsed.substr(-8,8)) <= 99999999) {
       console.log('Es numero valido');
-      this.database.importarClientes(nombre, Number(telefono.substr(-8,8)) ).then((data) => {
+      this.database.importarClientes(nombre, Number(telefonoParsed.substr(-8,8)) ).then((data) => {
       });
     } else{
       console.log('No es valido el numero');

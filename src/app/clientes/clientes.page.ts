@@ -28,12 +28,14 @@ export class ClientesPage implements OnInit {
 
   ngOnInit() {
     this.pantallaEspera();
+    this.getClientes();
+
   }
 
   async pantallaEspera() {
     const loading = await this.loadingController.create({
       message: 'Cargando Clientes',
-      duration: 2000
+      duration: 4000
     });
     await loading.present();
   }

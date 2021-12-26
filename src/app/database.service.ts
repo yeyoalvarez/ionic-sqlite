@@ -135,7 +135,6 @@ export class DatabaseService {
         []
       )
       .catch((e) => 'error al crear clientes' + JSON.stringify(e));
-    console.log('numero insertado');
   }
 
   async getClientes() {
