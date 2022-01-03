@@ -13,32 +13,22 @@
 </ion-header>
 
 
-
 <ion-content>
   <ion-list>
     <div class="ion-text-start">
-        <ion-button (click)="getPermissions()" >
-          Permisos del Usuario
-        </ion-button>
-      <ion-button (click)="getContacts()" >
-        Obtener Contactos
-      </ion-button>
-        <ion-button (click)="permiso()">Importar</ion-button>
-
+      <ion-button (click)="importarContactos()">Importar Contactos</ion-button>
     </div>
-    <ion-item *ngFor="let contact of contacts | async | filter:textoBuscar" >
-      <ion-icon *ngIf="!contact.photoThumbnail" color="primary" slot="start" name="beer"></ion-icon>
-      <ion-avatar *ngIf="contact.photoThumbnail"  slot="start">
-        <ion-img [src]="contact.photoThumbnail"></ion-img>
-      </ion-avatar>
+
+    <ion-item *ngFor="let contact of contacts | filter:textoBuscar" >
       <ion-label class="ion-text-wrap">
+        <ion-icon *ngIf="!contact.photoThumbnail" color="primary" slot="start" name="beer"></ion-icon>
+        <ion-avatar *ngIf="contact.photoThumbnail"  slot="start">
+          <ion-img [src]="contact.photoThumbnail"></ion-img>
+        </ion-avatar>
         <ion-text *ngIf="contact.phoneNumbers.length > 0" color="dark">
           <h3>{{contact.displayName}}</h3>
           <h3>{{contact.phoneNumbers[0].number}}</h3>
         </ion-text>
-          <ion-content *ngIf="permisoImportar && contact.phoneNumbers.length > 0">
-            {{insertarContactos(contact.displayName,contact.phoneNumbers[0].number)}}
-          </ion-content>
       </ion-label>
     </ion-item>
 

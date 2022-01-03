@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import {Contact, Contacts} from '@capacitor-community/contacts';
-import {AlertController, ToastController} from '@ionic/angular';
+import { Contacts } from '@capacitor-community/contacts';
 import {DatabaseService} from '../database.service';
-import { LoadingController } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-ajustes',
@@ -21,56 +19,67 @@ export class AjustesPage implements OnInit {
 // }
 
   textoBuscar = '';
-  permisoImportar: boolean;
-  contacts: Observable<Contact[]>;
+  telefonoParsed = '';
+  contacts: any = [];
 
-  constructor(public database: DatabaseService,
-              public alertCtrl: AlertController,
-              public loadingController: LoadingController
-
-  ) {
+  constructor(    public database: DatabaseService,
+                  public alertController: AlertController) {
+    this.getPermissions();
     this.database.createDatabase().then(() => {
+      this.getContacts();
     });
   }
 
   ngOnInit() {
   }
 
-  async getPermissions(): Promise<void> {
-    console.log('button clicked');
-    Contacts.getPermissions();
+  async getPermissions() {
+    const permisos = await Contacts.getPermissions();
+    if (!permisos.granted){
+      return;
+    }
   }
 
-  async getContacts(): Promise<void> {
+  async getContacts() {
     Contacts.getContacts().then(result => {
       console.log('result is:' , result);
-      const phoneContacts: Contact[] = result.contacts;
-      this.contacts = of(phoneContacts);
+      this.contacts = result.contacts;
     });
   }
 
-  async insertarContactos(nombre: string, telefono: string){
-    const telefonoParsed = telefono.replace(" ", "");
-    console.log(`parsing ${telefono} => ${telefonoParsed}`);
-    if (Number(telefonoParsed.substr(-8,8)) <= 99999999) {
+  insertarContactos(nombre: string, telefono: string){
+    this.telefonoParsed = telefono.replace(' ', '');
+    this.telefonoParsed = this.telefonoParsed.replace(' ', '');
+    console.log(`parsing ${telefono} => ${this.telefonoParsed}`);
+    if (Number(this.telefonoParsed.substr(-8,8)) <= 99999999) {
       console.log('Es numero valido');
-      this.database.importarClientes(nombre, Number(telefonoParsed.substr(-8,8)) ).then((data) => {
+      this.database.importarClientes(nombre, Number(this.telefonoParsed.substr(-8,8)) )
+        .then(() => {
       });
     } else{
       console.log('No es valido el numero');
     }
   }
 
-  async pantallaEspera(mensaje: string) {
-    const loading = await this.loadingController.create({
-      message: mensaje,
-      duration: 3000
+  importarContactos() {
+    console.log('cantidad de contactos', this.contacts.length);
+    for(let i = 0; i <=this.contacts.length-1; i++) {
+      if(this.contacts[i].phoneNumbers.length > 0){
+        this.insertarContactos(this.contacts[i].displayName,this.contacts[i].phoneNumbers[0].number);
+        console.log('nombre', this.contacts[i].displayName);
+        console.log('telefono', this.contacts[i].phoneNumbers[0].number);
+      }
+    }
+    this.presentAlert();
+  }
+
+  async presentAlert() {
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'Terminado',
+      message: 'Contactos Importados',
+      buttons: ['OK']
     });
-    return await loading.present();
+    await alert.present();
   }
-
-  async permiso(){
-    this.permisoImportar = true;
-  }
-
 }

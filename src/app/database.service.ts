@@ -134,7 +134,7 @@ export class DatabaseService {
         WHERE NOT EXISTS(SELECT 1 FROM clientes WHERE telefono = ${telefono})`,
         []
       )
-      .catch((e) => 'error al crear clientes' + JSON.stringify(e));
+      .catch((e) => 'error al importar contacto' + JSON.stringify(e));
   }
 
   async getClientes() {
