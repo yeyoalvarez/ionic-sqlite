@@ -11,6 +11,7 @@ import * as moment from 'moment';
 
 export class DeudasPage implements OnInit {
 
+  textoBuscar = '';
   clientes: any = [];
   clientesId = 0;
   productosId = 0;

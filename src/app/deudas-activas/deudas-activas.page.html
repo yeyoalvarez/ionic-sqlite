@@ -14,7 +14,7 @@
 <ion-content>
 
   <ion-list>
-    <ion-item-sliding *ngFor="let deuda of deudas | filter:textoBuscar" >
+    <ion-item-sliding *ngFor="let deuda of deudas" >
       <ion-item-options side="start">
         <ion-item-option [routerLink]="['/deudas-detalles',deuda.id]">Detalles</ion-item-option>
       </ion-item-options>

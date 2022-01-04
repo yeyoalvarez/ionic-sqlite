@@ -3,6 +3,7 @@ import { Contacts } from '@capacitor-community/contacts';
 import {DatabaseService} from '../database.service';
 import { AlertController } from '@ionic/angular';
 
+
 @Component({
   selector: 'app-ajustes',
   templateUrl: './ajustes.page.html',
@@ -26,7 +27,6 @@ export class AjustesPage implements OnInit {
                   public alertController: AlertController) {
     this.getPermissions();
     this.database.createDatabase().then(() => {
-      this.getContacts();
     });
   }
 
@@ -36,8 +36,10 @@ export class AjustesPage implements OnInit {
   async getPermissions() {
     const permisos = await Contacts.getPermissions();
     if (!permisos.granted){
+      this.getContacts();
       return;
     }
+    this.getContacts();
   }
 
   async getContacts() {
