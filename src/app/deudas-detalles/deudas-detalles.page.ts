@@ -1,8 +1,7 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import {DatabaseService} from '../database.service';
 import {ActivatedRoute} from '@angular/router';
-import { Screenshot } from '@ionic-native/screenshot/ngx';
-import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
+
 import * as moment from 'moment';
 
 @Component({
@@ -38,7 +37,7 @@ export class DeudasDetallesPage implements OnInit {
   editMode = false;
   selectedProductosId = 0;
   selectedClientesId = 0;
-  montoDeuda = 0;
+  montoDeuda;
   editId = 0;
   nombre: any;
   firstMonto: any = [];
@@ -51,15 +50,11 @@ export class DeudasDetallesPage implements OnInit {
 
 
   constructor(public database: DatabaseService,
-              private activatedRoute: ActivatedRoute,
-              private screenshot: Screenshot,
-              private androidPermissions: AndroidPermissions,
-              private cdRef: ChangeDetectorRef) {
+              private activatedRoute: ActivatedRoute) {
+    this.idrecibido = this.activatedRoute.snapshot.paramMap.get('id');
   }
 
   ngOnInit() {
-    this.idrecibido = this.activatedRoute.snapshot.paramMap.get('id');
-    this.getHistorial();
   }
 
   ionViewWillEnter() {

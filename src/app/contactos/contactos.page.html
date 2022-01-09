@@ -1,4 +1,4 @@
-<ion-header no-border>
+<ion-header [translucent]="true"  no-border>
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
@@ -19,7 +19,7 @@
       <ion-button (click)="importarContactos()">Importar Contactos</ion-button>
     </div>
 
-    <ion-item *ngFor="let contact of contacts | filter:textoBuscar" >
+    <ion-item *ngFor="let contact of contacts | filter:textoBuscar">
       <ion-label class="ion-text-wrap">
         <ion-icon *ngIf="!contact.photoThumbnail" color="primary" slot="start" name="beer"></ion-icon>
         <ion-avatar *ngIf="contact.photoThumbnail"  slot="start">

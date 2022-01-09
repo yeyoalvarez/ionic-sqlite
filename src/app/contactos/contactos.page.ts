@@ -3,32 +3,22 @@ import { Contacts } from '@capacitor-community/contacts';
 import {DatabaseService} from '../database.service';
 import { AlertController } from '@ionic/angular';
 
-
 @Component({
-  selector: 'app-ajustes',
-  templateUrl: './ajustes.page.html',
-  styleUrls: ['./ajustes.page.scss'],
+  selector: 'app-contactos',
+  templateUrl: './contactos.page.html',
+  styleUrls: ['./contactos.page.scss'],
 })
-export class AjustesPage implements OnInit {
-
-  // export interface PhoneContact {
-//   contactId: string;
-//   lookupKey: string;
-//   displayName: string;
-//   phoneNumbers: [string];
-//   emails: [string];
-// }
+export class ContactosPage implements OnInit {
 
   textoBuscar = '';
   telefonoParsed = '';
   contacts: any = [];
 
-  constructor(    public database: DatabaseService,
-                  public alertController: AlertController) {
+  constructor(public database: DatabaseService,
+              public alertController: AlertController) {
     this.getPermissions();
     this.database.createDatabase().then(() => {
-    });
-  }
+    }); }
 
   ngOnInit() {
   }
@@ -57,14 +47,14 @@ export class AjustesPage implements OnInit {
       console.log('Es numero valido');
       this.database.importarClientes(nombre, Number(this.telefonoParsed.substr(-8,8)) )
         .then(() => {
-      });
+        });
     } else{
       console.log('No es valido el numero');
     }
   }
 
   importarContactos() {
-    console.log('cantidad de contactos', this.contacts.length);
+    console.log('cantidad de contacto', this.contacts.length);
     for(let i = 0; i <=this.contacts.length-1; i++) {
       if(this.contacts[i].phoneNumbers.length > 0){
         this.insertarContactos(this.contacts[i].displayName,this.contacts[i].phoneNumbers[0].number);
@@ -85,3 +75,4 @@ export class AjustesPage implements OnInit {
     await alert.present();
   }
 }
+
