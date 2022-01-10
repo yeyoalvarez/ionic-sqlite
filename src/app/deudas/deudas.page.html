@@ -17,6 +17,7 @@
         [items]="productos"
         itemValueField="id"
         itemTextField="name"
+        [canSearch]="true"
         (onChange)="portChangeP($event)"
       >
       </ionic-selectable>
@@ -29,6 +30,7 @@
         [items]="clientes"
         itemValueField="id"
         itemTextField="name"
+        [canSearch]="true"
         (onChange)="portChangeC($event)"
       >
       </ionic-selectable>

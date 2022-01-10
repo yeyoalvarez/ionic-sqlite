@@ -12,9 +12,9 @@ export class AppComponent {
   public appPages = [
     { title: 'Home', url: '/inicio', icon: 'home' },
     { title: 'Productos', url: '/productos', icon: 'cart' },
-    { title: 'Clientes', url: '/clientes', icon: 'people' },
+    { title: 'Clientes', url: '/clientes', icon: 'person-add' },
     { title: 'Deudas', url: '/deudas-activas', icon: 'wallet' },
-    { title: 'Contactos', url: '/contactos', icon: 'people-circle-outline' },
+    { title: 'Contactos', url: '/contactos', icon: 'people' },
     // { title: 'Outbox', url: '/folder/Outbox', icon: 'paper-plane' },
     // { title: 'Favorites', url: '/folder/Favorites', icon: 'heart' },
     // { title: 'Archived', url: '/folder/Archived', icon: 'archive' },

@@ -11,7 +11,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { SQLite } from '@ionic-native/sqlite/ngx';
 import { IonicSelectableModule } from 'ionic-selectable';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
-
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
 
 @NgModule({
@@ -22,7 +22,7 @@ import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    SQLite,AndroidPermissions
+    SQLite,AndroidPermissions,Ng2SearchPipeModule
   ],
   bootstrap: [AppComponent],
 })
