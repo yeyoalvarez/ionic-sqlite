@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Ajustes</ion-title>
+    <ion-title>Contactos</ion-title>
   </ion-toolbar>
   <ion-searchbar animated placeholder="Buscar Cliente"
                  showCancelButton="focus" cancelButtonText="Custom Cancel"
@@ -20,12 +20,12 @@
     </div>
 
     <ion-item *ngFor="let contact of contacts | filter:textoBuscar">
-      <ion-label class="ion-text-wrap">
         <ion-icon *ngIf="!contact.photoThumbnail" color="primary" slot="start" name="beer"></ion-icon>
         <ion-avatar *ngIf="contact.photoThumbnail"  slot="start">
           <ion-img [src]="contact.photoThumbnail"></ion-img>
         </ion-avatar>
-        <ion-text *ngIf="contact.phoneNumbers.length > 0" color="dark">
+      <ion-label class="ion-text-wrap">
+      <ion-text *ngIf="contact.phoneNumbers.length > 0" color="dark">
           <h3>{{contact.displayName}}</h3>
           <h3>{{contact.phoneNumbers[0].number}}</h3>
         </ion-text>

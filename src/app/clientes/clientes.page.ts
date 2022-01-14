@@ -35,7 +35,7 @@ export class ClientesPage implements OnInit {
   async pantallaEspera() {
     const loading = await this.loadingController.create({
       message: 'Cargando Clientes',
-      duration: 4000
+      duration: 2000
     });
     await loading.present();
   }

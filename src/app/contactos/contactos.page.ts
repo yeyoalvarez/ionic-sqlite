@@ -43,9 +43,9 @@ export class ContactosPage implements OnInit {
     this.telefonoParsed = telefono.replace(' ', '');
     this.telefonoParsed = this.telefonoParsed.replace(' ', '');
     console.log(`parsing ${telefono} => ${this.telefonoParsed}`);
-    if (Number(this.telefonoParsed.substr(-8,8)) <= 99999999) {
+    if (Number(this.telefonoParsed.substr(-9,9)) <= 999999999) {
       console.log('Es numero valido');
-      this.database.importarClientes(nombre, Number(this.telefonoParsed.substr(-8,8)) )
+      this.database.importarClientes(nombre, Number(this.telefonoParsed.substr(-9,9)) )
         .then(() => {
         });
     } else{
