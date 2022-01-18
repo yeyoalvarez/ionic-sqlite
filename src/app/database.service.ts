@@ -296,4 +296,16 @@ export class DatabaseService {
       .catch((e) => 'error al obtener ultimo monto' + JSON.stringify(e));
   }
 
+  async existenciaDeuda(id: number) {
+    return this.databaseObj
+      .executeSql(
+        `SELECT COUNT(*) as cantDeudas
+        from historial
+        WHERE idCliente = ${id}`,
+        []
+      )
+      .then((res) => res)
+      .catch((e) => 'error al buscar si existen deudas' + JSON.stringify(e));
+  }
+
 }

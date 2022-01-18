@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { DatabaseService } from '../database.service';
 import { LoadingController } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
+
 
 @Component({
   selector: 'app-clientes',
@@ -13,6 +15,8 @@ export class ClientesPage implements OnInit {
   telefonos: any = [];
   telefono=9;
   paisCodigo = '595';
+  idExisteDeuda = 0;
+  idExDeuda: any = [];
 
   editMode = false;
   editId = 0;
@@ -20,7 +24,8 @@ export class ClientesPage implements OnInit {
   textoBuscar = '';
 
   constructor(public database: DatabaseService,
-              public loadingController: LoadingController) {
+              public loadingController: LoadingController,
+              public alertController: AlertController) {
     this.database.createDatabase().then(() => {
       this.getClientes();
     });
@@ -87,10 +92,22 @@ export class ClientesPage implements OnInit {
   }
 
   deleteClientes(id: number) {
-    this.database.deleteClientes(id).then((data) => {
-      alert(data);
-      this.getClientes();
+
+    this.database.existenciaDeuda(Number(id)).then((data) => {
+      this.idExDeuda.push(data.rows.item(0));
     });
+    console.log('de', this.idExDeuda);
+    console.log('tiene deudas ', this.idExDeuda[0].cantDeudas);
+
+    if(this.idExDeuda[0].cantDeudas == 0){
+      this.database.deleteClientes(id).then((data) => {
+        alert(data);
+        this.getClientes();
+      });
+    }else{
+      this.presentAlert();
+    }
+
   }
 
   editClientes(cliente: any) {
@@ -100,5 +117,14 @@ export class ClientesPage implements OnInit {
     this.editId = cliente.id;
   }
 
+  async presentAlert() {
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'No se puede eliminar',
+      message: 'El cliente tiene historial de deudas',
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
 
 }
