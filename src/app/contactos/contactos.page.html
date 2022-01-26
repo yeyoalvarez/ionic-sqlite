@@ -20,7 +20,7 @@
     </div>
 
     <ion-item *ngFor="let contact of contacts | filter:textoBuscar">
-        <ion-icon *ngIf="!contact.photoThumbnail" color="primary" slot="start" name="beer"></ion-icon>
+        <ion-icon *ngIf="!contact.photoThumbnail" color="primary" slot="start" name="call"></ion-icon>
         <ion-avatar *ngIf="contact.photoThumbnail"  slot="start">
           <ion-img [src]="contact.photoThumbnail"></ion-img>
         </ion-avatar>
