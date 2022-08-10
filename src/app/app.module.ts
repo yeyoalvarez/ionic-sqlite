@@ -13,6 +13,8 @@ import { IonicSelectableModule } from 'ionic-selectable';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
+import { File } from '@awesome-cordova-plugins/file/ngx';
+import { FileOpener } from '@awesome-cordova-plugins/file-opener/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -22,7 +24,7 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    SQLite,AndroidPermissions,Ng2SearchPipeModule
+    SQLite,AndroidPermissions,Ng2SearchPipeModule,FileOpener,File
   ],
   bootstrap: [AppComponent],
 })

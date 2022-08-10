@@ -1,8 +1,13 @@
 import { Component, OnInit} from '@angular/core';
 import {DatabaseService} from '../database.service';
 import {ActivatedRoute} from '@angular/router';
-
+import { FileOpener } from '@awesome-cordova-plugins/file-opener/ngx';
+import { File } from '@awesome-cordova-plugins/file/ngx';
 import * as moment from 'moment';
+
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
   selector: 'app-deudas-detalles',
@@ -47,10 +52,13 @@ export class DeudasDetallesPage implements OnInit {
 
 
   items: any[] = [];
+  pdfObject: any;
 
 
   constructor(public database: DatabaseService,
-              private activatedRoute: ActivatedRoute) {
+              private activatedRoute: ActivatedRoute,
+              public file: File,
+              public fileOpener: FileOpener) {
     this.idrecibido = this.activatedRoute.snapshot.paramMap.get('id');
   }
 
@@ -190,4 +198,129 @@ export class DeudasDetallesPage implements OnInit {
     }
     return this.diferenciaMonto;
   }
+
+  generarPDF(){
+    const definirDocumento = {
+      content: [
+        {text: 'Tables', style: 'header'},
+        'Official documentation is in progress, this document is just a glimpse of what is possible with pdfmake and its layout engine.',
+        {text: 'A simple table (no headers, no width specified, no spans, no styling)', style: 'subheader'},
+      ]
+    };
+
+    //   const definirDocumento = { content: [
+    //     {
+    //       text: 'ELECTRONIC SHOP',
+    //       fontSize: 16,
+    //       alignment: 'center',
+    //       color: '#047886'
+    //     },
+    //     {
+    //       text: 'INVOICE',
+    //       fontSize: 20,
+    //       bold: true,
+    //       alignment: 'center',
+    //       decoration: 'underline',
+    //       color: 'skyblue'
+    //     },
+    //     {
+    //       text: 'Customer Details',
+    //       style: 'sectionHeader'
+    //     },
+    //     {
+    //       columns: [
+    //         [
+    //           {
+    //             text: this.invoice.customerName,
+    //             bold:true
+    //           },
+    //           { text: this.invoice.address },
+    //           { text: this.invoice.email },
+    //           { text: this.invoice.contactNo }
+    //         ],
+    //         [
+    //           {
+    //             text: `Date: ${new Date().toLocaleString()}`,
+    //             alignment: 'right'
+    //           },
+    //           {
+    //             text: `Bill No : ${((Math.random() *1000).toFixed(0))}`,
+    //             alignment: 'right'
+    //           }
+    //         ]
+    //       ]
+    //     },
+    //     {
+    //       text: 'Order Details',
+    //       style: 'sectionHeader'
+    //     },
+    //     {
+    //       table: {
+    //         headerRows: 1,
+    //         widths: ['*', 'auto', 'auto', 'auto'],
+    //         body: [
+    //           ['Product', 'Price', 'Quantity', 'Amount'],
+    //           ...this.invoice.products.map(p => ([p.name, p.price, p.qty, (p.price*p.qty).toFixed(2)])),
+    // eslint-disable-next-line max-len
+    //           [{text: 'Total Amount', colSpan: 3}, {}, {}, this.invoice.products.reduce((sum, p)=> sum + (p.qty * p.price), 0).toFixed(2)]
+    //         ]
+    //       }
+    //     },
+    //     {
+    //       text: 'Additional Details',
+    //       style: 'sectionHeader'
+    //     },
+    //     {
+    //       text: this.invoice.additionalDetails,
+    //       margin: [0, 0 ,0, 15]
+    //     },
+    //     {
+    //       columns: [
+    //         [{ qr: `${this.invoice.customerName}`, fit: '50' }],
+    //         [{ text: 'Signature', alignment: 'right', italics: true}],
+    //       ]
+    //     },
+    //     {
+    //       text: 'Terms and Conditions',
+    //       style: 'sectionHeader'
+    //     },
+    //     {
+    //       ul: [
+    //         'Order can be return in max 10 days.',
+    //         'Warrenty of the product will be subject to the manufacturer terms and conditions.',
+    //         'This is system generated invoice.',
+    //       ],
+    //     }
+    //   ],
+    //   styles: {
+    //     sectionHeader: {
+    //       bold: true,
+    //       decoration: 'underline',
+    //       fontSize: 14,
+    //       margin: [0, 15,0, 15]
+    //     }
+    //   }
+    // };
+
+    this.pdfObject = pdfMake.createPdf(definirDocumento);
+    alert('pdf generado');
+    this.abrirPdf();
+
+  }
+
+  abrirPdf(){
+    this.pdfObject.getBuffer((buffer) => {
+      const blob = new Blob([buffer], { type: 'application/pdf' });
+      // Save the PDF to the data Directory of our App
+      this.file.writeFile(this.file.dataDirectory, 'hello.pdf', blob, { replace: true }).then(fileEntry => {
+
+        this.fileOpener.open(this.file.dataDirectory + 'hello.pdf', 'application/pdf');
+
+      });
+
+    });
+
+    return true;
+  }
+
 }

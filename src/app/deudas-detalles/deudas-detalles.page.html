@@ -53,6 +53,10 @@
               <ion-button href={{url+historial.telefono}} color="success">
                 <ion-icon name="logo-whatsapp"></ion-icon>
               </ion-button>
+            <ion-button (click)="generarPDF()">
+              <ion-icon name="document"></ion-icon>
+            </ion-button>
+
 
             <ion-list>
               <ion-item>
@@ -60,7 +64,8 @@
                 <ion-input [(ngModel)]="montoDeuda"></ion-input>
               </ion-item>
               <ng-container *ngIf="historial.idDeuda === getIdDeuda()">
-              <ion-button expand="block" (click)="editDeudas(historial)" [routerLink]="['/deudas-activas']">Realizar Pago</ion-button>
+              <ion-button expand="block" (click)="editDeudas(historial)" [routerLink]="['/deudas-activas']">
+                Realizar Pago</ion-button>
               </ng-container>
             </ion-list>
           </ng-container>
