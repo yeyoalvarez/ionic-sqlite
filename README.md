@@ -1,4 +1,4 @@
-# ionic-sqlite
+# ionic-sqlite o Deudapp
 app para android donde se almacenan historial de deudas de un vendedor independiente.
 Aqui puede gestionarse un historial de las deudas actuales que tienen los clientes hacia un vendedor independiente,
 permite mantener un historial de las ventas actuales como los pequeños pagos mensuales o semanales que puede realizar el cliente
