@@ -11,6 +11,7 @@ export class DatabaseService {
     clientes: 'clientes',
     deudas: 'deudas',
     historial: 'historial',
+    recordatorioPagos: 'recordatorioPagos',
   };
 
   constructor(private sqlite: SQLite) {}
@@ -56,6 +57,13 @@ export class DatabaseService {
       idProducto INTEGER UNSIGNED NOT NULL, idCliente INTEGER UNSIGNED NOT NULL,
       idDeuda INTEGER UNSIGNED NOT NULL, estado BOOLEAN,
       montos INTEGER UNSIGNED NOT NULL, fechas VARCHAR(255))`,
+      []
+    );
+
+    await this.databaseObj.executeSql(
+      `CREATE TABLE IF NOT EXISTS ${this.tables.recordatorioPagos} (id INTEGER PRIMARY KEY AUTOINCREMENT,
+      idCliente INTEGER UNSIGNED NOT NULL, fechaUltimoPago VARCHAR(255),
+      recordatorioPago VARCHAR(1))`,
       []
     );
 
@@ -231,6 +239,8 @@ export class DatabaseService {
       .then(() => 'deuda eliminada')
       .catch((e) => 'error al eliminar deuda ' + JSON.stringify(e));
   }
+
+  /*funciones para la tabla historia de deudas*/
 
   async addHistorialNuevo(clientesId: number, productosId: number, monto: number, fecha: string) {
     return this.databaseObj

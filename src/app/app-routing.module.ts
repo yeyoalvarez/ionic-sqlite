@@ -24,7 +24,7 @@ const routes: Routes = [
     loadChildren: () => import('./inicio/inicio.module').then( m => m.InicioPageModule)
   },
   {
-    path: 'deudas-activas',
+    path: 'deudas-activas/:id',
     loadChildren: () => import('./deudas-activas/deudas-activas.module').then( m => m.DeudasActivasPageModule)
   },
   {
@@ -35,6 +35,11 @@ const routes: Routes = [
     path: 'contactos',
     loadChildren: () => import('./contactos/contactos.module').then( m => m.ContactosPageModule)
   },
+  {
+    path: 'deudas-clientes',
+    loadChildren: () => import('./deudas-clientes/deudas-clientes.module').then( m => m.DeudasClientesPageModule)
+  },
+
 
 
 

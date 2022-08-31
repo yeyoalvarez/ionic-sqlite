@@ -1,0 +1,49 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Clientes con Deudas</ion-title>
+  </ion-toolbar>
+  <ion-searchbar animated placeholder="Buscar Deudor"
+                 showCancelButton="focus" cancelButtonText="Custom Cancel"
+                 [(ngModel)]="textoBuscar">
+  </ion-searchbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-list>
+    <ion-item-sliding *ngFor="let cliente of clientes | filter:textoBuscar">
+      <ion-item-options side="start">
+        <ion-item-option [routerLink]="['/deudas-activas',cliente.id]">Detalles</ion-item-option>
+      </ion-item-options>
+
+      <ion-grid>
+        <ion-row>
+          <ion-col size="3" style="background-color: lightskyblue">
+            Cliente
+          </ion-col>
+          <ion-col size="3" style="background-color: lightskyblue">
+            Atrasado
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <ion-item>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="3">
+              {{cliente.id}}
+            </ion-col>
+            <ion-col size="3">
+              {{ cliente.productos}}
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-item>
+
+    </ion-item-sliding>
+  </ion-list>
+
+</ion-content>
