@@ -10,10 +10,10 @@ import {Platform} from '@ionic/angular';
 export class AppComponent {
   public selectedIndex = 0;
   public appPages = [
-    { title: 'Home', url: '/inicio', icon: 'home' },
+    { title: 'Inicio', url: '/inicio', icon: 'home' },
     { title: 'Productos', url: '/productos', icon: 'cart' },
     { title: 'Clientes', url: '/clientes', icon: 'person-add' },
-    { title: 'Deudas', url: '/deudas-clientes', icon: 'wallet' },
+    { title: 'Deudas Clientes', url: '/deudas-clientes', icon: 'wallet' },
     { title: 'Deudas', url: '/deudas-activas', icon: 'wallet' },
     { title: 'Contactos', url: '/contactos', icon: 'people' },
     // { title: 'Outbox', url: '/folder/Outbox', icon: 'paper-plane' },

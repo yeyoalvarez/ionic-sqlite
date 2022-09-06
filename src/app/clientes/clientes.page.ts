@@ -99,7 +99,7 @@ export class ClientesPage implements OnInit {
     console.log('de', this.idExDeuda);
     console.log('tiene deudas ', this.idExDeuda[0].cantDeudas);
 
-    if(this.idExDeuda[0].cantDeudas == 0){
+    if(this.idExDeuda[0].cantDeudas === 0){
       this.database.deleteClientes(id).then((data) => {
         alert(data);
         this.getClientes();

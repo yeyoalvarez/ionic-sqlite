@@ -7,14 +7,16 @@ import { IonicModule } from '@ionic/angular';
 import { DeudasClientesPageRoutingModule } from './deudas-clientes-routing.module';
 
 import { DeudasClientesPage } from './deudas-clientes.page';
+import {Ng2SearchPipeModule} from "ng2-search-filter";
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    DeudasClientesPageRoutingModule
-  ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        DeudasClientesPageRoutingModule,
+        Ng2SearchPipeModule
+    ],
   declarations: [DeudasClientesPage]
 })
 export class DeudasClientesPageModule {}
