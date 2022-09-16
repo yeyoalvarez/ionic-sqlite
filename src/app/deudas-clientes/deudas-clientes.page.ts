@@ -9,6 +9,8 @@ import {ActivatedRoute} from '@angular/router';
 })
 export class DeudasClientesPage implements OnInit {
 
+  idrecibido: string;
+  id: string;
   clientes: any = [];
   clientesId = 0;
   productosId = 0;
@@ -32,9 +34,11 @@ export class DeudasClientesPage implements OnInit {
   items: any[] = [];
   textoBuscar = '';
 
-  constructor(public database: DatabaseService) {
+  constructor(public database: DatabaseService,
+              private activatedRoute: ActivatedRoute,
+  ) {
     this.database.createDatabase().then(() => {
-      // will call get categories
+      this.idrecibido = this.activatedRoute.snapshot.paramMap.get('id');
       this.getDeudas();
     });
   }

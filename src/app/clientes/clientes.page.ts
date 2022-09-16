@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DatabaseService } from '../database.service';
 import { LoadingController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 
 @Component({
@@ -22,6 +23,7 @@ export class ClientesPage implements OnInit {
   editId = 0;
   selectedItem: any;
   textoBuscar = '';
+  p = 1; //variable de paginacion
 
   constructor(public database: DatabaseService,
               public loadingController: LoadingController,

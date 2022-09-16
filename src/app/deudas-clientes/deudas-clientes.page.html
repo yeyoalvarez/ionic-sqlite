@@ -12,32 +12,24 @@
 </ion-header>
 
 <ion-content>
+  <ion-label>
+    Clientes
+  </ion-label>
 
   <ion-list>
-    <ion-item-sliding *ngFor="let deuda of deudas | filter:textoBuscar" >
-      <ion-item-options side="start">
-        <ion-item-option [routerLink]="['/deudas-activas',deuda.id]">Detalles</ion-item-option>
-      </ion-item-options>
+    <ion-item *ngFor="let deuda of deudas | filter:textoBuscar" [routerLink]="['/deudas-activas',deuda.id]" >
 
       <ion-grid>
         <ion-row>
-          <ion-col size="3" style="background-color: lightskyblue">
-            Cliente
-          </ion-col>
+            {{deuda.clientes}}
         </ion-row>
       </ion-grid>
 
-      <ion-item>
-        <ion-grid>
-          <ion-row>
-            <ion-label>
-              {{deuda.clientes}}
-            </ion-label>
-          </ion-row>
-        </ion-grid>
-      </ion-item>
-
-    </ion-item-sliding>
+    </ion-item>
   </ion-list>
+
+  <ion-content side="end">
+    <ion-button expand="block" [routerLink]="['/deudas']"> Añadir Deuda</ion-button>
+  </ion-content>
 
 </ion-content>
