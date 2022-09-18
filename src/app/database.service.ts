@@ -60,12 +60,12 @@ export class DatabaseService {
       []
     );
 
-    // await this.databaseObj.executeSql(
-    //   `CREATE TABLE IF NOT EXISTS ${this.tables.recordatorioPagos} (id INTEGER PRIMARY KEY AUTOINCREMENT,
-    //   idCliente INTEGER UNSIGNED NOT NULL, fechaUltimoPago VARCHAR(255),
-    //   recordatorioPago VARCHAR(1))`,
-    //   []
-    // );
+    await this.databaseObj.executeSql(
+      `CREATE TABLE IF NOT EXISTS ${this.tables.recordatorioPagos} (id INTEGER PRIMARY KEY AUTOINCREMENT,
+      idCliente INTEGER UNSIGNED NOT NULL, fechaUltimoPago VARCHAR(255),
+      recordatorioPago VARCHAR(1))`,
+      []
+    );
 
   }
 

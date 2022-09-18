@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {DatabaseService} from '../database.service';
 import * as moment from 'moment';
 moment.locale('es');
-import {NavController, ModalController } from '@ionic/angular';
-
+import {ModalController } from '@ionic/angular';
+import {ActivatedRoute} from '@angular/router';
 
 
 @Component({
@@ -13,6 +13,7 @@ import {NavController, ModalController } from '@ionic/angular';
 })
 export class DeudasActivasPage implements OnInit {
 
+  idrecibido: string;
   clientes: any = [];
   clientesId = 0;
   productosId = 0;
@@ -37,9 +38,11 @@ export class DeudasActivasPage implements OnInit {
   textoBuscar = '';
 
   constructor(public database: DatabaseService,
-              public modalCtrl: ModalController) {
+              public modalCtrl: ModalController,
+              private activatedRoute: ActivatedRoute,
+  ) {
     this.database.createDatabase().then(() => {
-      // will call get categories
+      this.idrecibido = this.activatedRoute.snapshot.paramMap.get('id');
       this.getDeudas();
     });
   }
@@ -56,6 +59,17 @@ export class DeudasActivasPage implements OnInit {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   }
 
+  comprarValores(valor: number){
+    console.log('valor1', valor);
+    console.log('idrecibido', this.idrecibido);
+    if (valor === Number(this.idrecibido)){
+      console.log('comparacion verdadera');
+      return true;
+    } else {
+      console.log('comparacion falsa');
+      return false;
+    }
+  }
 
   getProductos() {
     this.database.getProductos().then((data) => {

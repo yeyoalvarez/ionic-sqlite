@@ -1,9 +1,10 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Deudas Activas</ion-title>
+      <ion-title>
+        Deudas Actuales del Cliente
+      </ion-title>
   </ion-toolbar>
   <ion-searchbar animated placeholder="Buscar Deudor"
                  showCancelButton="focus" cancelButtonText="Custom Cancel"
@@ -14,41 +15,39 @@
 <ion-content>
 
   <ion-list>
-    <ion-item-sliding *ngFor="let deuda of deudas | filter:textoBuscar">
+    <ion-item-sliding *ngFor="let deuda of deudas | filter:textoBuscar " >
       <ion-item-options side="start">
         <ion-item-option [routerLink]="['/deudas-detalles',deuda.id]">Detalles</ion-item-option>
       </ion-item-options>
 
-      <ion-grid>
+      <ion-grid *ngIf="comprarValores(deuda.id)">
+        Deudas de {{deuda.clientes}}
+      </ion-grid>
+
+      <ion-grid *ngIf="comprarValores(deuda.id)">
         <ion-row>
-          <ion-col size="3" style="background-color: lightskyblue">
-            Cliente {{deuda.id}}
-          </ion-col>
-          <ion-col size="3" style="background-color: lightskyblue">
+          <ion-col size="4" style="background-color: lightskyblue">
             Producto
           </ion-col>
-          <ion-col size="3" style="background-color: lightskyblue">
+          <ion-col size="4" style="background-color: lightskyblue">
             Fecha
           </ion-col>
-          <ion-col size="3" style="background-color: lightskyblue">
+          <ion-col size="4" style="background-color: lightskyblue">
             Monto
           </ion-col>
         </ion-row>
       </ion-grid>
 
-      <ion-item>
+      <ion-item *ngIf="comprarValores(deuda.id)">
         <ion-grid>
         <ion-row>
-          <ion-col size="3">
-            {{ deuda.clientes }}
-          </ion-col>
-          <ion-col size="3">
+          <ion-col size="4">
             {{ deuda.productos}}
           </ion-col>
-          <ion-col size="3">
+          <ion-col size="4">
             {{ deuda.fecha }}
           </ion-col>
-          <ion-col size="3">
+          <ion-col size="4">
             {{ moneda(deuda.monto) }}
           </ion-col>
         </ion-row>

@@ -1,8 +1,8 @@
-<ion-header>
+<<ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button text="atras"       ></ion-back-button>
-<!--                       default-href="/deudas-activas"-->
+      <!--                       default-href="/deudas-activas"-->
 
     </ion-buttons>
     <ion-title>Detalles de la Deuda</ion-title>
@@ -13,64 +13,64 @@
 
   <ion-list>
 
-<ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
-  <ion-refresher-content></ion-refresher-content>
-</ion-refresher>
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+      <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
 
 
 
     <ion-item-sliding *ngFor="let historial of historiales" >
-        <ng-container *ngIf="historial.idDeuda === getIdDeuda()">
-          <p *ngIf="historial.montos === primermonto">
-            <ion-grid>
-              <ion-row>
-                <ion-col size="12">
-                  Cliente: {{historial.clientes}}
-                </ion-col>
-                <ion-col size="12">
-                  Producto: {{historial.productos}}
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-          </p>
-
+      <ng-container *ngIf="historial.idDeuda === getIdDeuda()">
+        <p *ngIf="historial.montos === primermonto">
           <ion-grid>
             <ion-row>
-              <ion-col size="6">
-                Fecha: {{historial.fechas}}
+              <ion-col size="12">
+                Cliente: {{historial.clientes}}
               </ion-col>
-              <ion-col size="6">
-                Pago: {{moneda(pagoAnterior(historial.montos))}}
-              </ion-col>
-              <ion-col size="6">
-                Deuda: {{ moneda(historial.montos) }}
+              <ion-col size="12">
+                Producto: {{historial.productos}}
               </ion-col>
             </ion-row>
           </ion-grid>
+        </p>
 
-          <ng-container *ngIf="historial.montos === ultimoMonto">
-            <p>Telefono: {{paisCodigo}} {{historial.telefono}}<br/></p>
-              <ion-button href={{url+historial.telefono}} color="success">
-                <ion-icon name="logo-whatsapp"></ion-icon>
-              </ion-button>
-            <ion-button (click)="generarPDF()">
-              <ion-icon name="document"></ion-icon>
-            </ion-button>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6">
+              Fecha: {{historial.fechas}}
+            </ion-col>
+            <ion-col size="6">
+              Pago: {{moneda(pagoAnterior(historial.montos))}}
+            </ion-col>
+            <ion-col size="6">
+              Deuda: {{ moneda(historial.montos) }}
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <ng-container *ngIf="historial.montos === ultimoMonto">
+          <p>Telefono: {{paisCodigo}} {{historial.telefono}}<br/></p>
+          <ion-button href={{url+historial.telefono}} color="success">
+            <ion-icon name="logo-whatsapp"></ion-icon>
+          </ion-button>
+          <ion-button (click)="generarPDF()">
+            <ion-icon name="document"></ion-icon>
+          </ion-button>
 
 
-            <ion-list>
-              <ion-item>
-                <ion-label position="floating">Añadir Monto</ion-label>
-                <ion-input [(ngModel)]="montoDeuda"></ion-input>
-              </ion-item>
-              <ng-container *ngIf="historial.idDeuda === getIdDeuda()">
+          <ion-list>
+            <ion-item>
+              <ion-label position="floating">Añadir Monto</ion-label>
+              <ion-input [(ngModel)]="montoDeuda"></ion-input>
+            </ion-item>
+            <ng-container *ngIf="historial.idDeuda === getIdDeuda()">
               <ion-button expand="block" (click)="editDeudas(historial)" [routerLink]="['/deudas-activas']">
                 Realizar Pago</ion-button>
-              </ng-container>
-            </ion-list>
-          </ng-container>
-
+            </ng-container>
+          </ion-list>
         </ng-container>
+
+      </ng-container>
     </ion-item-sliding>
 
   </ion-list>

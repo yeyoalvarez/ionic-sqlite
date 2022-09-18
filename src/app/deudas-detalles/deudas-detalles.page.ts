@@ -176,9 +176,9 @@ export class DeudasDetallesPage implements OnInit {
 
   getLastMonto() {
     this.database.getLastMonto(Number(this.idrecibido)).then((data) => {
-          this.lastMonto.push(data.rows.item(0));
-        this.ultimoMonto = this.lastMonto[0].monto;
-      });
+      this.lastMonto.push(data.rows.item(0));
+      this.ultimoMonto = this.lastMonto[0].monto;
+    });
   }
 
   getFirstMonto() {
