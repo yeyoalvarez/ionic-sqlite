@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button text="atras"></ion-back-button>
+      <ion-back-button></ion-back-button>
     </ion-buttons>
     <ion-title>Añadir Deuda</ion-title>
   </ion-toolbar>
@@ -52,8 +52,17 @@
       ></ion-datetime>
     </ion-item>
 
-    <ion-button expand="block" (click)="addDeudas()">Añadir</ion-button>
+    <ion-item>
+      <ion-label>Periodos de Cobro</ion-label>
+      <ion-label position="floating">Añade el monto adeudado</ion-label>
+
+    </ion-item>
+
+    <ion-button expand="block" (click)="addDeudas()"
+                [routerLink]="['/deudas-detalles']" >Añadir</ion-button>
   </ion-list>
 
+  <ion-row>Observacion: Si el cliente ya posee una deuda esta no se creara
+  hasta cancelar la deuda anterior</ion-row>
 
 </ion-content>

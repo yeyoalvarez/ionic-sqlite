@@ -41,7 +41,8 @@ export class DatabaseService {
 
     await this.databaseObj.executeSql(
       `CREATE TABLE IF NOT EXISTS ${this.tables.clientes} (id INTEGER PRIMARY KEY AUTOINCREMENT,
-       name VARCHAR(255) NOT NULL, telefono INTEGER UNSIGNED NOT NULL)`,
+       name VARCHAR(255) NOT NULL, telefono INTEGER UNSIGNED NOT NULL, ci INTEGER UNSIGNED,
+       direccion text(255))`,
       []
     );
 
@@ -62,7 +63,6 @@ export class DatabaseService {
 
     await this.databaseObj.executeSql(
       `CREATE TABLE IF NOT EXISTS ${this.tables.recordatorioPagos} (id INTEGER PRIMARY KEY AUTOINCREMENT,
-      idCliente INTEGER UNSIGNED NOT NULL, fechaUltimoPago VARCHAR(255),
       recordatorioPago VARCHAR(1))`,
       []
     );
@@ -184,7 +184,9 @@ export class DatabaseService {
     return this.databaseObj
       .executeSql(
         `INSERT INTO ${this.tables.deudas} (clientesId, productosId, monto, fecha, estado)
-         VALUES ('${clientesId}', ${productosId}, ${monto},'${fecha}','TRUE')`,
+         SELECT '${clientesId}', ${productosId}, ${monto},'${fecha}','TRUE'
+          WHERE NOT EXISTS(SELECT 1 FROM deudas
+          WHERE clientesid = '${clientesId}' and estado == 'TRUE');`,
         []
       )
       .then(() => 'deuda creada')

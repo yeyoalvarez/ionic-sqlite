@@ -50,6 +50,10 @@ export class DeudasClientesPage implements OnInit {
     this.getDeudas();
   }
 
+  moneda(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  }
+
   getDeudas() {
     this.database.getDeudas().then((data) => {
       this.deudas = [];
