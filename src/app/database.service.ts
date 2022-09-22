@@ -41,15 +41,15 @@ export class DatabaseService {
 
     await this.databaseObj.executeSql(
       `CREATE TABLE IF NOT EXISTS ${this.tables.clientes} (id INTEGER PRIMARY KEY AUTOINCREMENT,
-       name VARCHAR(255) NOT NULL, telefono INTEGER UNSIGNED NOT NULL, ci INTEGER UNSIGNED,
-       direccion text(255))`,
+       name VARCHAR(255) NOT NULL, telefono INTEGER UNSIGNED NOT NULL)`,
       []
     );
 
     await this.databaseObj.executeSql(
       `CREATE TABLE IF NOT EXISTS ${this.tables.deudas} (id INTEGER PRIMARY KEY AUTOINCREMENT,
       productosId INTEGER UNSIGNED NOT NULL, clientesId INTEGER UNSIGNED NOT NULL,
-      monto INTEGER UNSIGNED NOT NULL, fecha VARCHAR(255),estado BOOLEAN)`,
+      monto INTEGER UNSIGNED NOT NULL, fecha VARCHAR(255),estado BOOLEAN,
+      recordatorioId INTEGER UNSIGNED NOT NULL)`,
       []
     );
 
@@ -63,10 +63,25 @@ export class DatabaseService {
 
     await this.databaseObj.executeSql(
       `CREATE TABLE IF NOT EXISTS ${this.tables.recordatorioPagos} (id INTEGER PRIMARY KEY AUTOINCREMENT,
-      recordatorioPago VARCHAR(1))`,
+      recordatorio VARCHAR(1))`,
       []
     );
 
+    /* valores por defaul en la tabla recordatorio, M: mensual, S: semanal*/
+    await this.databaseObj.executeSql(
+      `INSERT INTO ${this.tables.recordatorioPagos} (recordatorio)
+      SELECT 'M'
+      WHERE NOT EXISTS(SELECT 1 FROM recordatorioPagos WHERE recordatorio = 'S'
+      or recordatorio = 'M');`,
+      []
+    );
+    await this.databaseObj.executeSql(
+      `INSERT INTO ${this.tables.recordatorioPagos} (recordatorio)
+      SELECT 'S'
+      WHERE NOT EXISTS(SELECT 1 FROM recordatorioPagos WHERE recordatorio = 'S'
+      or recordatorio = 'M'); `,
+      []
+    );
   }
 
   async addProductos(name: string) {
@@ -180,11 +195,11 @@ export class DatabaseService {
       });
   }
 
-  async addDeudas(clientesId: number, productosId: number, monto: number, fecha: string) {
+  async addDeudas(clientesId: number, productosId: number, monto: number, fecha: string, recordar: number) {
     return this.databaseObj
       .executeSql(
-        `INSERT INTO ${this.tables.deudas} (clientesId, productosId, monto, fecha, estado)
-         SELECT '${clientesId}', ${productosId}, ${monto},'${fecha}','TRUE'
+        `INSERT INTO ${this.tables.deudas} (clientesId, productosId, monto, fecha, estado, recordatorioId)
+         SELECT '${clientesId}', ${productosId}, ${monto},'${fecha}','TRUE', ${recordar}
           WHERE NOT EXISTS(SELECT 1 FROM deudas
           WHERE clientesid = '${clientesId}' and estado == 'TRUE');`,
         []

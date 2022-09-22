@@ -13,6 +13,8 @@ export class DeudasPage implements OnInit {
 
   textoBuscar = '';
   clientes: any = [];
+  recordatorio = ['M', 'S'];
+  recordar: any = [];
   clientesId = 0;
   productosId = 0;
   idDeuda: any = [];
@@ -74,6 +76,13 @@ export class DeudasPage implements OnInit {
     this.productosId = this.aux.id;
   }
 
+  portChangeR(event: {
+    component: IonicSelectableComponent;value: any;
+  }) {
+    this.aux = event.value;
+    this.recordar = this.aux.id;
+  }
+
   getProductos() {
     this.database.getProductos().then((data) => {
       this.productos = [];
@@ -97,7 +106,6 @@ export class DeudasPage implements OnInit {
   }
 
   addDeudas() {
-
     if (this.clientesId === 0) {
       alert('Seleccionar el cliente');
       return;
@@ -118,6 +126,12 @@ export class DeudasPage implements OnInit {
       return;
     }
 
+    if (this.recordar === 'M'){
+      this.auxId = 1;
+    }else{
+      this.auxId = 2;
+    }
+
     if (this.editMode) {
       if (this.estado === true){
         this.database
@@ -133,7 +147,7 @@ export class DeudasPage implements OnInit {
       }} else {
       this.database
         .addDeudas(this.clientesId, this.productosId, this.montoDeuda,
-          this.fecha)
+          this.fecha, this.auxId)
         .then((data) => {
           this.montoDeuda = 0;
           this.productosId = 0;
@@ -164,7 +178,7 @@ export class DeudasPage implements OnInit {
     });
   }
 
-  editDeudas(deudas: any) {
+  editDeudas(deudas: any){
     this.editMode = true;
     this.selectedClientesId = deudas.clientesId;
     this.selectedProductosId = deudas.productosId;

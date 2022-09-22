@@ -24,10 +24,6 @@ const routes: Routes = [
     loadChildren: () => import('./inicio/inicio.module').then( m => m.InicioPageModule)
   },
   {
-    path: 'deudas-activas/:id',
-    loadChildren: () => import('./deudas-activas/deudas-activas.module').then( m => m.DeudasActivasPageModule)
-  },
-  {
     path: 'deudas-detalles/:id',
     loadChildren: () => import('./deudas-detalles/deudas-detalles.module').then( m => m.DeudasDetallesPageModule)
   },

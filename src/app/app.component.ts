@@ -14,7 +14,6 @@ export class AppComponent {
     { title: 'Productos', url: '/productos', icon: 'cart' },
     { title: 'Clientes', url: '/clientes', icon: 'person-add' },
     { title: 'Deudas Clientes', url: '/deudas-clientes', icon: 'wallet' },
-    // { title: 'Deudas', url: '/deudas-activas', icon: 'wallet' },
     { title: 'Contactos', url: '/contactos', icon: 'people' },
     // { title: 'Outbox', url: '/folder/Outbox', icon: 'paper-plane' },
     // { title: 'Favorites', url: '/folder/Favorites', icon: 'heart' },

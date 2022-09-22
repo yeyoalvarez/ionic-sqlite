@@ -36,6 +36,19 @@
       </ionic-selectable>
     </ion-item>
 
+    <ion-item>
+      <ion-label>Seleccionar el recordatorio Mensual/Semanal</ion-label>
+      <ionic-selectable
+        [(ngModel)]="seleccionarCli"
+        [items]="recordatorio"
+        itemValueField="id"
+        itemTextField="name"
+        [canSearch]="true"
+        (onChange)="portChangeR($event)"
+      >
+      </ionic-selectable>
+    </ion-item>
+
 
     <ion-item>
       <ion-label position="floating">Añade el monto adeudado</ion-label>
@@ -62,7 +75,7 @@
                 [routerLink]="['/deudas-detalles']" >Añadir</ion-button>
   </ion-list>
 
-  <ion-row>Observacion: Si el cliente ya posee una deuda esta no se creara
+  <ion-row>Observacion: Si el cliente ya posee una deuda, esta no se creara
   hasta cancelar la deuda anterior</ion-row>
 
 </ion-content>
