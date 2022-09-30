@@ -37,12 +37,12 @@
     </ion-item>
 
     <ion-item>
-      <ion-label>Seleccionar el recordatorio Mensual/Semanal</ion-label>
+      <ion-label>Seleccionar el recordatorio</ion-label>
       <ionic-selectable
-        [(ngModel)]="seleccionarCli"
+        [(ngModel)]="seleccionarRec"
         [items]="recordatorio"
         itemValueField="id"
-        itemTextField="name"
+        itemTextField="recordatorio"
         [canSearch]="true"
         (onChange)="portChangeR($event)"
       >
@@ -66,7 +66,6 @@
     </ion-item>
 
     <ion-item>
-      <ion-label>Periodos de Cobro</ion-label>
       <ion-label position="floating">Añade el monto adeudado</ion-label>
 
     </ion-item>

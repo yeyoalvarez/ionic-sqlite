@@ -13,8 +13,8 @@ export class DeudasPage implements OnInit {
 
   textoBuscar = '';
   clientes: any = [];
-  recordatorio = ['M', 'S'];
-  recordar: any = [];
+  recordatorio: any = [];
+  recordar = 0;
   clientesId = 0;
   productosId = 0;
   idDeuda: any = [];
@@ -29,6 +29,7 @@ export class DeudasPage implements OnInit {
 
   seleccionarCli = 0;
   seleccionarPro = 0;
+  seleccionarRec = 0;
   productos: any = [];
   aux: any = [];
 
@@ -42,6 +43,7 @@ export class DeudasPage implements OnInit {
     this.getProductos();
     this.getClientes();
     this.getDeudas();
+    this.getRecordatorio();
   }
 
 
@@ -52,7 +54,6 @@ export class DeudasPage implements OnInit {
 
   cambioFecha(event){
     this.fecha = moment(event.detail.value).format('DD/MM/YY');
-    console.log('solo fecha', this.fecha);
   }
 
   ionViewWillEnter() {
@@ -102,6 +103,19 @@ export class DeudasPage implements OnInit {
           this.clientes.push(data.rows.item(i));
         }
       }
+      console.log('clientes',this.clientes);
+    });
+  }
+
+  getRecordatorio() {
+    this.database.getRecordatorio().then((data) => {
+      this.recordatorio = [];
+      if (data.rows.length > 0) {
+        for (let i = 0; i < data.rows.length; i++) {
+          this.recordatorio.push(data.rows.item(i));
+        }
+      }
+      console.log('recordatorio',this.recordatorio);
     });
   }
 
@@ -126,7 +140,8 @@ export class DeudasPage implements OnInit {
       return;
     }
 
-    if (this.recordar === 'M'){
+    console.log('recordar ', this.recordar);
+    if (this.recordar === 1){
       this.auxId = 1;
     }else{
       this.auxId = 2;
@@ -194,6 +209,4 @@ export class DeudasPage implements OnInit {
     });
   }
 
-
 }
-

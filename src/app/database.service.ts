@@ -63,25 +63,25 @@ export class DatabaseService {
 
     await this.databaseObj.executeSql(
       `CREATE TABLE IF NOT EXISTS ${this.tables.recordatorioPagos} (id INTEGER PRIMARY KEY AUTOINCREMENT,
-      recordatorio VARCHAR(1))`,
+      recordatorio VARCHAR(255) NOT NULL UNIQUE )`,
       []
     );
 
     /* valores por defaul en la tabla recordatorio, M: mensual, S: semanal*/
     await this.databaseObj.executeSql(
       `INSERT INTO ${this.tables.recordatorioPagos} (recordatorio)
-      SELECT 'M'
-      WHERE NOT EXISTS(SELECT 1 FROM recordatorioPagos WHERE recordatorio = 'S'
-      or recordatorio = 'M');`,
+      SELECT 'Mensual'
+      WHERE NOT EXISTS(SELECT 1 FROM recordatorioPagos WHERE recordatorio = 'Mensual');`,
       []
     );
+
     await this.databaseObj.executeSql(
       `INSERT INTO ${this.tables.recordatorioPagos} (recordatorio)
-      SELECT 'S'
-      WHERE NOT EXISTS(SELECT 1 FROM recordatorioPagos WHERE recordatorio = 'S'
-      or recordatorio = 'M'); `,
+      SELECT 'Semanal'
+      WHERE NOT EXISTS(SELECT 1 FROM recordatorioPagos WHERE recordatorio = 'Semanal'); `,
       []
     );
+
   }
 
   async addProductos(name: string) {
@@ -216,10 +216,12 @@ export class DatabaseService {
         deudas.monto as monto,
         clientes.name as clientes,
         productos.name as productos, deudas.fecha as fecha,
-        clientes.telefono as telefono
+        clientes.telefono as telefono,
+        recordatorioPagos.recordatorio as recordatorio
         FROM deudas
         JOIN productos ON productos.id = deudas.productosId
         JOIN clientes ON  clientes.id = deudas.clientesid
+        JOIN recordatorioPagos ON recordatorioPagos.id = deudas.recordatorioid
         where deudas.estado =='TRUE'
         ORDER BY clientes ASC`,
         []
@@ -333,6 +335,16 @@ export class DatabaseService {
       )
       .then((res) => res)
       .catch((e) => 'error al buscar si existen deudas' + JSON.stringify(e));
+  }
+
+  async getRecordatorio(){
+    return this.databaseObj
+      .executeSql(
+        `SELECT * FROM ${this.tables.recordatorioPagos}`,
+        []
+      )
+      .then((res) => res)
+      .catch((e) => 'error al obtener el recordatorio' + JSON.stringify(e));
   }
 
 }
