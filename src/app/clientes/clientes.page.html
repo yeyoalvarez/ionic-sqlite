@@ -26,6 +26,16 @@
       <ion-input [(ngModel)]="telefono"></ion-input>
     </ion-item>
 
+    <ion-item>
+      <ion-label position="floating">Ci del Cliente</ion-label>
+      <ion-input [(ngModel)]="ci"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Direccion del Cliente</ion-label>
+      <ion-input [(ngModel)]="direccion"></ion-input>
+    </ion-item>
+
     <section>
       <ion-button (click)="addClientes()">Añadir</ion-button>
     </section>
@@ -39,7 +49,7 @@
         <ion-item-option (click)="editClientes(cliente)">Editar</ion-item-option>
       </ion-item-options>
 
-      <ion-item>
+      <ion-item [routerLink]="['/clientes-detalles', cliente.id]">
         <ion-label>{{ cliente.name }}</ion-label>
         <ion-label>{{ paisCodigo }} {{ cliente.telefono }}</ion-label>
       </ion-item>

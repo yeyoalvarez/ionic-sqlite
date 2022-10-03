@@ -34,7 +34,11 @@ const routes: Routes = [
   {
     path: 'deudas-clientes',
     loadChildren: () => import('./deudas-clientes/deudas-clientes.module').then( m => m.DeudasClientesPageModule)
+  },  {
+    path: 'clientes-detalles',
+    loadChildren: () => import('./clientes-detalles/clientes-detalles.module').then( m => m.ClientesDetallesPageModule)
   },
+
 
 
 

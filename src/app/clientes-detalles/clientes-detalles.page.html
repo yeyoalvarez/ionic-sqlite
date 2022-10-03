@@ -1,0 +1,42 @@
+<ion-header [translucent]="true" no-border>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Detalles del Cliente</ion-title>
+  </ion-toolbar>
+  <ion-searchbar animated placeholder="Buscar Cliente"
+                 showCancelButton="focus" cancelButtonText="Custom Cancel">
+  </ion-searchbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-list>
+    <ion-item-sliding *ngFor="let cliente of clientes">
+
+      <ion-grid>
+        <ion-row>
+          <ion-col size="6">
+            Cliente: {{ cliente.name }}
+          </ion-col>
+          <ion-col size="6">
+            Telefono: {{ paisCodigo }} {{ cliente.telefono }}
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="6">
+            Cedula: {{ cliente.ci }}
+          </ion-col>
+          <ion-col size="6">
+            Direccion: {{ cliente.direccion }}
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+    </ion-item-sliding>
+  </ion-list>
+
+</ion-content>

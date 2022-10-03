@@ -41,7 +41,7 @@ export class DatabaseService {
 
     await this.databaseObj.executeSql(
       `CREATE TABLE IF NOT EXISTS ${this.tables.clientes} (id INTEGER PRIMARY KEY AUTOINCREMENT,
-       name VARCHAR(255) NOT NULL, telefono INTEGER UNSIGNED NOT NULL)`,
+       name VARCHAR(255) NOT NULL, telefono INTEGER UNSIGNED NOT NULL, ci INTEGER, direccion VARCHAR(255) )`,
       []
     );
 
@@ -49,7 +49,7 @@ export class DatabaseService {
       `CREATE TABLE IF NOT EXISTS ${this.tables.deudas} (id INTEGER PRIMARY KEY AUTOINCREMENT,
       productosId INTEGER UNSIGNED NOT NULL, clientesId INTEGER UNSIGNED NOT NULL,
       monto INTEGER UNSIGNED NOT NULL, fecha VARCHAR(255),estado BOOLEAN,
-      recordatorioId INTEGER UNSIGNED NOT NULL)`,
+      recordatorioId INTEGER UNSIGNED NOT NULL, detalles VARCHAR(255) )`,
       []
     );
 
@@ -57,17 +57,18 @@ export class DatabaseService {
       `CREATE TABLE IF NOT EXISTS historial(id INTEGER PRIMARY KEY AUTOINCREMENT,
       idProducto INTEGER UNSIGNED NOT NULL, idCliente INTEGER UNSIGNED NOT NULL,
       idDeuda INTEGER UNSIGNED NOT NULL, estado BOOLEAN,
-      montos INTEGER UNSIGNED NOT NULL, fechas VARCHAR(255))`,
+      montos INTEGER UNSIGNED NOT NULL, fechas VARCHAR(255),
+      detalles VARCHAR(255) )`,
       []
     );
 
     await this.databaseObj.executeSql(
       `CREATE TABLE IF NOT EXISTS ${this.tables.recordatorioPagos} (id INTEGER PRIMARY KEY AUTOINCREMENT,
-      recordatorio VARCHAR(255) NOT NULL UNIQUE )`,
+      recordatorio VARCHAR(255) NOT NULL UNIQUE)`,
       []
     );
 
-    /* valores por defaul en la tabla recordatorio, M: mensual, S: semanal*/
+    /* valores por defaul en la tabla recordatorio, mensual y semanal*/
     await this.databaseObj.executeSql(
       `INSERT INTO ${this.tables.recordatorioPagos} (recordatorio)
       SELECT 'Mensual'
@@ -133,10 +134,11 @@ export class DatabaseService {
       });
   }
 
-  async addClientes(name: string, telefono: number) {
+  async addClientes(name: string, telefono: number, ci: number, direccion: string) {
     return this.databaseObj
       .executeSql(
-        `INSERT INTO ${this.tables.clientes} (name, telefono) VALUES ('${name}',${telefono})`,
+        `INSERT INTO ${this.tables.clientes} (name, telefono, ci, direccion) VALUES ('${name}',${telefono},
+        ${ci}, '${direccion}')`,
         []
       )
       .then(() => 'Cliente Creado')
@@ -170,6 +172,17 @@ export class DatabaseService {
       .catch((e) => 'error al obtener clientes' + JSON.stringify(e));
   }
 
+  async getClienteDetalles(id: number) {
+    return this.databaseObj
+      .executeSql(
+        `SELECT * FROM ${this.tables.clientes}
+        WHERE id = ${id}`,
+        []
+      )
+      .then((res) => res)
+      .catch((e) => 'error al obtener clientes' + JSON.stringify(e));
+  }
+
   async deleteClientes(id: number) {
     return this.databaseObj
       .executeSql(`DELETE FROM ${this.tables.clientes} WHERE id = ${id}`, [])
@@ -177,11 +190,12 @@ export class DatabaseService {
       .catch((e) => 'error al eliminar cliente' + JSON.stringify(e));
   }
 
-  async editClientes(name: string, id: number, telefono: number) {
+  async editClientes(name: string, id: number, telefono: number, ci: number,
+                     direccion: string) {
     return this.databaseObj
       .executeSql(
         `UPDATE ${this.tables.clientes} SET name = '${name}',
-         telefono = ${telefono}
+         telefono = ${telefono}, ci = ${ci}, direccion = '${direccion}'
          WHERE id = ${id}`,
         []
       )
@@ -195,11 +209,11 @@ export class DatabaseService {
       });
   }
 
-  async addDeudas(clientesId: number, productosId: number, monto: number, fecha: string, recordar: number) {
+  async addDeudas(clientesId: number, productosId: number, monto: number, fecha: string, recordar: number, detalles: string) {
     return this.databaseObj
       .executeSql(
-        `INSERT INTO ${this.tables.deudas} (clientesId, productosId, monto, fecha, estado, recordatorioId)
-         SELECT '${clientesId}', ${productosId}, ${monto},'${fecha}','TRUE', ${recordar}
+        `INSERT INTO ${this.tables.deudas} (clientesId, productosId, monto, fecha, estado, recordatorioId, detalles)
+         SELECT '${clientesId}', ${productosId}, ${monto},'${fecha}','TRUE', ${recordar}, '${detalles}'
           WHERE NOT EXISTS(SELECT 1 FROM deudas
           WHERE clientesid = '${clientesId}' and estado == 'TRUE');`,
         []
@@ -261,11 +275,11 @@ export class DatabaseService {
 
   /*funciones para la tabla historia de deudas*/
 
-  async addHistorialNuevo(clientesId: number, productosId: number, monto: number, fecha: string) {
+  async addHistorialNuevo(clientesId: number, productosId: number, monto: number, fecha: string, detalles: string) {
     return this.databaseObj
       .executeSql(
-        `INSERT INTO ${this.tables.historial} (idCliente, idProducto, idDeuda, montos, fechas,estado)
-         VALUES ('${clientesId}', ${productosId},(SELECT MAX(id) AS id from deudas), ${monto},'${fecha}','TRUE')`,
+        `INSERT INTO ${this.tables.historial} (idCliente, idProducto, idDeuda, montos, fechas,estado, detalles)
+         VALUES ('${clientesId}', ${productosId},(SELECT MAX(id) AS id from deudas), ${monto},'${fecha}','TRUE','${detalles}')`,
         []
       )
       .catch((e) => 'error al crear historial' + JSON.stringify(e));
@@ -280,7 +294,8 @@ export class DatabaseService {
         clientes.name as clientes,
         productos.name as productos, historial.fechas as fechas,
         clientes.telefono as telefono,
-        historial.estado AS estado
+        historial.estado AS estado,
+        historial.detalles AS detalles
         FROM historial
         JOIN productos ON productos.id = historial.idProducto
         JOIN clientes ON  clientes.id = historial.idCliente
@@ -291,11 +306,14 @@ export class DatabaseService {
       .catch((e) => 'error al obtener historial' + JSON.stringify(e));
   }
 
-  async addHistorial(clientesId: number, productosId: number, idDeuda: number, monto: number, fecha: string) {
+  async addHistorial(clientesId: number, productosId: number, idDeuda: number, monto: number,
+                     fecha: string, detalles: string) {
     return this.databaseObj
       .executeSql(
-        `INSERT INTO ${this.tables.historial} (idCliente, idProducto, idDeuda, montos, fechas,estado)
-         VALUES ('${clientesId}', ${productosId},${idDeuda}, ${monto},'${fecha}','TRUE')`,
+        `INSERT INTO ${this.tables.historial} (idCliente, idProducto, idDeuda, montos, fechas,
+         estado,detalles)
+         VALUES ('${clientesId}', ${productosId},${idDeuda}, ${monto},'${fecha}',
+         'TRUE', '${detalles}')`,
         []
       )
       .catch((e) => 'error al crear historial' + JSON.stringify(e));

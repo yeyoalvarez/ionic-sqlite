@@ -66,8 +66,12 @@
     </ion-item>
 
     <ion-item>
-      <ion-label position="floating">Añade el monto adeudado</ion-label>
+      <ion-label position="floating">Detalles del Pago/Incremento de Deuda</ion-label>
+      <ion-input [(ngModel)]="detalles"></ion-input>
+    </ion-item>
 
+    <ion-item>
+      <ion-label position="floating">Añade el monto adeudado</ion-label>
     </ion-item>
 
     <ion-button expand="block" (click)="addDeudas()"

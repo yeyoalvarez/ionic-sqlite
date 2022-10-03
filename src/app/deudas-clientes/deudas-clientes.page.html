@@ -17,14 +17,14 @@
     <ion-item *ngFor="let deuda of deudas | filter:textoBuscar" [routerLink]="['/deudas-detalles',deuda.id]" >
 
       <ion-grid>
-        <ion-col size="6">
+        <ion-col>
             {{deuda.clientes}}
         </ion-col>
-        <ion-col size="6">
+        <ion-col>
           {{ moneda(deuda.monto) }}
         </ion-col>
-        <ion-col size="6">
-          {{ moneda(deuda.recordatorio) }}
+        <ion-col>
+          {{ deuda.recordatorio}}
         </ion-col>
       </ion-grid>
 

@@ -15,6 +15,8 @@ export class ClientesPage implements OnInit {
   clientes: any = [];
   telefonos: any = [];
   telefono=9;
+  ci = 0;
+  direccion = '';
   paisCodigo = '595';
   idExisteDeuda = 0;
   idExDeuda: any = [];
@@ -60,27 +62,29 @@ export class ClientesPage implements OnInit {
     if (this.editMode) {
       // edit category
       this.database
-        .editClientes(this.clienteNombre, this.editId, this.telefono)
+        .editClientes(this.clienteNombre, this.editId, this.telefono, this.ci, this.direccion)
         .then((data) => {
           this.clienteNombre = '';
           this.telefono = 9;
           this.editMode = false;
           this.editId = 0;
+          this.ci = 0;
+          this.direccion = '';
           alert(data);
           this.getClientes();
         });
     } else {
       // add category
-      this.database.addClientes(this.clienteNombre, this.telefono).then((data) => {
+      this.database.addClientes(this.clienteNombre, this.telefono, this.ci, this.direccion).then((data) => {
         this.clienteNombre = '';
         this.telefono = 9;
+        this.ci = 0;
+        this.direccion = '';
         alert(data);
         this.getClientes();
       });
     }
   }
-
-
 
   getClientes() {
     this.database.getClientes().then((data) => {
@@ -116,6 +120,8 @@ export class ClientesPage implements OnInit {
     this.editMode = true;
     this.clienteNombre = cliente.name;
     this.telefono = cliente.telefono;
+    this.ci = cliente.ci;
+    this.direccion = cliente.direccion;
     this.editId = cliente.id;
   }
 

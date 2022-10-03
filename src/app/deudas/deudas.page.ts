@@ -24,6 +24,7 @@ export class DeudasPage implements OnInit {
   deudas: any = [];
   historiales: any = [];
   fecha: any = [];
+  detalles: any = [];
   auxfecha: Date = new Date();
   estado = false;
 
@@ -162,21 +163,23 @@ export class DeudasPage implements OnInit {
       }} else {
       this.database
         .addDeudas(this.clientesId, this.productosId, this.montoDeuda,
-          this.fecha, this.auxId)
+          this.fecha, this.auxId, this.detalles)
         .then((data) => {
           this.montoDeuda = 0;
           this.productosId = 0;
           this.clientesId = 0;
+          this.recordar = 0;
           alert(data);
         });
 
       this.database
         .addHistorialNuevo(this.clientesId, this.productosId,this.montoDeuda,
-          this.fecha)
+          this.fecha, this.detalles)
         .then(() => {
           this.montoDeuda = 0;
           this.productosId = 0;
           this.clientesId = 0;
+          this.recordar = 0;
         });
 
     }

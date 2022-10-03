@@ -21,6 +21,7 @@ export class DeudasDetallesPage implements OnInit {
 
   id: string;
   idrecibido: string;
+  detalle: any;
   clientes: any = [];
   clientesId = 0;
   productosId = 0;
@@ -137,11 +138,12 @@ export class DeudasDetallesPage implements OnInit {
   addHistorial(deudas: any) {
     this.database
       .addHistorial(deudas.idCliente, deudas.idProducto, this.getIdDeuda(),deudas.montos-this.montoDeuda,
-        moment().format('DD/MM/YY'))
+        moment().format('DD/MM/YY'), this.detalle)
       .then(() => {
         this.montoDeuda = 0;
         this.productosId = 0;
         this.clientesId = 0;
+        this.detalle = [];
       });
   }
 
