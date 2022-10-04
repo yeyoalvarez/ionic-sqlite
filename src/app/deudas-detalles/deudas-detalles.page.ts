@@ -97,36 +97,62 @@ export class DeudasDetallesPage implements OnInit {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   }
 
-  editDeudas(deudas: any) {
-    if (this.montoDeuda > deudas.montos) {
-      alert('error al ingresar monto');
-      return;
-    }
-    if (this.montoDeuda < 1) {
-      alert('error al ingresar monto');
-      return;
+  editDeudas(deudas: any, operacion: number) {
+    /* Verificar datos de disminuir deuda*/
+      if (operacion === 1) {
+        if (this.montoDeuda > deudas.montos) {
+          alert('error al ingresar monto');
+          return;
+        }
+        if (this.montoDeuda < 1) {
+          alert('error al ingresar monto');
+          return;
+        }
+      }
+
+    /* verificar datos de aumentar deuda*/
+    if (operacion === 2) {
+      if (this.montoDeuda < 0) {
+        alert('error al ingresar monto');
+        return;
+      }
     }
 
     console.log(this.montoDeuda);
     console.log('monto a pagar');
     console.log(deudas.montos);
-    if (Number(deudas.montos) === Number(this.montoDeuda)){
+
+    /*si se disminuira la deuda y es el monto total, se cancelara*/
+    if (Number(deudas.montos) === Number(this.montoDeuda)
+    && operacion === 1 ){
       this.database
         .deudaCancelada(0, this.getIdDeuda())
         .then((data) => {
-          this.addHistorial(deudas);
+          this.addHistorial(deudas, 1);
           this.montoDeuda = 0;
           this.selectedProductosId = 0;
           this.selectedClientesId = 0;
+          console.log('disminuir');
           alert(data);
         });
-
-    }else{
-
+    /*si disminuira la deuda, pero no es el monto total adeudado*/
+    }else if(operacion === 1){
       this.database
         .editDeudas(deudas.montos-this.montoDeuda, this.getIdDeuda())
         .then((data) => {
-          this.addHistorial(deudas);
+          this.addHistorial(deudas, 1);
+          this.montoDeuda = 0;
+          this.selectedProductosId = 0;
+          this.selectedClientesId = 0;
+          console.log('disminuir');
+          alert(data);
+        });
+      /*si se aumentara la deuda*/
+    }else if(operacion === 2){
+      this.database
+        .editDeudas( Number(deudas.montos)+Number(this.montoDeuda), this.getIdDeuda())
+        .then((data) => {
+          this.addHistorial(deudas, 2);
           this.montoDeuda = 0;
           this.selectedProductosId = 0;
           this.selectedClientesId = 0;
@@ -135,16 +161,32 @@ export class DeudasDetallesPage implements OnInit {
     }
   }
 
-  addHistorial(deudas: any) {
-    this.database
-      .addHistorial(deudas.idCliente, deudas.idProducto, this.getIdDeuda(),deudas.montos-this.montoDeuda,
-        moment().format('DD/MM/YY'), this.detalle)
-      .then(() => {
-        this.montoDeuda = 0;
-        this.productosId = 0;
-        this.clientesId = 0;
-        this.detalle = [];
-      });
+  addHistorial(deudas: any, operacion: number) {
+    /*si se reduce la deuda*/
+    if (operacion === 1){
+      this.database
+        .addHistorial(deudas.idCliente, deudas.idProducto, this.getIdDeuda(),deudas.montos-this.montoDeuda,
+          moment().format('DD/MM/YY'), this.detalle)
+        .then(() => {
+          this.montoDeuda = 0;
+          this.productosId = 0;
+          this.clientesId = 0;
+          this.detalle = [];
+        });
+      /*si es una suma de deuda*/
+    }else if (operacion === 2){
+      this.database
+        .addHistorial(deudas.idCliente, deudas.idProducto, this.getIdDeuda(),
+          Number(deudas.montos)+Number(this.montoDeuda),
+          moment().format('DD/MM/YY'), this.detalle)
+        .then(() => {
+          this.montoDeuda = 0;
+          this.productosId = 0;
+          this.clientesId = 0;
+          this.detalle = [];
+        });
+    }
+
   }
 
   getDeudas() {
@@ -198,7 +240,13 @@ export class DeudasDetallesPage implements OnInit {
       this.diferenciaMonto = this.deudaActual-x;
       this.deudaActual = this.deudaActual - this.diferenciaMonto;
     }
-    return this.diferenciaMonto;
+    //
+    // if(this.diferenciaMonto > 0){
+    //   return this.diferenciaMonto * -1;
+    // }else if(this.diferenciaMonto < 0){
+    //   return this.diferenciaMonto ;
+    // }
+      return Number(this.diferenciaMonto* -1);
   }
 
   generarPDF(){
