@@ -119,6 +119,7 @@ export class DeudasDetallesPage implements OnInit {
     // var fecha = localDate.format('DD/MM/YY');
     //
     // console.log()
+
   }
 
   editDeudas(deudas: any, operacion: number) {

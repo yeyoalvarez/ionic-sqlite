@@ -386,4 +386,5 @@ export class DatabaseService {
       .catch((e) => 'error al obtener el recordatorio' + JSON.stringify(e));
   }
 
+
 }
