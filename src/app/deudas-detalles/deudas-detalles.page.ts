@@ -21,7 +21,7 @@ export class DeudasDetallesPage implements OnInit {
 
   id: string;
   idrecibido: string;
-  detalle: any;
+  detalle = ' ';
   clientes: any = [];
   clientesId = 0;
   productosId = 0;
@@ -46,10 +46,12 @@ export class DeudasDetallesPage implements OnInit {
   montoDeuda;
   editId = 0;
   nombre: any;
-  firstMonto: any = [];
-  primermonto = 0;
   diferenciaMonto = 0;
   deudaActual = 0;
+  indice = 0;
+  primero: boolean;
+  lastId = 0;
+  lastIdLista: any = [];
 
 
   items: any[] = [];
@@ -64,12 +66,13 @@ export class DeudasDetallesPage implements OnInit {
   }
 
   ngOnInit() {
+    this.primero = true;
   }
 
   ionViewWillEnter() {
     this.getHistorial();
     this.getLastMonto();
-    this.getFirstMonto();
+    this.getLastDeudaId();
   }
 
 
@@ -77,8 +80,8 @@ export class DeudasDetallesPage implements OnInit {
     return Number(this.idrecibido);
   }
 
-  getMonto() {
-    return Number(this.idrecibido);
+  getLastId() {
+    return Number(this.lastId);
   }
 
   doRefresh(event) {
@@ -86,6 +89,18 @@ export class DeudasDetallesPage implements OnInit {
       this.getHistorial();
       event.target.complete();
     }, 2000);
+  }
+
+  primeraDeuda(){
+    this.primero = false;
+    console.log('booleano', this.primero);
+  }
+
+  getLastDeudaId() {
+    this.database.getLastDeudaId(Number(this.idrecibido)).then((data) => {
+      this.lastIdLista.push(data.rows.item(0));
+      this.lastId = this.lastIdLista[0].id;
+    });
   }
 
   cambioFecha(event) {
@@ -144,6 +159,7 @@ export class DeudasDetallesPage implements OnInit {
           this.montoDeuda = 0;
           this.selectedProductosId = 0;
           this.selectedClientesId = 0;
+          this.detalle = ' ';
           console.log('disminuir');
           alert(data);
         });
@@ -156,6 +172,7 @@ export class DeudasDetallesPage implements OnInit {
           this.montoDeuda = 0;
           this.selectedProductosId = 0;
           this.selectedClientesId = 0;
+          this.detalle = ' ';
           alert(data);
         });
     }
@@ -171,7 +188,7 @@ export class DeudasDetallesPage implements OnInit {
           this.montoDeuda = 0;
           this.productosId = 0;
           this.clientesId = 0;
-          this.detalle = [];
+          this.detalle = ' ';
         });
       /*si es una suma de deuda*/
     }else if (operacion === 2){
@@ -183,7 +200,7 @@ export class DeudasDetallesPage implements OnInit {
           this.montoDeuda = 0;
           this.productosId = 0;
           this.clientesId = 0;
-          this.detalle = [];
+          this.detalle = ' ';
         });
     }
 
@@ -211,25 +228,10 @@ export class DeudasDetallesPage implements OnInit {
     });
   }
 
-  deleteDeudas(id: number) {
-    this.database.deleteDeudas(id).then((data) => {
-      alert(data);
-      this.getDeudas();
-    });
-  }
-
   getLastMonto() {
     this.database.getLastMonto(Number(this.idrecibido)).then((data) => {
       this.lastMonto.push(data.rows.item(0));
       this.ultimoMonto = this.lastMonto[0].monto;
-    });
-  }
-
-  getFirstMonto() {
-    this.database.getFirsMonto(Number(this.idrecibido)).then((data) => {
-      this.firstMonto.push(data.rows.item(0));
-      this.primermonto = this.firstMonto[0].monto;
-      this.deudaActual = this.primermonto;
     });
   }
 
@@ -240,13 +242,7 @@ export class DeudasDetallesPage implements OnInit {
       this.diferenciaMonto = this.deudaActual-x;
       this.deudaActual = this.deudaActual - this.diferenciaMonto;
     }
-    //
-    // if(this.diferenciaMonto > 0){
-    //   return this.diferenciaMonto * -1;
-    // }else if(this.diferenciaMonto < 0){
-    //   return this.diferenciaMonto ;
-    // }
-      return Number(this.diferenciaMonto* -1);
+      return Number(this.diferenciaMonto *-1);
   }
 
   generarPDF(){

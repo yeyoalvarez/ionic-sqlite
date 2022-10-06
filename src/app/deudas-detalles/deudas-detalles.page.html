@@ -16,11 +16,9 @@
       <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
 
-
-
     <ion-item-sliding *ngFor="let historial of historiales" >
       <ng-container *ngIf="historial.idDeuda === getIdDeuda()">
-        <p *ngIf="historial.montos === primermonto">
+        <p *ngIf="primero">
           <ion-grid>
             <ion-row>
               <ion-col size="12">
@@ -38,11 +36,11 @@
             <ion-col size="6">
               Fecha: {{historial.fechas}}
             </ion-col>
-            <ion-col size="6" *ngIf="pagoAnterior(historial.montos)">
-              Pago: {{moneda(pagoAnterior(historial.montos))}}
-            </ion-col>
-            <ion-col size="6" *ngIf="!pagoAnterior(historial.montos)">
-              Aumento: {{moneda(pagoAnterior(historial.montos))}}
+<!--            <ion-col size="6" *ngIf="pagoAnterior(historial.montos)">-->
+<!--              Pago: {{moneda(pagoAnterior(historial.montos))}}-->
+<!--            </ion-col>-->
+            <ion-col size="6">
+              pago: {{moneda(pagoAnterior(historial.montos))}}
             </ion-col>
             <ion-col size="6">
               Deuda: {{ moneda(historial.montos) }}
@@ -56,7 +54,7 @@
           </ion-row>
         </ion-grid>
 
-        <ng-container *ngIf="historial.montos === ultimoMonto">
+        <ng-container *ngIf="(historial.montos === ultimoMonto) && (getIdDeuda()!==getLastId)">
           <p>Telefono: {{paisCodigo}} {{historial.telefono}}<br/></p>
           <ion-button href={{url+historial.telefono}} color="success">
             <ion-icon name="logo-whatsapp"></ion-icon>
@@ -76,15 +74,19 @@
               <ion-input [(ngModel)]="detalle"></ion-input>
             </ion-item>
 
-            <ng-container *ngIf="historial.idDeuda === getIdDeuda()">
-                  <ion-button expand="block" (click)="editDeudas(historial,1)" [routerLink]="['/deudas-clientes']">
-                    Pago Deuda</ion-button>
-                  <ion-button expand="block" (click)="editDeudas(historial, 2)" [routerLink]="['/deudas-clientes']">
-                    Aumentar Deuda</ion-button>
-            </ng-container>
+            <ion-row class="top-20">
+              <ng-container *ngIf="historial.idDeuda === getIdDeuda()">
+                <ion-col>
+                    <ion-button expand="full" (click)="editDeudas(historial,1)" [routerLink]="['/deudas-clientes']">
+                      Pago Deuda</ion-button>
+                </ion-col>
+                <ion-col>
+                    <ion-button expand="full" (click)="editDeudas(historial, 2)" [routerLink]="['/deudas-clientes']">
+                      Aumentar Deuda</ion-button>
+                </ion-col>
+              </ng-container>
+            </ion-row>
           </ion-list>
-
-
 
         </ng-container>
 

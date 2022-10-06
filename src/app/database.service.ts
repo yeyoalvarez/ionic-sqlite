@@ -322,21 +322,27 @@ export class DatabaseService {
   async getLastMonto(idDeuda: number) {
     return this.databaseObj
       .executeSql(
-        `SELECT min(montos) AS monto
+        `SELECT montos AS monto
         from historial
-        WHERE idDeuda = ${idDeuda}`,
+        WHERE idDeuda = ${idDeuda} AND
+        id = (SELECT max(id)
+        from historial
+        WHERE idDeuda = ${idDeuda}); `,
         []
       )
       .then((res) => res)
       .catch((e) => 'error al obtener ultimo monto' + JSON.stringify(e));
   }
 
-  async getFirsMonto(idDeuda: number) {
+  async getLastDeudaId(idDeuda: number) {
     return this.databaseObj
       .executeSql(
-        `SELECT max(montos) AS monto
+        `SELECT id AS id
         from historial
-        WHERE idDeuda = ${idDeuda}`,
+        WHERE idDeuda = ${idDeuda} AND
+        id = (SELECT max(id)
+        from historial
+        WHERE idDeuda = ${idDeuda}); `,
         []
       )
       .then((res) => res)
