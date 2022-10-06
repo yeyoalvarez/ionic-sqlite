@@ -49,9 +49,10 @@ export class DeudasDetallesPage implements OnInit {
   diferenciaMonto = 0;
   deudaActual = 0;
   indice = 0;
-  primero: boolean;
+  firstId = 0;
   lastId = 0;
   lastIdLista: any = [];
+  firstIdLista: any = [];
 
 
   items: any[] = [];
@@ -66,7 +67,6 @@ export class DeudasDetallesPage implements OnInit {
   }
 
   ngOnInit() {
-    this.primero = true;
   }
 
   ionViewWillEnter() {
@@ -84,6 +84,10 @@ export class DeudasDetallesPage implements OnInit {
     return Number(this.lastId);
   }
 
+  getFirstId() {
+    return Number(this.firstId);
+  }
+
   doRefresh(event) {
     setTimeout(() => {
       this.getHistorial();
@@ -91,9 +95,11 @@ export class DeudasDetallesPage implements OnInit {
     }, 2000);
   }
 
-  primeraDeuda(){
-    this.primero = false;
-    console.log('booleano', this.primero);
+  getFirstDeudaId() {
+    this.database.getFirstDeudaId(Number(this.idrecibido)).then((data) => {
+      this.firstIdLista.push(data.rows.item(0));
+      this.firstId = this.firstIdLista[0].id;
+    });
   }
 
   getLastDeudaId() {
@@ -103,13 +109,16 @@ export class DeudasDetallesPage implements OnInit {
     });
   }
 
-  cambioFecha(event) {
-    console.log('Date', new Date(event.detail.value.format('Do MM YY')));
-
-  }
 
   moneda(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  }
+
+  testFecha(fec: string, tiempo: string){
+    const date = new Date(fec);
+    // var fecha = localDate.format('DD/MM/YY');
+    //
+    // console.log()
   }
 
   editDeudas(deudas: any, operacion: number) {

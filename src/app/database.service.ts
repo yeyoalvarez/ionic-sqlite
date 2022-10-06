@@ -346,7 +346,22 @@ export class DatabaseService {
         []
       )
       .then((res) => res)
-      .catch((e) => 'error al obtener ultimo monto' + JSON.stringify(e));
+      .catch((e) => 'error al obtener ultimo id' + JSON.stringify(e));
+  }
+
+  async getFirstDeudaId(idDeuda: number) {
+    return this.databaseObj
+      .executeSql(
+        `SELECT id AS id
+        from historial
+        WHERE idDeuda = ${idDeuda} AND
+        id = (SELECT min(id)
+        from historial
+        WHERE idDeuda = ${idDeuda}); `,
+        []
+      )
+      .then((res) => res)
+      .catch((e) => 'error al obtener primer id' + JSON.stringify(e));
   }
 
   async existenciaDeuda(id: number) {
