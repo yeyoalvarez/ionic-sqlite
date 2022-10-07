@@ -114,14 +114,6 @@ export class DeudasDetallesPage implements OnInit {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   }
 
-  testFecha(fec: string, tiempo: string){
-    const date = new Date(fec);
-    // var fecha = localDate.format('DD/MM/YY');
-    //
-    // console.log()
-
-  }
-
   editDeudas(deudas: any, operacion: number) {
     /* Verificar datos de disminuir deuda*/
       if (operacion === 1) {

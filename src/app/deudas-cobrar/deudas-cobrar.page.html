@@ -1,0 +1,29 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Deudas por Cobrar</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item-sliding *ngFor="let deuda of deudas" >
+    <ng-container *ngIf="testFecha(deuda.fecha, deuda.recordatorio)">
+      <ion-item [routerLink]="['/deudas-detalles',deuda.id]">
+      <ion-grid>
+        <ion-row>
+          <ion-col size="5">
+            Cliente: {{deuda.clientes}}
+          </ion-col>
+          <ion-col size="7">
+            Ultimo cobro: {{deuda.fecha}}
+          </ion-col>
+          </ion-row>
+      </ion-grid>
+      </ion-item>
+    </ng-container>
+  </ion-item-sliding>
+
+
+</ion-content>

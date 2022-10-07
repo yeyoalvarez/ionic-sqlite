@@ -1,21 +1,14 @@
-<<ion-header>
+<<ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button text="atras"></ion-back-button>
-
+      <ion-back-button></ion-back-button>
     </ion-buttons>
     <ion-title>Detalles de Deuda</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
   <ion-list>
-
-    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
-      <ion-refresher-content></ion-refresher-content>
-    </ion-refresher>
-
     <ion-item-sliding *ngFor="let historial of historiales" >
       <ng-container *ngIf="historial.idDeuda === getIdDeuda()">
         <p *ngIf="historial.id === getFirstId()">
@@ -60,7 +53,6 @@
         </ion-grid>
 
         <ng-container *ngIf="(historial.id === getLastId())">
-          {{testFecha(historial.fecha, 'mensual')}}
           <p>Telefono: {{paisCodigo}} {{historial.telefono}}<br/></p>
           <ion-button href={{url+historial.telefono}} color="success">
             <ion-icon name="logo-whatsapp"></ion-icon>
@@ -68,7 +60,6 @@
           <ion-button (click)="generarPDF()">
             <ion-icon name="document"></ion-icon>
           </ion-button>
-
 
           <ion-list>
             <ion-item>
@@ -100,6 +91,4 @@
     </ion-item-sliding>
 
   </ion-list>
-
-
 </ion-content>

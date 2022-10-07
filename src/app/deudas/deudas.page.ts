@@ -54,7 +54,7 @@ export class DeudasPage implements OnInit {
   }
 
   cambioFecha(event){
-    this.fecha = moment(event.detail.value).format('DD/MM/YY');
+    this.fecha = moment(event.detail.value).format('DD/MM/YYYY');
   }
 
   ionViewWillEnter() {
