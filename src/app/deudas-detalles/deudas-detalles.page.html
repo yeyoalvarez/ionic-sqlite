@@ -1,4 +1,4 @@
-<<ion-header [translucent]="true">
+<ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
@@ -56,6 +56,9 @@
           <p>Telefono: {{paisCodigo}} {{historial.telefono}}<br/></p>
           <ion-button href={{url+historial.telefono}} color="success">
             <ion-icon name="logo-whatsapp"></ion-icon>
+          </ion-button>
+          <ion-button (click)="tomarScreen()">
+            <ion-icon name="image"></ion-icon>
           </ion-button>
           <ion-button (click)="generarPDF()">
             <ion-icon name="document"></ion-icon>

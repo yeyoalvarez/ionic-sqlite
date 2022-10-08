@@ -6,6 +6,10 @@
     <param name="android-package" value="com.darktalker.cordova.screenshot.Screenshot"/>
   </feature>
 
+  <feature name="PDFService">
+    <param name="android-package" value="com.pdf.generator.PDFGenerator"/>
+  </feature>
+
   <feature name="Permissions">
     <param name="android-package" value="com.android.plugins.Permissions"/>
   </feature>
