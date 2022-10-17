@@ -45,7 +45,7 @@ export class DeudasDetallesPage implements OnInit {
   editMode = false;
   selectedProductosId = 0;
   selectedClientesId = 0;
-  montoDeuda;
+  montoDeuda = 0;
   editId = 0;
   nombre: any;
   diferenciaMonto = 0;
@@ -120,6 +120,11 @@ export class DeudasDetallesPage implements OnInit {
 
   editDeudas(deudas: any, operacion: number) {
     /* Verificar datos de disminuir deuda*/
+      if(this.montoDeuda === 0) {
+        alert('Ingrese el monto');
+        return;
+      }
+
       if (operacion === 1) {
         if (this.montoDeuda > deudas.montos) {
           alert('error al ingresar monto');
@@ -133,7 +138,7 @@ export class DeudasDetallesPage implements OnInit {
 
     /* verificar datos de aumentar deuda*/
     if (operacion === 2) {
-      if (this.montoDeuda < 0) {
+      if (this.montoDeuda <= 0) {
         alert('error al ingresar monto');
         return;
       }
@@ -147,7 +152,7 @@ export class DeudasDetallesPage implements OnInit {
     if (Number(deudas.montos) === Number(this.montoDeuda)
     && operacion === 1 ){
       this.database
-        .deudaCancelada(0, this.getIdDeuda())
+        .deudaCancelada(0, this.getIdDeuda(), moment().format('DD/MM/YY'))
         .then((data) => {
           this.addHistorial(deudas, 1);
           this.montoDeuda = 0;
@@ -159,7 +164,8 @@ export class DeudasDetallesPage implements OnInit {
     /*si disminuira la deuda, pero no es el monto total adeudado*/
     }else if(operacion === 1){
       this.database
-        .editDeudas(deudas.montos-this.montoDeuda, this.getIdDeuda())
+        .editDeudas(deudas.montos-this.montoDeuda, this.getIdDeuda(),
+          moment().format('DD/MM/YY'))
         .then((data) => {
           this.addHistorial(deudas, 1);
           this.montoDeuda = 0;
@@ -172,7 +178,8 @@ export class DeudasDetallesPage implements OnInit {
       /*si se aumentara la deuda*/
     }else if(operacion === 2){
       this.database
-        .editDeudas( Number(deudas.montos)+Number(this.montoDeuda), this.getIdDeuda())
+        .editDeudas( Number(deudas.montos)+Number(this.montoDeuda), this.getIdDeuda(),
+          moment().format('DD/MM/YY'))
         .then((data) => {
           this.addHistorial(deudas, 2);
           this.montoDeuda = 0;

@@ -43,13 +43,19 @@
           </ion-row>
         </ion-grid>
 
+        <style>
+          .hr {
+            border-bottom: 2px solid #ccc;
+            margin: 10px 0;
+            width: 100%;
+          }
+        </style>
+
         <ion-grid>
           <ion-row>
             Detalles: {{historial.detalles}}
           </ion-row>
-          <ion-col size="12">
-            ------------------------------------------------------------------------------------
-          </ion-col>
+          <div class="hr"> </div>
         </ion-grid>
 
         <ng-container *ngIf="(historial.id === getLastId())">

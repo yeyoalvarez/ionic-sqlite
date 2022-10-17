@@ -244,21 +244,23 @@ export class DatabaseService {
       .catch((e) => 'error al obtener deudas' + JSON.stringify(e));
   }
 
-  async editDeudas(monto: number, id: number) {
+  async editDeudas(monto: number, id: number, fecha: string) {
     return this.databaseObj
       .executeSql(
-        `UPDATE ${this.tables.deudas} SET monto = ${monto}
-          WHERE id = ${id}`,
+        `UPDATE ${this.tables.deudas} SET monto = ${monto},
+        fecha = ${fecha}
+        WHERE id = ${id}`,
         []
       )
       .then(() => 'deuda actualizada')
       .catch((e) => 'error al actualizar deuda ' + JSON.stringify(e));
   }
 
-  async deudaCancelada(monto: number, id: number) {
+  async deudaCancelada(monto: number, id: number, fecha: string) {
     return this.databaseObj
       .executeSql(
-        `UPDATE ${this.tables.deudas} SET monto = 0, estado = 'FALSE'
+        `UPDATE ${this.tables.deudas} SET monto = 0, estado = 'FALSE',
+        fecha = ${fecha}
           WHERE id = ${id} and ${monto} = 0`,
         []
       )

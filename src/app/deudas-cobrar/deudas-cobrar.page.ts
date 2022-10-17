@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {DatabaseService} from '../database.service';
-import {ActivatedRoute} from '@angular/router';
 import * as moment from 'moment';
 
 @Component({
@@ -13,8 +12,11 @@ export class DeudasCobrarPage implements OnInit {
   textoBuscar = '';
   deudas: any = [];
 
-  constructor(public database: DatabaseService,
-              private activatedRoute: ActivatedRoute) { }
+  constructor(public database: DatabaseService) {
+    this.database.createDatabase().then(() => {
+      this.getDeudas();
+    });
+  }
 
   ngOnInit() {
   }

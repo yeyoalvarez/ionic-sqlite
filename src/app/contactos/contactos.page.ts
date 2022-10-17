@@ -43,7 +43,8 @@ export class ContactosPage implements OnInit {
     this.telefonoParsed = telefono.replace(' ', '');
     this.telefonoParsed = this.telefonoParsed.replace(' ', '');
     console.log(`parsing ${telefono} => ${this.telefonoParsed}`);
-    if (Number(this.telefonoParsed.substr(-9,9)) <= 999999999) {
+    if ( (Number(this.telefonoParsed.substr(-9,9)) <= 999999999)
+      && (Number(this.telefonoParsed.substr(-9,9)) >= 911111111) ) {
       console.log('Es numero valido');
       this.database.importarClientes(nombre, Number(this.telefonoParsed.substr(-9,9)) )
         .then(() => {

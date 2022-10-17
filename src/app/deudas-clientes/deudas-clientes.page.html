@@ -14,20 +14,38 @@
 <ion-content>
 
   <ion-list>
-    <ion-item *ngFor="let deuda of deudas | filter:textoBuscar" [routerLink]="['/deudas-detalles',deuda.id]" >
-
+    <ion-item>
       <ion-grid>
-        <ion-col>
-            {{deuda.clientes}}
-        </ion-col>
-        <ion-col>
-          {{ moneda(deuda.monto) }}
-        </ion-col>
-        <ion-col>
-          {{ deuda.recordatorio}}
-        </ion-col>
+        <ion-row>
+          <ion-col size="5">
+            Cliente
+          </ion-col>
+          <ion-col size="4">
+            Deuda
+          </ion-col>
+          <ion-col size="3">
+            Pago
+          </ion-col>
+        </ion-row>
       </ion-grid>
+    </ion-item>
+  </ion-list>
 
+  <ion-list>
+    <ion-item *ngFor="let deuda of deudas | filter:textoBuscar" [routerLink]="['/deudas-detalles',deuda.id]" >
+        <ion-grid>
+          <ion-row>
+            <ion-col size="5">
+                {{deuda.clientes}}
+            </ion-col>
+            <ion-col size="4">
+              {{ moneda(deuda.monto) }}
+            </ion-col>
+            <ion-col size="3">
+              {{ deuda.recordatorio}}
+            </ion-col>
+          </ion-row>
+        </ion-grid>
     </ion-item>
   </ion-list>
 

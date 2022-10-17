@@ -65,4 +65,11 @@ export class DeudasClientesPage implements OnInit {
     });
   }
 
+  deleteDeudas(id: number) {
+    this.database.deleteDeudas(id).then((data) => {
+      alert(data);
+      this.getDeudas();
+    });
+  }
+
 }

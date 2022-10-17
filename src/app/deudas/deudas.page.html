@@ -66,7 +66,7 @@
     </ion-item>
 
     <ion-item>
-      <ion-label position="floating">Detalles del Pago/Incremento de Deuda</ion-label>
+      <ion-label position="floating">Detalles de la deuda</ion-label>
       <ion-input [(ngModel)]="detalles"></ion-input>
     </ion-item>
 
@@ -78,7 +78,23 @@
                 [routerLink]="['/deudas-detalles']" >Añadir</ion-button>
   </ion-list>
 
-  <ion-row>Observacion: Si el cliente ya posee una deuda, esta no se creara
-  hasta cancelar la deuda anterior</ion-row>
+  <style>
+    table,th,td{
+      border: 2px solid black;
+    }
+    th, td{
+      padding: 10px;
+    }
+    th{
+      text-align: center;
+    }
+  </style>
+
+  <table style="width: 100%;">
+    <tr>
+      <th>Observacion: Si el cliente ya posee una deuda, esta no se creara
+        hasta cancelar la deuda anterior</th>
+    </tr>
+  </table>
 
 </ion-content>

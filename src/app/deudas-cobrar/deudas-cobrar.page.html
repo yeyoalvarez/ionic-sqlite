@@ -9,8 +9,8 @@
 
 <ion-content>
   <ion-item-sliding *ngFor="let deuda of deudas" >
-    <ng-container *ngIf="testFecha(deuda.fecha, deuda.recordatorio)">
-      <ion-item [routerLink]="['/deudas-detalles',deuda.id]">
+    <ion-item *ngIf="testFecha(deuda.fecha, deuda.recordatorio)"
+              [routerLink]="['/deudas-detalles',deuda.id]">
       <ion-grid>
         <ion-row>
           <ion-col size="5">
@@ -21,8 +21,7 @@
           </ion-col>
           </ion-row>
       </ion-grid>
-      </ion-item>
-    </ng-container>
+    </ion-item>
   </ion-item-sliding>
 
 
