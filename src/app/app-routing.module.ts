@@ -34,13 +34,18 @@ const routes: Routes = [
   {
     path: 'deudas-clientes',
     loadChildren: () => import('./deudas-clientes/deudas-clientes.module').then( m => m.DeudasClientesPageModule)
-  },  {
+  },
+  {
     path: 'clientes-detalles',
     loadChildren: () => import('./clientes-detalles/clientes-detalles.module').then( m => m.ClientesDetallesPageModule)
   },
   {
     path: 'deudas-cobrar',
     loadChildren: () => import('./deudas-cobrar/deudas-cobrar.module').then( m => m.DeudasCobrarPageModule)
+  },
+  {
+    path: 'deudas-canceladas',
+    loadChildren: () => import('./deudas-canceladas/deudas-canceladas.module').then( m => m.DeudasCanceladasPageModule)
   },
 
 

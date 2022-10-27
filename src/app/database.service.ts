@@ -213,9 +213,7 @@ export class DatabaseService {
     return this.databaseObj
       .executeSql(
         `INSERT INTO ${this.tables.deudas} (clientesId, productosId, monto, fecha, estado, recordatorioId, detalles)
-         SELECT '${clientesId}', ${productosId}, ${monto},'${fecha}','TRUE', ${recordar}, '${detalles}'
-          WHERE NOT EXISTS(SELECT 1 FROM deudas
-          WHERE clientesid = '${clientesId}' and estado == 'TRUE');`,
+         SELECT '${clientesId}', ${productosId}, ${monto},'${fecha}','TRUE', ${recordar}, '${detalles}' `,
         []
       )
       .then(() => 'deuda creada')
@@ -244,6 +242,23 @@ export class DatabaseService {
       .catch((e) => 'error al obtener deudas' + JSON.stringify(e));
   }
 
+  async getDeudasCanceladas() {
+    return this.databaseObj
+      .executeSql(
+        `SELECT historial.idCliente,
+        historial.montos as monto,
+        clientes.name as clientes,
+        historial.fechas as fecha
+        FROM historial
+        JOIN clientes ON  clientes.id = historial.idCliente
+        where historial.montos = 0
+        ORDER by clientes`,
+        []
+      )
+      .then((res) => res)
+      .catch((e) => 'error al obtener deudas' + JSON.stringify(e));
+  }
+
   async editDeudas(monto: number, id: number, fecha: string) {
     return this.databaseObj
       .executeSql(
@@ -260,8 +275,8 @@ export class DatabaseService {
     return this.databaseObj
       .executeSql(
         `UPDATE ${this.tables.deudas} SET monto = 0, estado = 'FALSE',
-        fecha = ${fecha}
-          WHERE id = ${id} and ${monto} = 0`,
+         fecha = '${fecha}'
+         WHERE id = ${id} and ${monto} = 0`,
         []
       )
       .then(() => 'Deuda Cancelada')
