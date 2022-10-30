@@ -16,7 +16,7 @@ export class AppComponent {
     { title: 'Deudas Clientes', url: '/deudas-clientes', icon: 'people' },
     { title: 'Deudas por Cobrar', url: '/deudas-cobrar', icon: 'wallet' },
     { title: 'Contactos', url: '/contactos', icon: 'people' },
-    { title: 'Deudas Canceladas', url: '/deudas-canceladas', icon: 'filing' },
+    { title: 'Deudas Canceladas', url: '/deudas-canceladas', icon: 'archive' },
     // { title: 'Archived', url: '/folder/Archived', icon: 'archive' },
     // { title: 'Trash', url: '/folder/Trash', icon: 'trash' },
     // { title: 'Spam', url: '/folder/Spam', icon: 'warning' },
