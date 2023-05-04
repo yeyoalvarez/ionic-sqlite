@@ -47,6 +47,12 @@ const routes: Routes = [
     path: 'deudas-canceladas',
     loadChildren: () => import('./deudas-canceladas/deudas-canceladas.module').then( m => m.DeudasCanceladasPageModule)
   },
+  {
+    path: 'deudas-canceladas-detalles/:id',
+    // eslint-disable-next-line max-len
+    loadChildren: () => import('./deudas-canceladas-detalles/deudas-canceladas-detalles.module').then( m => m.DeudasCanceladasDetallesPageModule)
+  },
+
 
 
 

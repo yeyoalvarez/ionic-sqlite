@@ -7,7 +7,8 @@ import { IonicModule } from '@ionic/angular';
 import { DeudasCanceladasPageRoutingModule } from './deudas-canceladas-routing.module';
 
 import { DeudasCanceladasPage } from './deudas-canceladas.page';
-import {Ng2SearchPipeModule} from "ng2-search-filter";
+import {Ng2SearchPipeModule} from 'ng2-search-filter';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 @NgModule({
     imports: [
@@ -15,7 +16,8 @@ import {Ng2SearchPipeModule} from "ng2-search-filter";
         FormsModule,
         IonicModule,
         DeudasCanceladasPageRoutingModule,
-        Ng2SearchPipeModule
+        Ng2SearchPipeModule,
+        NgxPaginationModule
     ],
   declarations: [DeudasCanceladasPage]
 })

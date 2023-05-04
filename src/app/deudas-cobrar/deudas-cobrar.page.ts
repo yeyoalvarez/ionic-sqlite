@@ -11,6 +11,8 @@ export class DeudasCobrarPage implements OnInit {
 
   textoBuscar = '';
   deudas: any = [];
+  p = 1; //variable de paginacion
+
 
   constructor(public database: DatabaseService) {
     this.database.createDatabase().then(() => {

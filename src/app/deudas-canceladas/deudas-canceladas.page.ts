@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {DatabaseService} from '../database.service';
 import {ActivatedRoute} from '@angular/router';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 @Component({
   selector: 'app-deudas-canceladas',
@@ -33,6 +34,8 @@ export class DeudasCanceladasPage implements OnInit {
 
   items: any[] = [];
   textoBuscar = '';
+  p = 1; //variable de paginacion
+
 
   constructor(public database: DatabaseService,
               private activatedRoute: ActivatedRoute,

@@ -77,6 +77,7 @@ export class DeudasDetallesPage implements OnInit {
     this.getHistorial();
     this.getLastMonto();
     this.getLastDeudaId();
+    this.getFirstDeudaId();
   }
 
 
@@ -256,6 +257,15 @@ export class DeudasDetallesPage implements OnInit {
       this.deudaActual = this.deudaActual - this.diferenciaMonto;
     }
       return Number(this.diferenciaMonto *-1);
+  }
+
+  pagoAnteriorConsulta(x){
+    if (x === this.deudaActual){
+      return 0;
+    }else{
+      this.diferenciaMonto = this.deudaActual-x;
+    }
+    return Number(this.diferenciaMonto *-1);
   }
 
   generarPDF(){

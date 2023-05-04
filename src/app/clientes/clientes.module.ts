@@ -8,7 +8,7 @@ import { ClientesPageRoutingModule } from './clientes-routing.module';
 
 import { ClientesPage } from './clientes.page';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
-import {NgxPaginationModule} from "ngx-pagination";
+import {NgxPaginationModule} from 'ngx-pagination';
 
 
 

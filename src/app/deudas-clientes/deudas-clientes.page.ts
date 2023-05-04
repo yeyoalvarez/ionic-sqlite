@@ -33,6 +33,8 @@ export class DeudasClientesPage implements OnInit {
 
   items: any[] = [];
   textoBuscar = '';
+  p = 1; //variable de paginacion
+
 
   constructor(public database: DatabaseService,
               private activatedRoute: ActivatedRoute,

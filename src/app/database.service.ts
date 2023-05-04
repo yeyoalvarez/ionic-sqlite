@@ -246,6 +246,7 @@ export class DatabaseService {
     return this.databaseObj
       .executeSql(
         `SELECT historial.idCliente,
+        historial.idDeuda AS id,
         historial.montos as monto,
         clientes.name as clientes,
         historial.fechas as fecha
