@@ -5,11 +5,7 @@ import { FileOpener } from '@awesome-cordova-plugins/file-opener/ngx';
 import { File } from '@awesome-cordova-plugins/file/ngx';
 import * as moment from 'moment';
 import { Screenshot } from '@ionic-native/screenshot/ngx';
-import { PDFGenerator } from '@ionic-native/pdf-generator/ngx';
-
-import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import { PDFGenerator, PDFGeneratorOptions } from '@awesome-cordova-plugins/pdf-generator/ngx';
 
 @Component({
   selector: 'app-deudas-detalles',
@@ -56,17 +52,15 @@ export class DeudasDetallesPage implements OnInit {
   lastIdLista: any = [];
   firstIdLista: any = [];
 
-  htmlSample: any;
-  items: any[] = [];
-  pdfObject: any;
-
+  html: any;
+  data: any[] = [];
 
   constructor(public database: DatabaseService,
               private activatedRoute: ActivatedRoute,
               public file: File,
               public fileOpener: FileOpener,
               public  screenshot: Screenshot,
-              private pdfGenerator: PDFGenerator) {
+              private pdf: PDFGenerator) {
     this.idrecibido = this.activatedRoute.snapshot.paramMap.get('id');
   }
 
@@ -268,52 +262,15 @@ export class DeudasDetallesPage implements OnInit {
     return Number(this.diferenciaMonto *-1);
   }
 
-  generarPDF(){
-
-    this.htmlSample = '<html><h1>Converted from HTML</h1></html>';
-    const options = {
-      documentSize: 'A4',
+  generatePdf(){
+    const options: PDFGeneratorOptions={
       type: 'share'
     };
-
-    this.pdfGenerator.fromData(this.htmlSample, options).
-    then(resolve => {
-        console.log(resolve);
-
-      }
-    ).catch((err) => {
-      console.error(err);
-    });
+    this.html = document.getElementById('content').
+      innerHTML;
+    this.pdf.fromData(this.html,options);
   }
 
-    // const definirDocumento = {
-    //   content: [
-    //     {text: 'Tables', style: 'header'},
-    //     'Official documentation is in progress, this document is just a glimpse of what is possible with pdfmake and its layout engine.',
-    //     {text: 'A simple table (no headers, no width specified, no spans, no styling)', style: 'subheader'},
-    //   ]
-    // };
-    //
-    //
-    // this.pdfObject = pdfMake.createPdf(definirDocumento);
-    // alert('pdf generado');
-    // this.abrirPdf();
-
-
-  abrirPdf(){
-    this.pdfObject.getBuffer((buffer) => {
-      const blob = new Blob([buffer], { type: 'application/pdf' });
-      // Save the PDF to the data Directory of our App
-      this.file.writeFile(this.file.dataDirectory, 'hello.pdf', blob, { replace: true }).then(fileEntry => {
-
-        this.fileOpener.open(this.file.dataDirectory + 'hello.pdf', 'application/pdf');
-
-      });
-
-    });
-
-    return true;
-  }
 
   tomarScreen(){
     this.screenshot.save().then(()=>{

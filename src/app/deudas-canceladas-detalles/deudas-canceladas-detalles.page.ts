@@ -5,8 +5,7 @@ import {File} from '@awesome-cordova-plugins/file/ngx';
 import {FileOpener} from '@awesome-cordova-plugins/file-opener/ngx';
 import {Screenshot} from '@ionic-native/screenshot/ngx';
 import * as moment from 'moment';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+import { PDFGenerator, PDFGeneratorOptions } from '@awesome-cordova-plugins/pdf-generator/ngx';
 
 @Component({
   selector: 'app-deudas-canceladas-detalles',
@@ -14,7 +13,6 @@ import html2canvas from 'html2canvas';
   styleUrls: ['./deudas-canceladas-detalles.page.scss'],
 })
 export class DeudasCanceladasDetallesPage implements OnInit {
-
   paisCodigo = '595';
   url = 'https://api.whatsapp.com/send?phone=' + this.paisCodigo;
 
@@ -53,15 +51,15 @@ export class DeudasCanceladasDetallesPage implements OnInit {
   lastIdLista: any = [];
   firstIdLista: any = [];
 
-  htmlSample: any;
-  items: any[] = [];
-  pdfObject: any;
+  html: any;
+  data: any[] = [];
 
   constructor(public database: DatabaseService,
               private activatedRoute: ActivatedRoute,
               public file: File,
               public fileOpener: FileOpener,
-              public  screenshot: Screenshot) {
+              public  screenshot: Screenshot,
+              private pdf: PDFGenerator) {
     this.idrecibido = this.activatedRoute.snapshot.paramMap.get('id');
   }
 
@@ -269,13 +267,13 @@ export class DeudasCanceladasDetallesPage implements OnInit {
     });
   }
 
-  async generatePDF() {
-    const canvas = await html2canvas(document.querySelector('#body'));
-    const imgData = canvas.toDataURL('image/png');
-    const pdf = new jsPDF();
-    pdf.addImage(imgData, 'PNG', 0, 0, 211, 298);
-    pdf.save('file.pdf');
-    alert('Guardado el pdf');
+  generatePdf(){
+    const options: PDFGeneratorOptions={
+      type: 'share'
+    };
+    this.html = document.getElementById('content').
+      innerHTML;
+    this.pdf.fromData(this.html,options);
   }
 
 
