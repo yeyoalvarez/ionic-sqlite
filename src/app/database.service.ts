@@ -224,7 +224,7 @@ export class DatabaseService {
     return this.databaseObj
       .executeSql(
         `SELECT deudas.id, deudas.productosId,
-        deudas.clientesid,
+        deudas.clientesId as idc,
         deudas.monto as monto,
         clientes.name as clientes,
         productos.name as productos, deudas.fecha as fecha,

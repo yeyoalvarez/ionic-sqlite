@@ -1,0 +1,33 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Ultima Deuda</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content id="content" #content>
+  <ion-list>
+    <ion-item-sliding *ngFor="let deuda of deudas" >
+        <p *ngIf="(deuda.id === getLastId())">
+          <ion-col size="6">
+            Fecha: {{deuda.fechas}}
+          </ion-col>
+          <ion-col size="6" *ngIf="deuda.id === getLastId()">
+            Deuda Total: {{ moneda(deuda.montos) }}
+          </ion-col>
+        </p>
+
+        <ng-container >
+          <ion-button (click)="tomarScreen()">
+            <ion-icon name="image"></ion-icon>
+          </ion-button>
+          <ion-button (click)="generatePdf()">
+            <ion-icon name="document"></ion-icon>
+          </ion-button>
+        </ng-container>
+    </ion-item-sliding>
+  </ion-list>
+</ion-content>
+
