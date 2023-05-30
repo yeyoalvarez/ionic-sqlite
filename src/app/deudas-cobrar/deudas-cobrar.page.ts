@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {DatabaseService} from '../database.service';
 import * as moment from 'moment';
+import {LoadingController} from '@ionic/angular';
 
 @Component({
   selector: 'app-deudas-cobrar',
@@ -14,17 +15,15 @@ export class DeudasCobrarPage implements OnInit {
   p = 1; //variable de paginacion
 
 
-  constructor(public database: DatabaseService) {
+  constructor(public database: DatabaseService,
+              public loadingController: LoadingController) {
     this.database.createDatabase().then(() => {
       this.getDeudas();
     });
   }
 
   ngOnInit() {
-  }
-
-  ionViewWillEnter() {
-    this.getDeudas();
+    this.pantallaEspera();
   }
 
   getDeudas() {
@@ -36,6 +35,13 @@ export class DeudasCobrarPage implements OnInit {
         }
       }
     });
+  }
+  async pantallaEspera() {
+    const loading = await this.loadingController.create({
+      message: 'Cargando Deudas',
+      duration: 2000
+    });
+    await loading.present();
   }
 
   testFecha(fec: string, tiempo: string){

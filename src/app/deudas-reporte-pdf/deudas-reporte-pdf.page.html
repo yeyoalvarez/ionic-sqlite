@@ -10,23 +10,25 @@
 <ion-content id="content" #content>
   <ion-list>
     <ion-item-sliding *ngFor="let deuda of deudas" >
-        <p *ngIf="(deuda.id === getLastId())">
-          <ion-col size="6">
-            Fecha: {{deuda.fechas}}
-          </ion-col>
-          <ion-col size="6" *ngIf="deuda.id === getLastId()">
-            Deuda Total: {{ moneda(deuda.montos) }}
-          </ion-col>
-        </p>
-
-        <ng-container >
+        <p *ngIf="deuda.id === getIdDeuda()">
+          <ion-row>
+            Cliente: {{deuda.clientes}}
+            <br/>
+          </ion-row>
+          <ion-row>
+            Fecha Ultimo Pago: {{deuda.fecha}}
+            <br/>
+          </ion-row>
+            <ion-row>
+              Deuda total: {{ moneda(deuda.monto) }}
+            </ion-row>
           <ion-button (click)="tomarScreen()">
             <ion-icon name="image"></ion-icon>
           </ion-button>
           <ion-button (click)="generatePdf()">
             <ion-icon name="document"></ion-icon>
           </ion-button>
-        </ng-container>
+        </p>
     </ion-item-sliding>
   </ion-list>
 </ion-content>

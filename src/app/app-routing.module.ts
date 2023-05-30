@@ -52,6 +52,11 @@ const routes: Routes = [
     // eslint-disable-next-line max-len
     loadChildren: () => import('./deudas-canceladas-detalles/deudas-canceladas-detalles.module').then( m => m.DeudasCanceladasDetallesPageModule)
   },
+  {
+    path: 'deudas-reporte-pdf/:id',
+    loadChildren: () => import('./deudas-reporte-pdf/deudas-reporte-pdf.module').then( m => m.DeudasReportePdfPageModule)
+  },
+
 
 
 

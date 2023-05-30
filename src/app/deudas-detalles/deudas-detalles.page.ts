@@ -264,7 +264,8 @@ export class DeudasDetallesPage implements OnInit {
 
   generatePdf(){
     const options: PDFGeneratorOptions={
-      type: 'share'
+      type: 'share',
+      documentSize: 'A2'
     };
     this.html = document.getElementById('content').
       innerHTML;

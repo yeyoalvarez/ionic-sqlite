@@ -12,6 +12,7 @@ export class DatabaseService {
     deudas: 'deudas',
     historial: 'historial',
     recordatorioPagos: 'recordatorioPagos',
+    metodoPago: 'metodoPago'
   };
 
   constructor(private sqlite: SQLite) {}
@@ -80,6 +81,13 @@ export class DatabaseService {
       `INSERT INTO ${this.tables.recordatorioPagos} (recordatorio)
       SELECT 'Semanal'
       WHERE NOT EXISTS(SELECT 1 FROM recordatorioPagos WHERE recordatorio = 'Semanal'); `,
+      []
+    );
+
+    /*nueva tabla metodo de pago*/
+    await this.databaseObj.executeSql(
+      `CREATE TABLE IF NOT EXISTS ${this.tables.metodoPago} (id INTEGER PRIMARY KEY AUTOINCREMENT,
+      tipo_pago VARCHAR(255) NOT NULL UNIQUE, abreviatura VARCHAR(2) NOT NULL UNIQUE)`,
       []
     );
 
@@ -224,7 +232,7 @@ export class DatabaseService {
     return this.databaseObj
       .executeSql(
         `SELECT deudas.id, deudas.productosId,
-        deudas.clientesId as idc,
+        deudas.clientesId,
         deudas.monto as monto,
         clientes.name as clientes,
         productos.name as productos, deudas.fecha as fecha,

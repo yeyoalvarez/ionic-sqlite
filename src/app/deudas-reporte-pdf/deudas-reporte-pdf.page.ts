@@ -26,32 +26,20 @@ export class DeudasReportePdfPage implements OnInit {
               private activatedRoute: ActivatedRoute,
               private pdf: PDFGenerator,
               public  screenshot: Screenshot) {
-    this.database.createDatabase().then(() => {
-      this.getLastDeudaId();
-    });
     this.idrecibido = this.activatedRoute.snapshot.paramMap.get('id');
+    console.log('deuda id', this.idrecibido);
   }
 
   ngOnInit() {
-  }
-
-  ionViewWillEnter() {
-    this.getLastDeudaId();
+    this.getDeudas();
   }
 
   moneda(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   }
 
-  getLastId() {
-    return Number(this.lastId);
-  }
-
-  getLastDeudaId() {
-    this.database.getLastDeudaId(Number(this.idrecibido)).then((data) => {
-      this.lastIdLista.push(data.rows.item(0));
-      this.lastId = this.lastIdLista[0].id;
-    });
+  getIdDeuda() {
+    return Number(this.idrecibido);
   }
 
   getDeudas() {
@@ -67,7 +55,8 @@ export class DeudasReportePdfPage implements OnInit {
 
   generatePdf(){
     const options: PDFGeneratorOptions={
-      type: 'share'
+      type: 'share',
+      documentSize: 'A6',
     };
     this.html = document.getElementById('content').
       innerHTML;
