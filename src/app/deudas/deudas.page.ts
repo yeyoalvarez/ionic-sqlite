@@ -14,12 +14,15 @@ export class DeudasPage implements OnInit {
   textoBuscar = '';
   clientes: any = [];
   recordatorio: any = [];
+  metodoPago: any = [];
   recordar = 0;
   clientesId = 0;
   productosId = 0;
+  tipopagoId = 0;
   idDeuda: any = [];
   id = 0;
   auxId = 0;
+  auxIdPago = 0;
 
   deudas: any = [];
   historiales: any = [];
@@ -45,6 +48,7 @@ export class DeudasPage implements OnInit {
     this.getClientes();
     this.getDeudas();
     this.getRecordatorio();
+    this.getMetodoPago();
   }
 
 
@@ -85,6 +89,15 @@ export class DeudasPage implements OnInit {
     this.recordar = this.aux.id;
   }
 
+  // metodo de pago
+
+  portChangeM(event: {
+    component: IonicSelectableComponent;value: any;
+  }) {
+    this.aux = event.value;
+    this.tipopagoId = this.aux.id;
+  }
+
   getProductos() {
     this.database.getProductos().then((data) => {
       this.productos = [];
@@ -120,6 +133,18 @@ export class DeudasPage implements OnInit {
     });
   }
 
+  getMetodoPago() {
+    this.database.getMetodoPago().then((data) => {
+      this.metodoPago = [];
+      if (data.rows.length > 0) {
+        for (let i = 0; i < data.rows.length; i++) {
+          this.metodoPago.push(data.rows.item(i));
+        }
+      }
+      console.log('metodoPago',this.metodoPago);
+    });
+  }
+
   addDeudas() {
     if (this.clientesId === 0) {
       alert('Seleccionar el cliente');
@@ -141,6 +166,13 @@ export class DeudasPage implements OnInit {
       return;
     }
 
+    // metodo de pago verificar
+    if ( this.tipopagoId === 0) {
+      alert('Ingrese el metodo de pago');
+      return;
+    }
+
+    // elegir recordatorio
     console.log('recordar ', this.recordar);
     if (this.recordar === 1){
       this.auxId = 1;
@@ -148,38 +180,53 @@ export class DeudasPage implements OnInit {
       this.auxId = 2;
     }
 
+    // elegir metodo de pago
+    console.log('metodo de pago ', this.tipopagoId);
+    if (this.tipopagoId === 3){
+      this.auxIdPago = 3;
+    } else if (this.tipopagoId === 2){
+      this.auxIdPago = 2;
+    } else{
+      //efectivo
+      this.auxIdPago = 1;
+    }
+
+
     if (this.editMode) {
       if (this.estado === true){
         this.database
-          .editDeudas(this.montoDeuda, this.editId, this.fecha)
+          .editDeudas(this.montoDeuda, this.editId, this.fecha, this.auxIdPago)
           .then((data) => {
             this.montoDeuda = 0;
             this.editMode = false;
             this.editId = 0;
             this.selectedProductosId = 0;
             this.selectedClientesId = 0;
+            this.tipopagoId = 0;
             alert(data);
           });
       }} else {
       this.database
         .addDeudas(this.clientesId, this.productosId, this.montoDeuda,
-          this.fecha, this.auxId, this.detalles)
+          this.fecha, this.auxId, this.detalles, this.auxIdPago)
         .then((data) => {
           this.montoDeuda = 0;
           this.productosId = 0;
           this.clientesId = 0;
           this.recordar = 0;
+          this.tipopagoId = 0;
           alert(data);
         });
 
       this.database
         .addHistorialNuevo(this.clientesId, this.productosId,this.montoDeuda,
-          this.fecha, this.detalles)
+          this.fecha, this.detalles, this.auxIdPago)
         .then(() => {
           this.montoDeuda = 0;
           this.productosId = 0;
           this.clientesId = 0;
           this.recordar = 0;
+          this.tipopagoId = 0;
         });
 
     }

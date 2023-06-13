@@ -51,6 +51,20 @@
 
 
     <ion-item>
+      <ion-label>Seleccionar el Metodo de Pago</ion-label>
+      <ionic-selectable
+        [(ngModel)]="seleccionarRec"
+        [items]="metodoPago"
+        itemValueField="id"
+        itemTextField="metodoPago"
+        [canSearch]="true"
+        (onChange)="portChangeM($event)"
+      >
+      </ionic-selectable>
+    </ion-item>
+
+
+    <ion-item>
       <ion-label position="floating">Añade el monto adeudado</ion-label>
       <ion-input [(ngModel)]="montoDeuda"></ion-input>
     </ion-item>
@@ -90,11 +104,5 @@
     }
   </style>
 
-<!--  <table style="width: 100%;">-->
-<!--    <tr>-->
-<!--      <th>Observacion: Si el cliente ya posee una deuda, esta no se creara-->
-<!--        hasta cancelar la deuda anterior</th>-->
-<!--    </tr>-->
-<!--  </table>-->
 
 </ion-content>

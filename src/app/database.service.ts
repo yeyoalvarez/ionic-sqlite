@@ -87,10 +87,18 @@ export class DatabaseService {
     /*nueva tabla metodo de pago*/
     await this.databaseObj.executeSql(
       `CREATE TABLE IF NOT EXISTS ${this.tables.metodoPago} (id INTEGER PRIMARY KEY AUTOINCREMENT,
-      tipo_pago VARCHAR(255) NOT NULL UNIQUE, abreviatura VARCHAR(2) NOT NULL UNIQUE)`,
+      name VARCHAR(255) NOT NULL UNIQUE, abreviatura VARCHAR(2) NOT NULL UNIQUE)`,
       []
     );
 
+    // insertar configuraciones de tabla metodos de pago
+    await this.databaseObj.executeSql(
+      `ALTER TABLE deudas ADD COLUMN tipoPagoId INTEGER not NULL DEFAULT 1;
+        ALTER TABLE historial ADD COLUMN tipoPagoId INTEGER not NULL DEFAULT 1;
+        INSERT INTO metodoPago (id, abreviatura, name) VALUES (1,'E','EFECTIVO'),
+         (2,'TB','TRANSFERENCIA BANCARIA'), (3,'G','GIROS');`,
+      []
+    );
   }
 
   async addProductos(name: string) {
@@ -217,11 +225,13 @@ export class DatabaseService {
       });
   }
 
-  async addDeudas(clientesId: number, productosId: number, monto: number, fecha: string, recordar: number, detalles: string) {
+  async addDeudas(clientesId: number, productosId: number, monto: number, fecha: string, recordar: number,
+                  detalles: string, tipopagoId: number) {
     return this.databaseObj
       .executeSql(
-        `INSERT INTO ${this.tables.deudas} (clientesId, productosId, monto, fecha, estado, recordatorioId, detalles)
-         SELECT '${clientesId}', ${productosId}, ${monto},'${fecha}','TRUE', ${recordar}, '${detalles}' `,
+        `INSERT INTO ${this.tables.deudas} (clientesId, productosId, monto, fecha, estado, recordatorioId,
+        detalles, tipoPagoId)
+         SELECT '${clientesId}', ${productosId}, ${monto},'${fecha}','TRUE', ${recordar}, '${detalles}', '${tipopagoId}' `,
         []
       )
       .then(() => 'deuda creada')
@@ -237,7 +247,8 @@ export class DatabaseService {
         clientes.name as clientes,
         productos.name as productos, deudas.fecha as fecha,
         clientes.telefono as telefono,
-        recordatorioPagos.recordatorio as recordatorio
+        recordatorioPagos.recordatorio as recordatorio,
+        deudas.tipoPagoId as tipopagoId,
         FROM deudas
         JOIN productos ON productos.id = deudas.productosId
         JOIN clientes ON  clientes.id = deudas.clientesid
@@ -268,11 +279,11 @@ export class DatabaseService {
       .catch((e) => 'error al obtener deudas' + JSON.stringify(e));
   }
 
-  async editDeudas(monto: number, id: number, fecha: string) {
+  async editDeudas(monto: number, id: number, fecha: string, tipopagoId: number) {
     return this.databaseObj
       .executeSql(
         `UPDATE ${this.tables.deudas} SET monto = ${monto},
-        fecha = ${fecha}
+        fecha = ${fecha}, tipoPagoId = ${tipopagoId}
         WHERE id = ${id}`,
         []
       )
@@ -301,11 +312,14 @@ export class DatabaseService {
 
   /*funciones para la tabla historia de deudas*/
 
-  async addHistorialNuevo(clientesId: number, productosId: number, monto: number, fecha: string, detalles: string) {
+  async addHistorialNuevo(clientesId: number, productosId: number, monto: number, fecha: string, detalles: string,
+                          tipopagoId: number) {
     return this.databaseObj
       .executeSql(
-        `INSERT INTO ${this.tables.historial} (idCliente, idProducto, idDeuda, montos, fechas,estado, detalles)
-         VALUES ('${clientesId}', ${productosId},(SELECT MAX(id) AS id from deudas), ${monto},'${fecha}','TRUE','${detalles}')`,
+        `INSERT INTO ${this.tables.historial} (idCliente, idProducto, idDeuda, montos, fechas,estado, detalles,
+        tipoPagoId)
+         VALUES ('${clientesId}', ${productosId},(SELECT MAX(id) AS id from deudas), ${monto},'${fecha}','TRUE',
+         '${detalles}', '${tipopagoId}')`,
         []
       )
       .catch((e) => 'error al crear historial' + JSON.stringify(e));
@@ -321,7 +335,8 @@ export class DatabaseService {
         productos.name as productos, historial.fechas as fechas,
         clientes.telefono as telefono,
         historial.estado AS estado,
-        historial.detalles AS detalles
+        historial.detalles AS detalles,
+        historial.tipoPagoId as tipopago,
         FROM historial
         JOIN productos ON productos.id = historial.idProducto
         JOIN clientes ON  clientes.id = historial.idCliente
@@ -412,5 +427,14 @@ export class DatabaseService {
       .catch((e) => 'error al obtener el recordatorio' + JSON.stringify(e));
   }
 
+  async getMetodoPago(){
+    return this.databaseObj
+      .executeSql(
+        `SELECT * FROM ${this.tables.metodoPago}`,
+        []
+      )
+      .then((res) => res)
+      .catch((e) => 'error al obtener el recordatorio' + JSON.stringify(e));
+  }
 
 }
