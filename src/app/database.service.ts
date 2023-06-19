@@ -92,13 +92,13 @@ export class DatabaseService {
     );
 
     // insertar configuraciones de tabla metodos de pago
-    await this.databaseObj.executeSql(
-      `ALTER TABLE deudas ADD COLUMN tipoPagoId INTEGER not NULL DEFAULT 1;
-        ALTER TABLE historial ADD COLUMN tipoPagoId INTEGER not NULL DEFAULT 1;
-        INSERT INTO metodoPago (id, abreviatura, name) VALUES (1,'E','EFECTIVO'),
-         (2,'TB','TRANSFERENCIA BANCARIA'), (3,'G','GIROS');`,
-      []
-    );
+    // await this.databaseObj.executeSql(
+    //   `ALTER TABLE deudas ADD COLUMN tipoPagoId INTEGER not NULL DEFAULT 1;
+    //     ALTER TABLE historial ADD COLUMN tipoPagoId INTEGER not NULL DEFAULT 1;
+    //     INSERT INTO metodoPago (id, abreviatura, name) VALUES (1,'E','EFECTIVO'),
+    //      (2,'TB','TRANSFERENCIA BANCARIA'), (3,'G','GIROS');`,
+    //   []
+    // );
   }
 
   async addProductos(name: string) {
@@ -248,7 +248,7 @@ export class DatabaseService {
         productos.name as productos, deudas.fecha as fecha,
         clientes.telefono as telefono,
         recordatorioPagos.recordatorio as recordatorio,
-        deudas.tipoPagoId as tipopagoId,
+        deudas.tipoPagoId as tipopagoId
         FROM deudas
         JOIN productos ON productos.id = deudas.productosId
         JOIN clientes ON  clientes.id = deudas.clientesid
@@ -336,10 +336,11 @@ export class DatabaseService {
         clientes.telefono as telefono,
         historial.estado AS estado,
         historial.detalles AS detalles,
-        historial.tipoPagoId as tipopago,
+        metodoPago.abreviatura as tipopago
         FROM historial
         JOIN productos ON productos.id = historial.idProducto
         JOIN clientes ON  clientes.id = historial.idCliente
+        JOIN metodoPago ON metodoPago.id = historial.tipoPagoId
         ORDER BY clientes ASC`,
         []
       )
@@ -430,11 +431,11 @@ export class DatabaseService {
   async getMetodoPago(){
     return this.databaseObj
       .executeSql(
-        `SELECT * FROM ${this.tables.metodoPago}`,
+        `SELECT * from ${this.tables.metodoPago}`,
         []
       )
       .then((res) => res)
-      .catch((e) => 'error al obtener el recordatorio' + JSON.stringify(e));
+      .catch((e) => 'error al obtener el metodo de pago' + JSON.stringify(e));
   }
 
 }

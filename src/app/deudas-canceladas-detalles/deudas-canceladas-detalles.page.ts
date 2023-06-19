@@ -23,6 +23,7 @@ export class DeudasCanceladasDetallesPage implements OnInit {
   clientesId = 0;
   productosId = 0;
   ultimoMonto = 0;
+  auxIdPago = 1;
 
   deudas: any = [];
   lastDeudas: any = [];
@@ -159,7 +160,7 @@ export class DeudasCanceladasDetallesPage implements OnInit {
     }else if(operacion === 1){
       this.database
         .editDeudas(deudas.montos-this.montoDeuda, this.getIdDeuda(),
-          moment().format('DD/MM/YY'))
+          moment().format('DD/MM/YY'), this.auxIdPago)
         .then((data) => {
           this.addHistorial(deudas, 1);
           this.montoDeuda = 0;
@@ -173,7 +174,7 @@ export class DeudasCanceladasDetallesPage implements OnInit {
     }else if(operacion === 2){
       this.database
         .editDeudas( Number(deudas.montos)+Number(this.montoDeuda), this.getIdDeuda(),
-          moment().format('DD/MM/YY'))
+          moment().format('DD/MM/YY'), this.auxIdPago)
         .then((data) => {
           this.addHistorial(deudas, 2);
           this.montoDeuda = 0;

@@ -32,7 +32,7 @@ export class DeudasDetallesPage implements OnInit {
   historiales: any = [];
   fecha = moment();
   valor = 1;
-
+  auxIdPago = 1;
 
   seleccionarCli = 0;
   seleccionarPro = 0;
@@ -42,6 +42,7 @@ export class DeudasDetallesPage implements OnInit {
   selectedProductosId = 0;
   selectedClientesId = 0;
   montoDeuda = 0;
+  valorTipopago = 0;
   editId = 0;
   nombre: any;
   diferenciaMonto = 0;
@@ -139,6 +140,14 @@ export class DeudasDetallesPage implements OnInit {
       }
     }
 
+    /*verificar metodo de pago*/
+    if (operacion === 2) {
+      if (this.montoDeuda <= 0) {
+        alert('error al ingresar monto');
+        return;
+      }
+    }
+
     console.log(this.montoDeuda);
     console.log('monto a pagar');
     console.log(deudas.montos);
@@ -160,7 +169,7 @@ export class DeudasDetallesPage implements OnInit {
     }else if(operacion === 1){
       this.database
         .editDeudas(deudas.montos-this.montoDeuda, this.getIdDeuda(),
-          moment().format('DD/MM/YY'))
+          moment().format('DD/MM/YY'), this.auxIdPago)
         .then((data) => {
           this.addHistorial(deudas, 1);
           this.montoDeuda = 0;
@@ -174,7 +183,7 @@ export class DeudasDetallesPage implements OnInit {
     }else if(operacion === 2){
       this.database
         .editDeudas( Number(deudas.montos)+Number(this.montoDeuda), this.getIdDeuda(),
-          moment().format('DD/MM/YY'))
+          moment().format('DD/MM/YY'), this.auxIdPago)
         .then((data) => {
           this.addHistorial(deudas, 2);
           this.montoDeuda = 0;

@@ -22,7 +22,7 @@ export class DeudasPage implements OnInit {
   idDeuda: any = [];
   id = 0;
   auxId = 0;
-  auxIdPago = 0;
+  auxIdPago = 1;
 
   deudas: any = [];
   historiales: any = [];
@@ -34,6 +34,7 @@ export class DeudasPage implements OnInit {
   seleccionarCli = 0;
   seleccionarPro = 0;
   seleccionarRec = 0;
+  seleccionarMet = 0;
   productos: any = [];
   aux: any = [];
 
@@ -141,7 +142,7 @@ export class DeudasPage implements OnInit {
           this.metodoPago.push(data.rows.item(i));
         }
       }
-      console.log('metodoPago',this.metodoPago);
+      console.log('metodoPago??',this.metodoPago);
     });
   }
 
@@ -226,7 +227,7 @@ export class DeudasPage implements OnInit {
           this.productosId = 0;
           this.clientesId = 0;
           this.recordar = 0;
-          this.tipopagoId = 0;
+          this.tipopagoId = 1;
         });
 
     }

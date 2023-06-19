@@ -53,10 +53,10 @@
     <ion-item>
       <ion-label>Seleccionar el Metodo de Pago</ion-label>
       <ionic-selectable
-        [(ngModel)]="seleccionarRec"
+        [(ngModel)]="seleccionarMet"
         [items]="metodoPago"
         itemValueField="id"
-        itemTextField="metodoPago"
+        itemTextField="name"
         [canSearch]="true"
         (onChange)="portChangeM($event)"
       >

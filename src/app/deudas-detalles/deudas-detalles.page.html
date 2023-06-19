@@ -43,6 +43,10 @@
                 pago: {{moneda(pagoAnterior(historial.montos))}}
                 <br>
               </ion-col>
+            <ion-col size="6">
+              Metodo Pago: {{ moneda(historial.tipopago) }}
+              <br>
+            </ion-col>
               <ion-col size="6">
                 Deuda Total: {{ moneda(historial.montos) }}
                 <br>
