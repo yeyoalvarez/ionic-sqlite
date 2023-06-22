@@ -291,11 +291,11 @@ export class DatabaseService {
       .catch((e) => 'error al actualizar deuda ' + JSON.stringify(e));
   }
 
-  async deudaCancelada(monto: number, id: number, fecha: string) {
+  async deudaCancelada(monto: number, id: number, fecha: string, metodoPago: number) {
     return this.databaseObj
       .executeSql(
         `UPDATE ${this.tables.deudas} SET monto = 0, estado = 'FALSE',
-         fecha = '${fecha}'
+         fecha = '${fecha}', tipoPagoId = '${metodoPago}'
          WHERE id = ${id} and ${monto} = 0`,
         []
       )
@@ -313,13 +313,13 @@ export class DatabaseService {
   /*funciones para la tabla historia de deudas*/
 
   async addHistorialNuevo(clientesId: number, productosId: number, monto: number, fecha: string, detalles: string,
-                          tipopagoId: number) {
+                          tipoPagoId: number) {
     return this.databaseObj
       .executeSql(
         `INSERT INTO ${this.tables.historial} (idCliente, idProducto, idDeuda, montos, fechas,estado, detalles,
         tipoPagoId)
          VALUES ('${clientesId}', ${productosId},(SELECT MAX(id) AS id from deudas), ${monto},'${fecha}','TRUE',
-         '${detalles}', '${tipopagoId}')`,
+         '${detalles}', '${tipoPagoId}')`,
         []
       )
       .catch((e) => 'error al crear historial' + JSON.stringify(e));
@@ -349,13 +349,13 @@ export class DatabaseService {
   }
 
   async addHistorial(clientesId: number, productosId: number, idDeuda: number, monto: number,
-                     fecha: string, detalles: string) {
+                     fecha: string, detalles: string, tipoPagoId: number) {
     return this.databaseObj
       .executeSql(
         `INSERT INTO ${this.tables.historial} (idCliente, idProducto, idDeuda, montos, fechas,
-         estado,detalles)
+         estado,detalles, tipoPagoId )
          VALUES ('${clientesId}', ${productosId},${idDeuda}, ${monto},'${fecha}',
-         'TRUE', '${detalles}')`,
+         'TRUE', '${detalles}', '${tipoPagoId}')`,
         []
       )
       .catch((e) => 'error al crear historial' + JSON.stringify(e));

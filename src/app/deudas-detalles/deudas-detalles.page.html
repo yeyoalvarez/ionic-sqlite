@@ -18,7 +18,6 @@
                 Cliente: {{historial.clientes}}
               </ion-col>
               <ion-col size="12">
-                <br>
                 Producto: {{historial.productos}}
               </ion-col>
             </ion-row>
@@ -44,7 +43,7 @@
                 <br>
               </ion-col>
             <ion-col size="6">
-              Metodo Pago: {{ moneda(historial.tipopago) }}
+              Metodo Pago: {{ historial.tipopago }}
               <br>
             </ion-col>
               <ion-col size="6">
@@ -90,6 +89,19 @@
             <ion-item>
               <ion-label position="floating">Nuevo Detalle</ion-label>
               <ion-input [(ngModel)]="detalle"></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-label>Seleccionar el Metodo de Pago</ion-label>
+              <ionic-selectable
+                [(ngModel)]="seleccionarMet"
+                [items]="metodoPago"
+                itemValueField="id"
+                itemTextField="name"
+                [canSearch]="true"
+                (onChange)="portChangeM($event)"
+              >
+              </ionic-selectable>
             </ion-item>
 
             <ion-row class="top-20">

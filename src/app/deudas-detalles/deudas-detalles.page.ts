@@ -6,6 +6,7 @@ import { File } from '@awesome-cordova-plugins/file/ngx';
 import * as moment from 'moment';
 import { Screenshot } from '@ionic-native/screenshot/ngx';
 import { PDFGenerator, PDFGeneratorOptions } from '@awesome-cordova-plugins/pdf-generator/ngx';
+import {IonicSelectableComponent} from 'ionic-selectable';
 
 @Component({
   selector: 'app-deudas-detalles',
@@ -28,16 +29,18 @@ export class DeudasDetallesPage implements OnInit {
   deudas: any = [];
   lastDeudas: any = [];
   lastMonto: any = [];
-  aux = 0;
   historiales: any = [];
   fecha = moment();
   valor = 1;
   auxIdPago = 1;
+  metodoPago: any = [];
+  seleccionarMet = 0;
 
   seleccionarCli = 0;
   seleccionarPro = 0;
   productos: any = [];
 
+  tipopagoId = 1;
   editMode = false;
   selectedProductosId = 0;
   selectedClientesId = 0;
@@ -52,6 +55,7 @@ export class DeudasDetallesPage implements OnInit {
   lastId = 0;
   lastIdLista: any = [];
   firstIdLista: any = [];
+  aux: any = [];
 
   html: any;
   data: any[] = [];
@@ -69,10 +73,11 @@ export class DeudasDetallesPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    this.getHistorial();
     this.getLastMonto();
     this.getLastDeudaId();
     this.getFirstDeudaId();
+    this.getMetodoPago();
+    this.getHistorial();
   }
 
 
@@ -88,11 +93,18 @@ export class DeudasDetallesPage implements OnInit {
     return Number(this.firstId);
   }
 
-  doRefresh(event) {
-    setTimeout(() => {
-      this.getHistorial();
-      event.target.complete();
-    }, 2000);
+  // doRefresh(event) {
+  //   setTimeout(() => {
+  //     this.getHistorial();
+  //     event.target.complete();
+  //   }, 2000);
+  // }
+
+  portChangeM(event: {
+    component: IonicSelectableComponent;value: any;
+  }) {
+    this.aux = event.value;
+    this.tipopagoId = this.aux.id;
   }
 
   getFirstDeudaId() {
@@ -156,12 +168,13 @@ export class DeudasDetallesPage implements OnInit {
     if (Number(deudas.montos) === Number(this.montoDeuda)
     && operacion === 1 ){
       this.database
-        .deudaCancelada(0, this.getIdDeuda(), moment().format('DD/MM/YY'))
+        .deudaCancelada(0, this.getIdDeuda(), moment().format('DD/MM/YY'), this.tipopagoId)
         .then((data) => {
           this.addHistorial(deudas, 1);
           this.montoDeuda = 0;
           this.selectedProductosId = 0;
           this.selectedClientesId = 0;
+          this.tipopagoId = 1;
           console.log('disminuir');
           alert(data);
         });
@@ -169,12 +182,13 @@ export class DeudasDetallesPage implements OnInit {
     }else if(operacion === 1){
       this.database
         .editDeudas(deudas.montos-this.montoDeuda, this.getIdDeuda(),
-          moment().format('DD/MM/YY'), this.auxIdPago)
+          moment().format('DD/MM/YY'), this.tipopagoId)
         .then((data) => {
           this.addHistorial(deudas, 1);
           this.montoDeuda = 0;
           this.selectedProductosId = 0;
           this.selectedClientesId = 0;
+          this.tipopagoId = 1;
           this.detalle = ' ';
           console.log('disminuir');
           alert(data);
@@ -183,13 +197,14 @@ export class DeudasDetallesPage implements OnInit {
     }else if(operacion === 2){
       this.database
         .editDeudas( Number(deudas.montos)+Number(this.montoDeuda), this.getIdDeuda(),
-          moment().format('DD/MM/YY'), this.auxIdPago)
+          moment().format('DD/MM/YY'), this.tipopagoId)
         .then((data) => {
           this.addHistorial(deudas, 2);
           this.montoDeuda = 0;
           this.selectedProductosId = 0;
           this.selectedClientesId = 0;
           this.detalle = ' ';
+          this.tipopagoId = 1;
           alert(data);
         });
     }
@@ -200,24 +215,26 @@ export class DeudasDetallesPage implements OnInit {
     if (operacion === 1){
       this.database
         .addHistorial(deudas.idCliente, deudas.idProducto, this.getIdDeuda(),deudas.montos-this.montoDeuda,
-          moment().format('DD/MM/YY'), this.detalle)
+          moment().format('DD/MM/YY'), this.detalle, this.tipopagoId)
         .then(() => {
           this.montoDeuda = 0;
           this.productosId = 0;
           this.clientesId = 0;
           this.detalle = ' ';
+          this.tipopagoId = 1;
         });
       /*si es una suma de deuda*/
     }else if (operacion === 2){
       this.database
         .addHistorial(deudas.idCliente, deudas.idProducto, this.getIdDeuda(),
           Number(deudas.montos)+Number(this.montoDeuda),
-          moment().format('DD/MM/YY'), this.detalle)
+          moment().format('DD/MM/YY'), this.detalle, this.tipopagoId)
         .then(() => {
           this.montoDeuda = 0;
           this.productosId = 0;
           this.clientesId = 0;
           this.detalle = ' ';
+          this.tipopagoId = 1;
         });
     }
 
@@ -269,6 +286,18 @@ export class DeudasDetallesPage implements OnInit {
       this.diferenciaMonto = this.deudaActual-x;
     }
     return Number(this.diferenciaMonto *-1);
+  }
+
+  getMetodoPago(){
+    this.database.getMetodoPago().then((data) => {
+      this.metodoPago = [];
+      if (data.rows.length > 0) {
+        for (let i = 0; i < data.rows.length; i++) {
+          this.metodoPago.push(data.rows.item(i));
+        }
+      }
+      console.log('metodoPago??',this.metodoPago);
+    });
   }
 
   generatePdf(){

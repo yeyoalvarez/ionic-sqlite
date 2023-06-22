@@ -12,6 +12,9 @@ import { Screenshot } from '@ionic-native/screenshot/ngx';
 })
 export class DeudasReportePdfPage implements OnInit {
 
+  paisCodigo = '595';
+  url = 'https://api.whatsapp.com/send?phone=' + this.paisCodigo;
+
   textoBuscar = '';
   deudas: any = [];
   p = 1; //variable de paginacion

@@ -12,6 +12,9 @@
     <ion-item-sliding *ngFor="let deuda of deudas" >
         <p *ngIf="deuda.id === getIdDeuda()">
           <ion-row>
+            <img src="assets\icon\logo.jpg" class="ion-text-center">
+          </ion-row>
+          <ion-row>
             Cliente: {{deuda.clientes}}
             <br/>
           </ion-row>
@@ -22,6 +25,10 @@
             <ion-row>
               Deuda total: {{ moneda(deuda.monto) }}
             </ion-row>
+          <br/><a>Telefono: {{paisCodigo}} {{deuda.telefono}}<br/></a>
+          <ion-button href={{url+deuda.telefono}} color="success">
+            <ion-icon name="logo-whatsapp"></ion-icon>
+          </ion-button>
           <ion-button (click)="tomarScreen()">
             <ion-icon name="image"></ion-icon>
           </ion-button>
@@ -33,3 +40,12 @@
   </ion-list>
 </ion-content>
 
+<style>
+  img{
+    width: 5px;
+    height: 5px;
+  }
+  ion-row{
+      text-align: center;
+  }
+</style>

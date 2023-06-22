@@ -241,6 +241,7 @@ export class DeudasPage implements OnInit {
           this.deudas.push(data.rows.item(i));
         }
       }
+      console.log('deudas??',this.deudas);
     });
   }
 
