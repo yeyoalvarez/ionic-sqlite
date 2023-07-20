@@ -9,8 +9,7 @@
 
 <ion-content>
   <ion-list>
-  <ion-item-sliding *ngFor="let deuda of deudas | filter:textoBuscar |
-    paginate: { itemsPerPage: 20, currentPage: p }" >
+  <ion-item-sliding *ngFor="let deuda of deudas | filter:textoBuscar" >
     <ion-item *ngIf="testFecha(deuda.fecha, deuda.recordatorio)"
               [routerLink]="['/deudas-reporte-pdf',deuda.id]" titulo ="loading">
       <ion-item>

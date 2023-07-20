@@ -44,7 +44,6 @@
             </ion-col>
             <ion-col size="6" *ngIf="pagoAnteriorConsulta(historial.montos) < 0 && historial.id !== getFirstId()">
               pago: {{moneda(pagoAnterior(historial.montos))}}
-              <br>
             </ion-col>
             <ion-col size="6">
               Metodo Pago: {{ historial.tipopago }}
