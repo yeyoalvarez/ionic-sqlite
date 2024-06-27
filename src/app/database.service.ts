@@ -247,8 +247,7 @@ export class DatabaseService {
         clientes.name as clientes,
         productos.name as productos, deudas.fecha as fecha,
         clientes.telefono as telefono,
-        recordatorioPagos.recordatorio as recordatorio,
-        deudas.tipoPagoId as tipopagoId
+        recordatorioPagos.recordatorio as recordatorio
         FROM deudas
         JOIN productos ON productos.id = deudas.productosId
         JOIN clientes ON  clientes.id = deudas.clientesid

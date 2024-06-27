@@ -9,47 +9,32 @@
 
 <ion-content id="content" #content>
   <ion-list>
-    <ion-item-sliding *ngFor="let historial of historiales" >
+    <ion-item-sliding *ngFor="let historial of historiales">
       <ng-container *ngIf="historial.idDeuda === getIdDeuda()">
         <p *ngIf="historial.id === getFirstId()">
           <ion-grid>
             <ion-row>
-              <ion-col size="12">
-                Cliente: {{historial.clientes}}
-              </ion-col>
-              <ion-col size="12">
-                Producto: {{historial.productos}}
-              </ion-col>
+              <ion-col size="12">Cliente: {{historial.clientes}}</ion-col>
+              <ion-col size="12">Producto: {{historial.productos}}</ion-col>
             </ion-row>
           </ion-grid>
         </p>
 
         <ion-grid>
           <ion-row>
-              <ion-col size="6">
-                Fecha: {{historial.fechas}}
-              </ion-col>
-              <ion-col size="6" *ngIf="historial.id === getFirstId()">
-                pago: 0
-                <br>
-                <a style="color: white">{{moneda(pagoAnterior(historial.montos))}}</a>
-              </ion-col>
-              <ion-col size="6" *ngIf="pagoAnteriorConsulta(historial.montos) > 0 && historial.id !== getFirstId()">
-                Mercaderia por {{moneda(pagoAnterior(historial.montos))}}
-                <br>
-              </ion-col>
-              <ion-col size="6" *ngIf="pagoAnteriorConsulta(historial.montos) < 0 && historial.id !== getFirstId()">
-                pago: {{moneda(pagoAnterior(historial.montos))}}
-                <br>
-              </ion-col>
-            <ion-col size="6">
-              Metodo Pago: {{ historial.tipopago }}
-              <br>
+            <ion-col size="6">Fecha: {{historial.fechas}}</ion-col>
+            <ion-col size="6" *ngIf="historial.id === getFirstId()">
+              Pago: 0<br>
+              <a style="color: white">{{moneda(pagoAnterior(historial.montos))}}</a>
             </ion-col>
-              <ion-col size="6">
-                Deuda Total: {{ moneda(historial.montos) }}
-                <br>
-              </ion-col>
+            <ion-col size="6" *ngIf="pagoAnteriorConsulta(historial.montos) > 0 && historial.id !== getFirstId()">
+              Mercadería por {{moneda(pagoAnterior(historial.montos))}}<br>
+            </ion-col>
+            <ion-col size="6" *ngIf="pagoAnteriorConsulta(historial.montos) < 0 && historial.id !== getFirstId()">
+              Pago: {{moneda(pagoAnterior(historial.montos))}}<br>
+            </ion-col>
+            <ion-col size="6">Método Pago: {{historial.tipopago}}<br></ion-col>
+            <ion-col size="6">Deuda Total: {{moneda(historial.montos)}}<br></ion-col>
           </ion-row>
         </ion-grid>
 
@@ -66,11 +51,11 @@
             <br>
             Detalles: {{historial.detalles}}
           </ion-row>
-          <div class="hr"> </div>
+          <div class="hr"></div>
         </ion-grid>
 
-        <ng-container *ngIf="(historial.id === getLastId())">
-          <p>Telefono: {{paisCodigo}} {{historial.telefono}}<br/></p>
+        <ng-container *ngIf="historial.id === getLastId()">
+          <p>Teléfono: {{paisCodigo}} {{historial.telefono}}<br/></p>
           <ion-button href={{url+historial.telefono}} color="success">
             <ion-icon name="logo-whatsapp"></ion-icon>
           </ion-button>
@@ -81,7 +66,7 @@
             <ion-icon name="document"></ion-icon>
           </ion-button>
 
-          <ion-list *ngIf="historial.montos !== 0" >
+          <ion-list *ngIf="historial.montos !== 0">
             <ion-item>
               <ion-label position="floating">Añadir Monto</ion-label>
               <ion-input [(ngModel)]="montoDeuda"></ion-input>
@@ -90,38 +75,35 @@
               <ion-label position="floating">Nuevo Detalle</ion-label>
               <ion-input [(ngModel)]="detalle"></ion-input>
             </ion-item>
-
             <ion-item>
-              <ion-label>Seleccionar el Metodo de Pago</ion-label>
+              <ion-label>Seleccionar el Método de Pago</ion-label>
               <ionic-selectable
                 [(ngModel)]="seleccionarMet"
                 [items]="metodoPago"
                 itemValueField="id"
                 itemTextField="name"
                 [canSearch]="true"
-                (onChange)="portChangeM($event)"
-              >
+                (onChange)="portChangeM($event)">
               </ionic-selectable>
             </ion-item>
 
             <ion-row class="top-20">
               <ng-container *ngIf="historial.idDeuda === getIdDeuda()">
                 <ion-col>
-                    <ion-button expand="full" (click)="editDeudas(historial,1)" [routerLink]="['/deudas-clientes']">
-                      Pago Deuda</ion-button>
+                  <ion-button expand="full" (click)="confirmarPagoDeuda(historial, 1)">
+                    Pago Deuda
+                  </ion-button>
                 </ion-col>
                 <ion-col>
-                    <ion-button expand="full" (click)="editDeudas(historial, 2)" [routerLink]="['/deudas-clientes']">
-                      Aumentar Deuda</ion-button>
+                  <ion-button expand="full" (click)="confirmarPagoDeuda(historial, 2)">
+                    Aumentar Deuda
+                  </ion-button>
                 </ion-col>
               </ng-container>
             </ion-row>
           </ion-list>
-
         </ng-container>
-
       </ng-container>
     </ion-item-sliding>
-
   </ion-list>
 </ion-content>

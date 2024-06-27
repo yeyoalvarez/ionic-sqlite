@@ -93,13 +93,6 @@ export class DeudasDetallesPage implements OnInit {
     return Number(this.firstId);
   }
 
-  // doRefresh(event) {
-  //   setTimeout(() => {
-  //     this.getHistorial();
-  //     event.target.complete();
-  //   }, 2000);
-  // }
-
   portChangeM(event: {
     component: IonicSelectableComponent;value: any;
   }) {
@@ -128,21 +121,21 @@ export class DeudasDetallesPage implements OnInit {
 
   editDeudas(deudas: any, operacion: number) {
     /* Verificar datos de disminuir deuda*/
-      if(this.montoDeuda === 0) {
-        alert('Ingrese el monto');
+    if(this.montoDeuda === 0) {
+      alert('Ingrese el monto');
+      return;
+    }
+
+    if (operacion === 1) {
+      if (this.montoDeuda > deudas.montos) {
+        alert('error al ingresar monto');
         return;
       }
-
-      if (operacion === 1) {
-        if (this.montoDeuda > deudas.montos) {
-          alert('error al ingresar monto');
-          return;
-        }
-        if (this.montoDeuda < 1) {
-          alert('error al ingresar monto');
-          return;
-        }
+      if (this.montoDeuda < 1) {
+        alert('error al ingresar monto');
+        return;
       }
+    }
 
     /* verificar datos de aumentar deuda*/
     if (operacion === 2) {
@@ -166,7 +159,7 @@ export class DeudasDetallesPage implements OnInit {
 
     /*si se disminuira la deuda y es el monto total, se cancelara*/
     if (Number(deudas.montos) === Number(this.montoDeuda)
-    && operacion === 1 ){
+      && operacion === 1 ){
       this.database
         .deudaCancelada(0, this.getIdDeuda(), moment().format('DD/MM/YY'), this.tipopagoId)
         .then((data) => {
@@ -178,7 +171,7 @@ export class DeudasDetallesPage implements OnInit {
           console.log('disminuir');
           alert(data);
         });
-    /*si disminuira la deuda, pero no es el monto total adeudado*/
+      /*si disminuira la deuda, pero no es el monto total adeudado*/
     }else if(operacion === 1){
       this.database
         .editDeudas(deudas.montos-this.montoDeuda, this.getIdDeuda(),
@@ -276,7 +269,7 @@ export class DeudasDetallesPage implements OnInit {
       this.diferenciaMonto = this.deudaActual-x;
       this.deudaActual = this.deudaActual - this.diferenciaMonto;
     }
-      return Number(this.diferenciaMonto *-1);
+    return Number(this.diferenciaMonto *-1);
   }
 
   pagoAnteriorConsulta(x){
@@ -316,5 +309,20 @@ export class DeudasDetallesPage implements OnInit {
       alert('Guardado');
     });
   }
+
+  confirmarPagoDeuda(historial: any, operacion: number) {
+    let mensaje = '';
+    if (operacion === 1) {
+      mensaje = `¿Está seguro que desea realizar el pago de deuda por el monto de ${this.moneda(this.montoDeuda)}?`;
+    } else if (operacion === 2) {
+      mensaje = `¿Está seguro que desea aumentar la deuda por el monto de ${this.moneda(this.montoDeuda)}?`;
+    }
+
+    if (confirm(mensaje)) {
+      this.editDeudas(historial, operacion);
+    }
+  }
+
+
 
 }

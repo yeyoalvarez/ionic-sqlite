@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {DatabaseService} from '../database.service';
-import {ActivatedRoute} from '@angular/router';
+import { DatabaseService } from '../database.service';
+import { ActivatedRoute } from '@angular/router';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-deudas-clientes',
@@ -10,34 +11,14 @@ import {ActivatedRoute} from '@angular/router';
 export class DeudasClientesPage implements OnInit {
 
   idrecibido: string;
-  id: string;
-  clientes: any = [];
-  clientesId = 0;
-  productosId = 0;
-
-  deudas: any = [];
-  fecha: string;
-  idVariable = 0;
-
-
-  seleccionarCli = 0;
-  seleccionarPro = 0;
-  productos: any = [];
-  aux: any = [];
-
-  editMode = false;
-  selectedProductosId = 0;
-  selectedClientesId = 0;
-  montoDeuda = 0;
-  editId = 0;
-
-  items: any[] = [];
+  deudas: any[] = [];
   textoBuscar = '';
-  p = 1; //variable de paginacion
+  p = 1; // Variable de paginación
 
-
-  constructor(public database: DatabaseService,
-              private activatedRoute: ActivatedRoute,
+  constructor(
+    private database: DatabaseService,
+    private activatedRoute: ActivatedRoute,
+    public alertController: AlertController
   ) {
     this.database.createDatabase().then(() => {
       this.idrecibido = this.activatedRoute.snapshot.paramMap.get('id');
@@ -45,33 +26,48 @@ export class DeudasClientesPage implements OnInit {
     });
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   ionViewWillEnter() {
     this.getDeudas();
   }
 
-  moneda(x) {
+  moneda(x: number) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   }
 
   getDeudas() {
     this.database.getDeudas().then((data) => {
       this.deudas = [];
-      if (data.rows.length > 0) {
-        for (let i = 0; i < data.rows.length; i++) {
-          this.deudas.push(data.rows.item(i));
-        }
+      for (let i = 0; i < data.rows.length; i++) {
+        this.deudas.push(data.rows.item(i));
       }
     });
   }
 
-  deleteDeudas(id: number) {
-    this.database.deleteDeudas(id).then((data) => {
-      alert(data);
-      this.getDeudas();
+  async deleteDeudas(id: number) {
+    const alert = await this.alertController.create({
+      header: 'Confirmación',
+      message: '¿Estás seguro de que quieres eliminar esta deuda?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirm Cancel');
+          }
+        }, {
+          text: 'Eliminar',
+          handler: () => {
+            this.database.deleteDeudas(id).then(() => {
+              this.getDeudas();
+            });
+          }
+        }
+      ]
     });
-  }
 
+    await alert.present();
+  }
 }

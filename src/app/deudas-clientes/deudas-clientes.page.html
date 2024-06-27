@@ -5,53 +5,48 @@
     </ion-buttons>
     <ion-title>Clientes con Deudas</ion-title>
   </ion-toolbar>
-  <ion-searchbar animated placeholder="Buscar Deudor"
-                 showCancelButton="focus" cancelButtonText="Custom Cancel"
-                 [(ngModel)]="textoBuscar">
+  <ion-searchbar
+    animated
+    placeholder="Buscar Deudor"
+    showCancelButton="focus"
+    cancelButtonText="Cancelar"
+    [(ngModel)]="textoBuscar">
   </ion-searchbar>
 </ion-header>
 
 <ion-content>
-
   <ion-list>
     <ion-item>
       <ion-grid>
         <ion-row>
-          <ion-col size="5">
-            Cliente
-          </ion-col>
-          <ion-col size="4">
-            Deuda
-          </ion-col>
-          <ion-col size="3">
-            Pago
-          </ion-col>
+          <ion-col size="5">Cliente</ion-col>
+          <ion-col size="4">Deuda</ion-col>
+          <ion-col size="3">Pago</ion-col>
         </ion-row>
       </ion-grid>
     </ion-item>
   </ion-list>
 
   <ion-list>
-    <ion-item *ngFor="let deuda of deudas | filter:textoBuscar"
-        [routerLink]="['/deudas-detalles',deuda.id]" >
+    <ion-item-sliding *ngFor="let deuda of deudas | filter:textoBuscar | paginate: { itemsPerPage: 20, currentPage: p }">
+      <ion-item [routerLink]="['/deudas-detalles', deuda.id]">
         <ion-grid>
           <ion-row>
-            <ion-col size="5">
-                {{deuda.clientes}}
-            </ion-col>
-            <ion-col size="4">
-              {{ moneda(deuda.monto) }}
-            </ion-col>
-            <ion-col size="3">
-              {{ deuda.recordatorio}}
-            </ion-col>
+            <ion-col size="5">{{deuda.clientes}}</ion-col>
+            <ion-col size="4">{{moneda(deuda.monto)}}</ion-col>
+            <ion-col size="3">{{deuda.recordatorio}}</ion-col>
           </ion-row>
         </ion-grid>
-    </ion-item>
+      </ion-item>
+      <ion-item-options side="end">
+        <ion-item-option color="danger" (click)="deleteDeudas(deuda.id)">Eliminar</ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
   </ion-list>
 
-  <ion-content side="end">
-    <ion-button expand="block" [routerLink]="['/deudas']"> Añadir Deuda</ion-button>
-  </ion-content>
+  <pagination-controls (pageChange)="p = $event"></pagination-controls>
 
+  <ion-footer>
+    <ion-button expand="block" [routerLink]="['/deudas']">Añadir Deuda</ion-button>
+  </ion-footer>
 </ion-content>
