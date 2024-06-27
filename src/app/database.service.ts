@@ -282,7 +282,7 @@ export class DatabaseService {
     return this.databaseObj
       .executeSql(
         `UPDATE ${this.tables.deudas} SET monto = ${monto},
-        fecha = ${fecha}, tipoPagoId = ${tipopagoId}
+        fecha = '${fecha}', tipoPagoId = ${tipopagoId}
         WHERE id = ${id}`,
         []
       )

@@ -90,12 +90,12 @@
             <ion-row class="top-20">
               <ng-container *ngIf="historial.idDeuda === getIdDeuda()">
                 <ion-col>
-                  <ion-button expand="full" (click)="confirmarPagoDeuda(historial, 1)">
+                  <ion-button expand="full" (click)="confirmarPagoDeuda(historial, 1)" [routerLink]="['/deudas-clientes']">
                     Pago Deuda
                   </ion-button>
                 </ion-col>
                 <ion-col>
-                  <ion-button expand="full" (click)="confirmarPagoDeuda(historial, 2)">
+                  <ion-button expand="full" (click)="confirmarPagoDeuda(historial, 2)" [routerLink]="['/deudas-clientes']">
                     Aumentar Deuda
                   </ion-button>
                 </ion-col>

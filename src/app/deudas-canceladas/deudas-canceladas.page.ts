@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {DatabaseService} from '../database.service';
-import {ActivatedRoute} from '@angular/router';
-import {NgxPaginationModule} from 'ngx-pagination';
+import { DatabaseService } from '../database.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-deudas-canceladas',
@@ -9,44 +8,21 @@ import {NgxPaginationModule} from 'ngx-pagination';
   styleUrls: ['./deudas-canceladas.page.scss'],
 })
 export class DeudasCanceladasPage implements OnInit {
-
   idrecibido: string;
-  id: string;
-  clientes: any = [];
-  clientesId = 0;
-  productosId = 0;
-
   deudas: any = [];
-  fecha: string;
-  idVariable = 0;
-
-
-  seleccionarCli = 0;
-  seleccionarPro = 0;
-  productos: any = [];
-  aux: any = [];
-
-  editMode = false;
-  selectedProductosId = 0;
-  selectedClientesId = 0;
-  montoDeuda = 0;
-  editId = 0;
-
-  items: any[] = [];
   textoBuscar = '';
-  p = 1; //variable de paginacion
+  p = 1; // Variable de paginación
 
-
-  constructor(public database: DatabaseService,
-              private activatedRoute: ActivatedRoute,
+  constructor(
+    public database: DatabaseService,
+    private activatedRoute: ActivatedRoute
   ) {
     this.database.createDatabase().then(() => {
       this.getDeudasCanceladas();
     });
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   ionViewWillEnter() {
     this.getDeudasCanceladas();
@@ -62,5 +38,4 @@ export class DeudasCanceladasPage implements OnInit {
       }
     });
   }
-
 }
