@@ -19,16 +19,15 @@ import { File } from '@awesome-cordova-plugins/file/ngx';
 import { FileOpener } from '@awesome-cordova-plugins/file-opener/ngx';
 
 @NgModule({
-  declarations: [AppComponent],
-  entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule,IonicSelectableModule],
-  providers: [
-    StatusBar,
-    SplashScreen,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    SQLite,AndroidPermissions,Ng2SearchPipeModule,FileOpener,File,
-    PDFGenerator, Screenshot
-  ],
-  bootstrap: [AppComponent],
+    declarations: [AppComponent],
+    imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, IonicSelectableModule],
+    providers: [
+        StatusBar,
+        SplashScreen,
+        { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+        SQLite, AndroidPermissions, Ng2SearchPipeModule, FileOpener, File,
+        PDFGenerator, Screenshot
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule {}
