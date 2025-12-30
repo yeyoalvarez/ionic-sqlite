@@ -6,6 +6,7 @@ import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 })
 export class DatabaseService {
   databaseObj: SQLiteObject;
+  dbReady: boolean = false;
   tables = {
     productos: 'productos',
     clientes: 'clientes',
@@ -90,15 +91,6 @@ export class DatabaseService {
       name VARCHAR(255) NOT NULL UNIQUE, abreviatura VARCHAR(2) NOT NULL UNIQUE)`,
       []
     );
-
-    // insertar configuraciones de tabla metodos de pago
-    // await this.databaseObj.executeSql(
-    //   `ALTER TABLE deudas ADD COLUMN tipoPagoId INTEGER not NULL DEFAULT 1;
-    //     ALTER TABLE historial ADD COLUMN tipoPagoId INTEGER not NULL DEFAULT 1;
-    //     INSERT INTO metodoPago (id, abreviatura, name) VALUES (1,'E','EFECTIVO'),
-    //      (2,'TB','TRANSFERENCIA BANCARIA'), (3,'G','GIROS');`,
-    //   []
-    // );
   }
 
   async addProductos(name: string) {
@@ -436,5 +428,36 @@ export class DatabaseService {
       .then((res) => res)
       .catch((e) => 'error al obtener el metodo de pago' + JSON.stringify(e));
   }
+
+  async getDeudaTotal() {
+    await this.openDatabase();
+    return this.databaseObj.executeSql(
+      `
+    SELECT
+      COUNT(DISTINCT deudas.clientesId) AS total_clientes_con_deuda,
+      SUM(deudas.monto) AS total_deudas
+    FROM deudas
+    WHERE deudas.estado = 'TRUE'
+    `,
+      []
+    );
+  }
+
+
+  async openDatabase() {
+    if (this.dbReady) {
+      return; // ya abierta
+    }
+
+    this.databaseObj = await this.sqlite.create({
+      name: 'database', // mismo nombre que createDatabase()
+      location: 'default'
+    });
+
+    this.dbReady = true;
+    console.log('📂 Base de datos abierta');
+  }
+
+
 
 }

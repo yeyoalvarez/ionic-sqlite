@@ -55,7 +55,11 @@ const routes: Routes = [
   {
     path: 'deudas-reporte-pdf/:id',
     loadChildren: () => import('./deudas-reporte-pdf/deudas-reporte-pdf.module').then( m => m.DeudasReportePdfPageModule)
+  },  {
+    path: 'deudas-total',
+    loadChildren: () => import('./deudas-total/deudas-total.module').then( m => m.DeudasTotalPageModule)
   },
+
 
 
 

@@ -17,7 +17,7 @@ export class AppComponent {
     { title: 'Deudas por Cobrar', url: '/deudas-cobrar', icon: 'calendar' },
     { title: 'Contactos', url: '/contactos', icon: 'people' },
     { title: 'Deudas Canceladas', url: '/deudas-canceladas', icon: 'wallet' },
-    // { title: 'Archived', url: '/folder/Archived', icon: 'archive' },
+    { title: 'Deudas Total', url: '/deudas-total', icon: 'wallet' },
     // { title: 'Trash', url: '/folder/Trash', icon: 'trash' },
     // { title: 'Spam', url: '/folder/Spam', icon: 'warning' },
   ];
