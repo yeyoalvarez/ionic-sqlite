@@ -1,0 +1,369 @@
+ion-content {
+  --background: #f5f6fa;
+}
+
+// Toolbar de filtros
+.filter-toolbar {
+  ion-segment {
+    --background: transparent;
+
+    ion-segment-button {
+      --indicator-color: var(--ion-color-primary);
+      --color-checked: var(--ion-color-primary);
+      font-size: 0.8rem;
+      min-height: 36px;
+    }
+  }
+}
+
+// Barra de resumen
+.summary-bar {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 16px;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+  .summary-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: var(--ion-color-light);
+    border-radius: 12px;
+
+    ion-icon {
+      font-size: 2rem;
+    }
+
+    div {
+      p {
+        margin: 0;
+        font-size: 0.8rem;
+        color: var(--ion-color-medium);
+      }
+
+      h3 {
+        margin: 4px 0 0 0;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--ion-color-dark);
+      }
+    }
+  }
+}
+
+// Skeleton container
+.skeleton-container {
+  padding: 16px;
+
+  ion-card {
+    margin-bottom: 12px;
+    border-radius: 12px;
+  }
+}
+
+// Empty state
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--ion-color-medium);
+
+  ion-icon {
+    font-size: 5rem;
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    color: var(--ion-color-success);
+  }
+
+  p {
+    font-size: 0.95rem;
+    margin: 0;
+    color: var(--ion-color-medium);
+  }
+}
+
+// Lista de deudas
+.deudas-list {
+  padding: 12px 16px 80px 16px;
+
+  ion-item-sliding {
+    margin-bottom: 12px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent;
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+    // Borde izquierdo según urgencia
+    &:has(.avatar-alta) {
+      border-left-color: var(--ion-color-danger);
+    }
+
+    &:has(.avatar-media) {
+      border-left-color: var(--ion-color-warning);
+    }
+
+    &:has(.avatar-baja) {
+      border-left-color: var(--ion-color-success);
+    }
+  }
+
+  .deuda-card {
+    --background: white;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --inner-padding-end: 0;
+    --border-radius: 16px;
+    min-height: 120px;
+    cursor: pointer;
+
+    &:hover {
+      --background: var(--ion-color-light);
+    }
+  }
+}
+
+// Avatar container con indicador de urgencia
+.avatar-container {
+  position: relative;
+  margin-right: 12px;
+
+  .avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: white;
+    text-transform: uppercase;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+    &.avatar-alta {
+      background: linear-gradient(135deg, var(--ion-color-danger) 0%, var(--ion-color-danger-shade) 100%);
+    }
+
+    &.avatar-media {
+      background: linear-gradient(135deg, var(--ion-color-warning) 0%, var(--ion-color-warning-shade) 100%);
+    }
+
+    &.avatar-baja {
+      background: linear-gradient(135deg, var(--ion-color-success) 0%, var(--ion-color-success-shade) 100%);
+    }
+  }
+
+  .urgencia-indicator {
+    position: absolute;
+    bottom: -4px;
+    right: -4px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+
+    ion-icon {
+      font-size: 1.2rem;
+    }
+
+    &.urgencia-alta {
+      ion-icon {
+        color: var(--ion-color-danger);
+      }
+    }
+
+    &.urgencia-media {
+      ion-icon {
+        color: var(--ion-color-warning);
+      }
+    }
+
+    &.urgencia-baja {
+      ion-icon {
+        color: var(--ion-color-success);
+      }
+    }
+  }
+}
+
+// Información de la deuda
+ion-label {
+  .cliente-nombre {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--ion-color-dark);
+    margin: 0 0 6px 0;
+  }
+
+  .producto-nombre {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.9rem;
+    color: var(--ion-color-medium);
+    margin: 0 0 10px 0;
+
+    ion-icon {
+      font-size: 0.9rem;
+    }
+  }
+
+  .vencimiento-info {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+
+    ion-chip {
+      margin: 0;
+      height: 26px;
+      font-size: 0.7rem;
+      font-weight: 600;
+
+      ion-icon {
+        font-size: 0.95rem;
+      }
+
+      ion-label {
+        margin: 0;
+      }
+    }
+  }
+
+  .fecha-cobro {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.8rem;
+    color: var(--ion-color-medium);
+    margin: 0;
+    font-style: italic;
+
+    ion-icon {
+      font-size: 0.85rem;
+    }
+  }
+}
+
+// Monto container
+.monto-container {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  padding-left: 12px;
+
+  .monto {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+
+    .currency {
+      font-size: 0.75rem;
+      font-weight: 600;
+      opacity: 0.7;
+    }
+
+    .amount {
+      font-size: 1.15rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    &.monto-danger {
+      color: var(--ion-color-danger);
+    }
+
+    &.monto-warning {
+      color: var(--ion-color-warning);
+    }
+
+    &.monto-primary {
+      color: var(--ion-color-primary);
+    }
+  }
+
+  .urgencia-badge {
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+}
+
+// Opciones de swipe
+ion-item-options {
+  ion-item-option {
+    ion-icon {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+// Paginación
+.pagination-container {
+  padding: 20px 16px 80px 16px;
+  text-align: center;
+  background: white;
+}
+
+// Responsive
+@media (max-width: 576px) {
+  .summary-bar {
+    grid-template-columns: 1fr;
+  }
+
+  .avatar-container {
+    .avatar {
+      width: 52px;
+      height: 52px;
+      font-size: 1.4rem;
+    }
+
+    .urgencia-indicator {
+      width: 24px;
+      height: 24px;
+
+      ion-icon {
+        font-size: 1rem;
+      }
+    }
+  }
+
+  .monto-container .monto .amount {
+    font-size: 1rem;
+  }
+
+  ion-label {
+    .cliente-nombre {
+      font-size: 1rem;
+    }
+
+    .producto-nombre {
+      font-size: 0.85rem;
+    }
+
+    .fecha-cobro {
+      font-size: 0.75rem;
+    }
+  }
+}

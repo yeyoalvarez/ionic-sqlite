@@ -2,5 +2,5 @@
 	"appId": "io.ionic.starter",
 	"appName": "bellobello",
 	"webDir": "www",
-	"bundledWebRuntime": false
+	"android": {}
 }

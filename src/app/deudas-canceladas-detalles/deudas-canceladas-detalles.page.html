@@ -1,93 +1,145 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
+  <ion-toolbar color="success">
     <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
+      <ion-back-button defaultHref="/deudas-canceladas"></ion-back-button>
     </ion-buttons>
-    <ion-title>Detalles de la Deuda Canceladas</ion-title>
+    <ion-title>Deuda Cancelada</ion-title>
   </ion-toolbar>
 </ion-header>
 
+<ion-content>
+  <!-- Skeleton mientras carga -->
+  <div *ngIf="cargando" class="skeleton-container">
+    <ion-card>
+      <ion-card-header>
+        <ion-skeleton-text animated style="width: 60%; height: 24px;"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 50%; height: 20px; margin-top: 8px;"></ion-skeleton-text>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-skeleton-text animated style="width: 40%; height: 18px;"></ion-skeleton-text>
+      </ion-card-content>
+    </ion-card>
+    <div style="padding: 12px;">
+      <ion-card *ngFor="let i of [1,2,3]">
+        <ion-card-content>
+          <ion-skeleton-text animated style="width: 100%; height: 20px;"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 80%; height: 18px; margin-top: 8px;"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 60%; height: 18px; margin-top: 8px;"></ion-skeleton-text>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
 
-<ion-content id="content" #content>
-  <ion-list>
-    <ion-item-sliding *ngFor="let historial of historiales" >
-      <ng-container *ngIf="historial.idDeuda === getIdDeuda()">
-        <p *ngIf="historial.id === getFirstId()">
-          <ion-grid>
-            <ion-row>
-              <ion-col size="12">
-                Cliente: {{historial.clientes}}
-              </ion-col>
-              <br>
-              <ion-col size="12">
-                Producto: {{historial.productos}}
-              </ion-col>
-              <br>
-            </ion-row>
-          </ion-grid>
-        </p>
+  <!-- Contenedor para captura de pantalla/PDF -->
+  <div id="printable-content" *ngIf="!cargando">
+  <!-- Header con info del cliente (solo se muestra una vez) -->
+  <div class="client-header" *ngIf="historiales.length > 0">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="person-circle" color="success"></ion-icon>
+          {{clienteNombre}}
+        </ion-card-title>
+        <ion-card-subtitle>
+          <ion-icon name="cube" color="medium"></ion-icon>
+          {{productoNombre}}
+        </ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="contact-info">
+          <ion-icon name="call" color="success"></ion-icon>
+          <span>{{telefonoDisplay}}</span>
+        </div>
+        <div class="cancellation-info" *ngIf="fechaCancelacion">
+          <ion-icon name="checkmark-circle" color="success"></ion-icon>
+          <span>Cancelada el {{fechaCancelacion}}</span>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
 
-        <ion-grid>
-          <ion-row>
-            <br>
-            <ion-col size="6">
-              Fecha: {{historial.fechas}}
-            </ion-col>
-            <ion-col size="6" *ngIf="historial.id === getFirstId()">
-              pago: 0
-              <br>
-              <a style="color: white">{{moneda(pagoAnterior(historial.montos))}}</a>
-            </ion-col>
-            <ion-col size="6" *ngIf="pagoAnteriorConsulta(historial.montos) > 0 && historial.id !== getFirstId()">
-              Mercaderia por {{moneda(pagoAnterior(historial.montos))}}
-              <br>
-            </ion-col>
-            <ion-col size="6" *ngIf="pagoAnteriorConsulta(historial.montos) < 0 && historial.id !== getFirstId()">
-              pago: {{moneda(pagoAnterior(historial.montos))}}
-            </ion-col>
-            <ion-col size="6">
-              Metodo Pago: {{ historial.tipopago }}
-            </ion-col>
-            <ion-col size="6">
-              Deuda Total: {{ moneda(historial.montos) }}
-            </ion-col>
-          </ion-row>
-        </ion-grid>
+  <!-- Timeline de transacciones -->
+  <div class="timeline-container">
+    <ion-card *ngFor="let historial of historiales; let i = index" class="transaction-card">
+      <div class="transaction-icon" [ngClass]="{'first-transaction': i === 0}">
+        <ion-icon [name]="historial.diferencia > 0 ? 'arrow-up-circle' : 'arrow-down-circle'"
+                  [color]="historial.diferencia > 0 ? 'danger' : 'success'"></ion-icon>
+      </div>
 
-        <style>
-          .hr {
-            border-bottom: 2px solid #ccc;
-            margin: 10px 0;
-            width: 100%;
-          }
-          ion-col{
-            width: 100%;
-          }
-        </style>
+      <ion-card-content>
+        <div class="transaction-header">
+          <span class="transaction-date">
+            <ion-icon name="calendar" color="medium"></ion-icon>
+            {{historial.fechas}}
+          </span>
+          <span class="payment-method">
+            <ion-badge color="medium">{{historial.tipopago}}</ion-badge>
+          </span>
+        </div>
 
-        <ion-grid>
-          <ion-row *ngIf="pagoAnteriorConsulta(historial.montos) > 0 && historial.id !== getFirstId()">
-            <br>
-            Detalles: {{historial.detalles}}
-          </ion-row>
-          <div class="hr"> </div>
-        </ion-grid>
+        <div class="transaction-details">
+          <div class="detail-row" *ngIf="i === 0">
+            <span class="label">Monto inicial:</span>
+            <span class="value initial">Gs. {{moneda(historial.montos)}}</span>
+          </div>
 
-        <ng-container *ngIf="(historial.id === getLastId())">
-          <p>Telefono: {{paisCodigo}} {{historial.telefono}}<br/></p>
-          <ion-button href={{url+historial.telefono}} color="success">
-            <ion-icon name="logo-whatsapp"></ion-icon>
-          </ion-button>
-          <ion-button (click)="tomarScreen()">
-            <ion-icon name="image"></ion-icon>
-          </ion-button>
-          <ion-button (click)="generatePdf()">
-            <ion-icon name="document"></ion-icon>
-          </ion-button>
-        </ng-container>
-      </ng-container>
+          <div class="detail-row" *ngIf="i !== 0 && historial.diferencia < 0">
+            <span class="label">Pago realizado:</span>
+            <span class="value payment">Gs. {{moneda(historial.pagoAnterior)}}</span>
+          </div>
 
-    </ion-item-sliding>
+          <div class="detail-row" *ngIf="i !== 0 && historial.diferencia > 0">
+            <span class="label">Mercadería agregada:</span>
+            <span class="value merchandise">Gs. {{moneda(historial.pagoAnterior)}}</span>
+          </div>
 
-  </ion-list>
+          <div class="detail-row total-row">
+            <span class="label">Saldo:</span>
+            <span class="value total">Gs. {{moneda(historial.montos)}}</span>
+          </div>
+
+          <div class="detail-notes" *ngIf="historial.detalles && historial.diferencia > 0 && i !== 0">
+            <ion-icon name="document-text" color="medium"></ion-icon>
+            <span>{{historial.detalles}}</span>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Badge de deuda cancelada -->
+  <div class="status-badge">
+    <ion-chip color="success">
+      <ion-icon name="checkmark-circle"></ion-icon>
+      <ion-label>Deuda Cancelada</ion-label>
+    </ion-chip>
+  </div>
+  </div><!-- Fin printable-content -->
+
+  <!-- Mensaje si no hay datos -->
+  <div class="empty-state" *ngIf="!cargando && historiales.length === 0">
+    <ion-icon name="receipt-outline" color="medium"></ion-icon>
+    <h3>No se encontró información</h3>
+    <p>No se pudo cargar el historial de esta deuda</p>
+    <ion-button routerLink="/deudas-canceladas" color="success">
+      <ion-icon slot="start" name="arrow-back"></ion-icon>
+      Volver a Deudas Canceladas
+    </ion-button>
+  </div>
+
+  <!-- Botones de acción -->
+  <div class="action-buttons" *ngIf="!cargando && historiales.length > 0">
+    <ion-button expand="block" [href]="whatsappUrl" color="success" [disabled]="!whatsappUrl">
+      <ion-icon slot="start" name="logo-whatsapp"></ion-icon>
+      WhatsApp
+    </ion-button>
+    <ion-button expand="block" (click)="tomarScreen()" color="primary">
+      <ion-icon slot="start" name="image"></ion-icon>
+      Capturar Boleta
+    </ion-button>
+    <ion-button expand="block" (click)="generatePdf()" color="secondary">
+      <ion-icon slot="start" name="document"></ion-icon>
+      Generar PDF
+    </ion-button>
+  </div>
 </ion-content>

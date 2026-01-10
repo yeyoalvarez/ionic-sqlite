@@ -1,0 +1,311 @@
+ion-content {
+  --background: #f5f6fa;
+}
+
+// Toolbar de filtros
+.filter-toolbar {
+  ion-segment {
+    --background: transparent;
+
+    ion-segment-button {
+      --indicator-color: var(--ion-color-primary);
+      --color-checked: var(--ion-color-primary);
+      font-size: 0.85rem;
+      min-height: 36px;
+    }
+  }
+}
+
+// Barra de resumen
+.summary-bar {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 16px;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+  .summary-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: var(--ion-color-light);
+    border-radius: 12px;
+
+    ion-icon {
+      font-size: 2rem;
+    }
+
+    div {
+      p {
+        margin: 0;
+        font-size: 0.8rem;
+        color: var(--ion-color-medium);
+      }
+
+      h3 {
+        margin: 4px 0 0 0;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--ion-color-dark);
+      }
+    }
+  }
+}
+
+// Skeleton container
+.skeleton-container {
+  padding: 16px;
+
+  ion-card {
+    margin-bottom: 12px;
+    border-radius: 12px;
+  }
+}
+
+// Empty state
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--ion-color-medium);
+
+  ion-icon {
+    font-size: 5rem;
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+  }
+
+  p {
+    font-size: 0.9rem;
+    margin: 0;
+  }
+}
+
+// Lista de deudas
+.deudas-list {
+  padding: 12px 16px 80px 16px;
+
+  ion-item-sliding {
+    margin-bottom: 12px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+
+  .deuda-card {
+    --background: white;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --inner-padding-end: 0;
+    --border-radius: 16px;
+    min-height: 100px;
+    cursor: pointer;
+
+    &:hover {
+      --background: var(--ion-color-light);
+    }
+  }
+}
+
+// Avatar container
+.avatar-container {
+  position: relative;
+  margin-right: 12px;
+
+  .avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    text-transform: uppercase;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+    &.avatar-danger {
+      background: linear-gradient(135deg, var(--ion-color-danger) 0%, var(--ion-color-danger-shade) 100%);
+    }
+
+    &.avatar-warning {
+      background: linear-gradient(135deg, var(--ion-color-warning) 0%, var(--ion-color-warning-shade) 100%);
+    }
+
+    &.avatar-primary {
+      background: linear-gradient(135deg, var(--ion-color-primary) 0%, var(--ion-color-primary-shade) 100%);
+    }
+  }
+
+  .urgencia-badge {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    font-size: 1.2rem;
+    background: white;
+    border-radius: 50%;
+    padding: 2px;
+  }
+}
+
+// Información del cliente
+ion-label {
+  .cliente-nombre {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--ion-color-dark);
+    margin: 0 0 6px 0;
+  }
+
+  .producto-nombre {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.9rem;
+    color: var(--ion-color-medium);
+    margin: 0 0 8px 0;
+
+    ion-icon {
+      font-size: 0.9rem;
+    }
+  }
+
+  .chips-container {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+
+    ion-chip {
+      margin: 0;
+      height: 24px;
+      font-size: 0.7rem;
+      font-weight: 600;
+
+      ion-icon {
+        font-size: 0.9rem;
+      }
+
+      ion-label {
+        margin: 0;
+      }
+    }
+  }
+}
+
+// Monto container
+.monto-container {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  padding-left: 12px;
+
+  .monto {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+
+    .currency {
+      font-size: 0.75rem;
+      font-weight: 600;
+      opacity: 0.7;
+    }
+
+    .amount {
+      font-size: 1.1rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    &.monto-danger {
+      color: var(--ion-color-danger);
+    }
+
+    &.monto-warning {
+      color: var(--ion-color-warning);
+    }
+
+    &.monto-primary {
+      color: var(--ion-color-primary);
+    }
+  }
+
+  .urgencia-badge-text {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 8px;
+  }
+}
+
+// Opciones de swipe
+ion-item-options {
+  ion-item-option {
+    ion-icon {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+// Paginación
+.pagination-container {
+  padding: 20px 16px 80px 16px;
+  text-align: center;
+  background: white;
+}
+
+// FAB button
+ion-fab {
+  margin-bottom: 16px;
+  margin-right: 16px;
+
+  ion-fab-button {
+    --box-shadow: 0 4px 16px rgba(var(--ion-color-primary-rgb), 0.4);
+
+    &::part(native) {
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 576px) {
+  .summary-bar {
+    grid-template-columns: 1fr;
+  }
+
+  .avatar-container .avatar {
+    width: 48px;
+    height: 48px;
+    font-size: 1.3rem;
+  }
+
+  .monto-container .monto .amount {
+    font-size: 1rem;
+  }
+
+  ion-label {
+    .cliente-nombre {
+      font-size: 0.95rem;
+    }
+
+    .producto-nombre {
+      font-size: 0.85rem;
+    }
+  }
+}

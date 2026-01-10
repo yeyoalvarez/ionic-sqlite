@@ -1,66 +1,196 @@
-<ion-header [translucent]="true" no-border>
+<ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>Clientes</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="toggleFormulario()">
+        <ion-icon slot="icon-only" [name]="mostrarFormulario ? 'close-circle-outline' : 'add-circle-outline'"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
-  <ion-searchbar animated placeholder="Buscar Cliente"
-                 showCancelButton="focus" cancelButtonText="Custom Cancel"
-                 [(ngModel)]="textoBuscar">
-  </ion-searchbar>
+
+  <!-- Barra de búsqueda -->
+  <ion-toolbar>
+    <ion-searchbar
+      animated
+      placeholder="Buscar por nombre, teléfono o CI..."
+      [(ngModel)]="textoBuscar"
+      (ionChange)="onBuscarChange()"
+      showCancelButton="focus"
+      cancelButtonText="Cancelar">
+    </ion-searchbar>
+  </ion-toolbar>
+
+  <!-- Ordenamiento -->
+  <ion-toolbar class="filter-toolbar" *ngIf="!mostrarFormulario">
+    <ion-segment [(ngModel)]="ordenamiento" (ionChange)="aplicarFiltrosYOrdenamiento()">
+      <ion-segment-button value="nombre-asc">
+        <ion-label>A-Z</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="nombre-desc">
+        <ion-label>Z-A</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-list>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
 
+  <!-- Formulario de agregar/editar -->
+  <ion-card *ngIf="mostrarFormulario" class="form-card">
+    <ion-card-header>
+      <ion-card-title>{{ editMode ? 'Editar Cliente' : 'Nuevo Cliente' }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-label position="floating">Nombre del Cliente</ion-label>
+          <ion-input [(ngModel)]="clienteNombre"></ion-input>
+        </ion-item>
 
-    <ion-item>
-      <ion-label position="floating">Nombre del Cliente</ion-label>
-      <ion-input [(ngModel)]="clienteNombre"></ion-input>
-    </ion-item>
+        <ion-item>
+          <ion-label position="floating">Celular del Cliente</ion-label>
+          <ion-label>{{ paisCodigo }}</ion-label>
+          <ion-input type="number" [(ngModel)]="telefono"></ion-input>
+        </ion-item>
 
-    <ion-item>
-      <ion-label position="floating">Celular del Cliente</ion-label>
-      <ion-label>{{ paisCodigo }}</ion-label>
-      <ion-input [(ngModel)]="telefono"></ion-input>
-    </ion-item>
+        <ion-item>
+          <ion-label position="floating">CI del Cliente (opcional)</ion-label>
+          <ion-input type="number" [(ngModel)]="ci"></ion-input>
+        </ion-item>
 
-    <ion-item>
-      <ion-label position="floating">Ci del Cliente</ion-label>
-      <ion-input [(ngModel)]="ci"></ion-input>
-    </ion-item>
+        <ion-item>
+          <ion-label position="floating">Dirección (opcional)</ion-label>
+          <ion-input [(ngModel)]="direccion"></ion-input>
+        </ion-item>
+      </ion-list>
 
-    <ion-item>
-      <ion-label position="floating">Direccion del Cliente</ion-label>
-      <ion-input [(ngModel)]="direccion"></ion-input>
-    </ion-item>
+      <div class="form-buttons">
+        <ion-button expand="block" (click)="addClientes()" color="primary">
+          <ion-icon slot="start" [name]="editMode ? 'checkmark-circle-outline' : 'add-circle-outline'"></ion-icon>
+          {{ editMode ? 'Actualizar' : 'Agregar' }}
+        </ion-button>
+        <ion-button expand="block" (click)="cancelarEdicion()" color="light">
+          <ion-icon slot="start" name="close-circle-outline"></ion-icon>
+          Cancelar
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
 
-    <section>
-      <ion-button (click)="addClientes()">Añadir</ion-button>
-    </section>
-  </ion-list>
+  <!-- Resumen rápido -->
+  <div class="summary-bar" *ngIf="!cargando && !mostrarFormulario">
+    <div class="summary-item">
+      <ion-icon name="people-circle-outline" color="primary"></ion-icon>
+      <div>
+        <p>Total Clientes</p>
+        <h3>{{ calcularTotalClientes() }}</h3>
+      </div>
+    </div>
+    <div class="summary-item">
+      <ion-icon name="card-outline" color="secondary"></ion-icon>
+      <div>
+        <p>Con CI</p>
+        <h3>{{ calcularClientesConCi() }}</h3>
+      </div>
+    </div>
+  </div>
 
-  <ion-list>
-    <ion-item-sliding *ngFor="let cliente of clientes | filter:textoBuscar |
-    paginate: { itemsPerPage: 20, currentPage: p }"
-       titulo ="loading">
-      <ion-item-options side="start">
-        <ion-item-option (click)="editClientes(cliente)">Editar</ion-item-option>
-      </ion-item-options>
+  <!-- Skeleton mientras carga -->
+  <div *ngIf="cargando" class="skeleton-container">
+    <ion-card *ngFor="let i of [1,2,3,4,5]">
+      <ion-card-content>
+        <ion-skeleton-text animated style="width: 100%; height: 80px;"></ion-skeleton-text>
+      </ion-card-content>
+    </ion-card>
+  </div>
 
-      <ion-item [routerLink]="['/clientes-detalles', cliente.id]">
-        <ion-label>{{ cliente.name }}</ion-label>
-        <ion-label>{{ paisCodigo }} {{ cliente.telefono }}</ion-label>
+  <!-- Lista de clientes moderna -->
+  <div *ngIf="!cargando" class="clientes-list">
+    <!-- Mensaje cuando no hay resultados -->
+    <div *ngIf="clientesFiltrados.length === 0" class="empty-state">
+      <ion-icon name="person-add-outline" color="medium"></ion-icon>
+      <h3>No hay clientes</h3>
+      <p *ngIf="!textoBuscar">Agrega tu primer cliente para comenzar</p>
+      <p *ngIf="textoBuscar">No se encontraron resultados</p>
+      <ion-button (click)="toggleFormulario()" *ngIf="!textoBuscar">
+        <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+        Agregar Cliente
+      </ion-button>
+    </div>
+
+    <!-- Cards de clientes -->
+    <ion-item-sliding *ngFor="let cliente of clientesFiltrados | paginate: { itemsPerPage: 50, currentPage: p }; let i = index">
+      <ion-item lines="none" class="cliente-card" button (click)="navegarADetalle(cliente.id)">
+        <!-- Avatar con inicial -->
+        <div slot="start" class="avatar-container">
+          <div class="avatar" [ngClass]="'avatar-' + getColorPorIndice(i)">
+            {{ cliente.inicial }}
+          </div>
+        </div>
+
+        <!-- Información del cliente -->
+        <ion-label>
+          <h2 class="cliente-nombre">{{ cliente.nombreDisplay }}</h2>
+          <div class="cliente-info">
+            <p class="info-telefono">
+              <ion-icon name="call-outline" size="small"></ion-icon>
+              {{ cliente.telefonoDisplay }}
+            </p>
+            <p class="info-ci" *ngIf="cliente.tieneCi">
+              <ion-icon name="card-outline" size="small"></ion-icon>
+              CI: {{ cliente.ci }}
+            </p>
+            <p class="info-direccion" *ngIf="cliente.tieneDireccion">
+              <ion-icon name="location-outline" size="small"></ion-icon>
+              {{ cliente.direccion }}
+            </p>
+          </div>
+        </ion-label>
+
+        <!-- Acciones rápidas -->
+        <div slot="end" class="action-buttons">
+          <ion-button fill="clear" size="small" (click)="abrirWhatsApp(cliente.telefono); $event.stopPropagation()">
+            <ion-icon slot="icon-only" name="logo-whatsapp" color="success"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" size="small" (click)="llamarTelefono(cliente.telefono); $event.stopPropagation()">
+            <ion-icon slot="icon-only" name="call" color="primary"></ion-icon>
+          </ion-button>
+        </div>
       </ion-item>
 
+      <!-- Opciones de swipe -->
+      <ion-item-options side="start">
+        <ion-item-option color="primary" (click)="editClientes(cliente)">
+          <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+
       <ion-item-options side="end">
-        <ion-item-option color="danger" (click)="deleteClientes(cliente.id)"
-        >Eliminar</ion-item-option>
+        <ion-item-option color="success" (click)="abrirWhatsApp(cliente.telefono)">
+          <ion-icon slot="icon-only" name="logo-whatsapp"></ion-icon>
+        </ion-item-option>
+        <ion-item-option color="danger" (click)="deleteClientes(cliente.id)">
+          <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+        </ion-item-option>
       </ion-item-options>
     </ion-item-sliding>
-  </ion-list>
+  </div>
 
-  <pagination-controls (pageChange)="p = $event"></pagination-controls>
+  <!-- Paginación -->
+  <div class="pagination-container" *ngIf="clientesFiltrados.length > 50">
+    <pagination-controls (pageChange)="p = $event"></pagination-controls>
+  </div>
 
+  <!-- Botón flotante para agregar -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="!mostrarFormulario">
+    <ion-fab-button (click)="toggleFormulario()" color="primary">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

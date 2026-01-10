@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { DeudasPageRoutingModule } from './deudas-routing.module';
 
 import { DeudasPage } from './deudas.page';
-import  {IonicSelectableModule} from 'ionic-selectable';
+import  {IonicSelectableComponent} from 'ionic-selectable';
 
 @NgModule({
     imports: [
@@ -15,7 +15,7 @@ import  {IonicSelectableModule} from 'ionic-selectable';
         FormsModule,
         IonicModule,
         DeudasPageRoutingModule,
-        IonicSelectableModule
+        IonicSelectableComponent
     ],
   declarations: [DeudasPage]
 })

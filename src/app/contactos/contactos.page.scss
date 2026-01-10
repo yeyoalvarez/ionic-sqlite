@@ -1,0 +1,276 @@
+ion-content {
+  --background: #f5f6fa;
+}
+
+// Toolbar de filtros
+.filter-toolbar {
+  ion-segment {
+    --background: transparent;
+
+    ion-segment-button {
+      --indicator-color: var(--ion-color-primary);
+      --color-checked: var(--ion-color-primary);
+      font-size: 0.8rem;
+      min-height: 36px;
+    }
+  }
+}
+
+// Barra de resumen
+.summary-bar {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 16px;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+  .summary-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: var(--ion-color-light);
+    border-radius: 12px;
+
+    ion-icon {
+      font-size: 2rem;
+    }
+
+    div {
+      p {
+        margin: 0;
+        font-size: 0.8rem;
+        color: var(--ion-color-medium);
+      }
+
+      h3 {
+        margin: 4px 0 0 0;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--ion-color-dark);
+      }
+    }
+  }
+}
+
+// Skeleton container
+.skeleton-container {
+  padding: 16px;
+
+  ion-card {
+    margin-bottom: 12px;
+    border-radius: 12px;
+  }
+}
+
+// Empty state
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--ion-color-medium);
+
+  ion-icon {
+    font-size: 5rem;
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    color: var(--ion-color-dark);
+  }
+
+  p {
+    font-size: 0.95rem;
+    margin: 0;
+    color: var(--ion-color-medium);
+  }
+}
+
+// Lista de contactos
+.contactos-list {
+  padding: 12px 16px 80px 16px;
+
+  ion-item-sliding {
+    margin-bottom: 12px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+
+  .contacto-card {
+    --background: white;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --inner-padding-end: 0;
+    --border-radius: 16px;
+    min-height: 80px;
+
+    &:hover {
+      --background: var(--ion-color-light);
+    }
+  }
+}
+
+// Avatar container
+.avatar-container {
+  position: relative;
+  margin-right: 12px;
+
+  .avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    text-transform: uppercase;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+    &.avatar-primary {
+      background: linear-gradient(135deg, var(--ion-color-primary) 0%, var(--ion-color-primary-shade) 100%);
+    }
+
+    &.avatar-secondary {
+      background: linear-gradient(135deg, var(--ion-color-secondary) 0%, var(--ion-color-secondary-shade) 100%);
+    }
+
+    &.avatar-tertiary {
+      background: linear-gradient(135deg, var(--ion-color-tertiary) 0%, var(--ion-color-tertiary-shade) 100%);
+    }
+
+    &.avatar-success {
+      background: linear-gradient(135deg, var(--ion-color-success) 0%, var(--ion-color-success-shade) 100%);
+    }
+
+    &.avatar-warning {
+      background: linear-gradient(135deg, var(--ion-color-warning) 0%, var(--ion-color-warning-shade) 100%);
+    }
+  }
+
+  ion-avatar {
+    width: 56px;
+    height: 56px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+}
+
+// Información del contacto
+ion-label {
+  .contacto-nombre {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--ion-color-dark);
+    margin: 0 0 6px 0;
+  }
+
+  .contacto-telefono {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    color: var(--ion-color-medium);
+    margin: 0;
+
+    ion-icon {
+      font-size: 0.95rem;
+      color: var(--ion-color-success);
+    }
+  }
+
+  .contacto-sin-telefono {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: var(--ion-color-medium);
+    margin: 0;
+    font-style: italic;
+
+    ion-icon {
+      font-size: 0.9rem;
+      color: var(--ion-color-warning);
+    }
+  }
+}
+
+// Acciones rápidas
+.quick-actions {
+  display: flex;
+  gap: 4px;
+
+  ion-button {
+    --padding-start: 8px;
+    --padding-end: 8px;
+    height: 40px;
+    margin: 0;
+
+    ion-icon {
+      font-size: 1.4rem;
+    }
+  }
+}
+
+// Paginación
+.pagination-container {
+  padding: 20px 16px 80px 16px;
+  text-align: center;
+  background: white;
+}
+
+// Botón flotante
+ion-fab {
+  ion-fab-button {
+    --box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  }
+}
+
+// Responsive
+@media (max-width: 576px) {
+  .summary-bar {
+    grid-template-columns: 1fr;
+  }
+
+  .avatar-container {
+    .avatar,
+    ion-avatar {
+      width: 48px;
+      height: 48px;
+      font-size: 1.3rem;
+    }
+  }
+
+  .quick-actions {
+    flex-direction: column;
+    gap: 2px;
+
+    ion-button {
+      height: 36px;
+
+      ion-icon {
+        font-size: 1.2rem;
+      }
+    }
+  }
+
+  ion-label {
+    .contacto-nombre {
+      font-size: 0.95rem;
+    }
+
+    .contacto-telefono,
+    .contacto-sin-telefono {
+      font-size: 0.8rem;
+    }
+  }
+}

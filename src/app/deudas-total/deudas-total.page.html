@@ -1,38 +1,120 @@
-<ion-toolbar>
-  <ion-buttons slot="start">
-    <ion-menu-button></ion-menu-button>
-    <ion-back-button></ion-back-button>
-  </ion-buttons>
-  <ion-title>Deudas Totales</ion-title>
-</ion-toolbar>
+<ion-header [translucent]="true">
+  <ion-toolbar color="warning">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Resumen Total</ion-title>
+  </ion-toolbar>
+</ion-header>
 
+<ion-content>
+  <!-- Skeleton mientras carga -->
+  <div *ngIf="cargando" class="skeleton-container">
+    <ion-card>
+      <ion-card-content>
+        <div style="text-align: center;">
+          <ion-skeleton-text animated style="width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 16px;"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 60%; height: 24px; margin: 0 auto 8px;"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 80%; height: 40px; margin: 0 auto;"></ion-skeleton-text>
+        </div>
+      </ion-card-content>
+    </ion-card>
+    <ion-card>
+      <ion-card-content>
+        <div style="text-align: center;">
+          <ion-skeleton-text animated style="width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 16px;"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 60%; height: 24px; margin: 0 auto 8px;"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 80%; height: 40px; margin: 0 auto;"></ion-skeleton-text>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
 
-<ion-content id="content">
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Resumen General</ion-card-title>
-    </ion-card-header>
+  <!-- Contenedor para captura -->
+  <div id="content" *ngIf="!cargando">
+    <!-- Header decorativo -->
+    <div class="header-banner">
+      <div class="banner-content">
+        <ion-icon name="stats-chart" class="banner-icon"></ion-icon>
+        <h2>Resumen General</h2>
+        <p>Estado actual de deudas</p>
+      </div>
+    </div>
 
-    <ion-card-content>
-      <ion-grid>
-        <ion-row>
-          <ion-col size="12" class="ion-text-center">
-            <h2>Clientes con deuda</h2>
-            <h1>{{ totalClientes }}</h1>
-          </ion-col>
-        </ion-row>
+    <!-- Cards de estadísticas -->
+    <div class="stats-container">
+      <!-- Card de Clientes -->
+      <ion-card class="stat-card clientes-card">
+        <ion-card-content>
+          <div class="stat-icon-container">
+            <div class="stat-icon">
+              <ion-icon name="people"></ion-icon>
+            </div>
+          </div>
+          <div class="stat-content">
+            <p class="stat-label">Clientes con deuda</p>
+            <h1 class="stat-value">{{totalClientesDisplay}}</h1>
+            <div class="stat-badge">
+              <ion-icon name="person"></ion-icon>
+              <span>Activos</span>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
 
-        <ion-row>
-          <ion-col size="12" class="ion-text-center">
-            <h2>Monto total adeudado</h2>
-            <h1>{{ moneda(totalDeudas) }} Gs</h1>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+      <!-- Card de Monto Total -->
+      <ion-card class="stat-card total-card">
+        <ion-card-content>
+          <div class="stat-icon-container">
+            <div class="stat-icon">
+              <ion-icon name="cash"></ion-icon>
+            </div>
+          </div>
+          <div class="stat-content">
+            <p class="stat-label">Monto total adeudado</p>
+            <h1 class="stat-value">{{totalDeudasDisplay}}</h1>
+            <div class="stat-badge danger">
+              <ion-icon name="trending-up"></ion-icon>
+              <span>Por cobrar</span>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
 
-      <ion-button expand="block" (click)="generatePdf()">
-        Exportar PDF
-      </ion-button>
-    </ion-card-content>
-  </ion-card>
+      <!-- Card de Promedio -->
+      <ion-card class="stat-card promedio-card" *ngIf="totalClientes > 0">
+        <ion-card-content>
+          <div class="stat-icon-container">
+            <div class="stat-icon">
+              <ion-icon name="calculator"></ion-icon>
+            </div>
+          </div>
+          <div class="stat-content">
+            <p class="stat-label">Promedio por cliente</p>
+            <h1 class="stat-value">{{promedioPorClienteDisplay}}</h1>
+            <div class="stat-badge tertiary">
+              <ion-icon name="analytics"></ion-icon>
+              <span>Promedio</span>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- Empty state -->
+    <div class="empty-state" *ngIf="totalClientes === 0">
+      <ion-icon name="bar-chart-outline" color="warning"></ion-icon>
+      <h3>No hay deudas registradas</h3>
+      <p>Cuando haya deudas activas, las estadísticas aparecerán aquí</p>
+    </div>
+  </div>
+
+  <!-- Botón de exportar -->
+  <div class="action-button" *ngIf="!cargando && totalClientes > 0">
+    <ion-button expand="block" (click)="generatePdf()" color="warning">
+      <ion-icon slot="start" name="document"></ion-icon>
+      Exportar PDF
+    </ion-button>
+  </div>
 </ion-content>

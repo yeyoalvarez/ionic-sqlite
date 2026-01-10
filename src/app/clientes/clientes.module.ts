@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { ClientesPageRoutingModule } from './clientes-routing.module';
 
 import { ClientesPage } from './clientes.page';
-import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { FilterPipe } from '../pipes/filter.pipe';
 import {NgxPaginationModule} from 'ngx-pagination';
 
 
@@ -18,7 +18,7 @@ import {NgxPaginationModule} from 'ngx-pagination';
     FormsModule,
     IonicModule,
     ClientesPageRoutingModule,
-    Ng2SearchPipeModule,
+    FilterPipe,
     NgxPaginationModule
   ],
   declarations: [ClientesPage]

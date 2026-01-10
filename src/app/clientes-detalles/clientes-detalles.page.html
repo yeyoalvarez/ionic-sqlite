@@ -1,42 +1,129 @@
-<ion-header [translucent]="true" no-border>
-  <ion-toolbar>
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
+      <ion-back-button defaultHref="/clientes"></ion-back-button>
     </ion-buttons>
     <ion-title>Detalles del Cliente</ion-title>
   </ion-toolbar>
-  <ion-searchbar animated placeholder="Buscar Cliente"
-                 showCancelButton="focus" cancelButtonText="Custom Cancel">
-  </ion-searchbar>
 </ion-header>
 
 <ion-content>
+  <!-- Skeleton mientras carga -->
+  <div *ngIf="cargando" class="skeleton-container">
+    <ion-card>
+      <ion-card-header>
+        <ion-skeleton-text animated style="width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 16px;"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 60%; height: 24px; margin: 0 auto;"></ion-skeleton-text>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-skeleton-text animated style="width: 100%; height: 20px;"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 80%; height: 20px;"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 90%; height: 20px;"></ion-skeleton-text>
+      </ion-card-content>
+    </ion-card>
+  </div>
 
-  <ion-list>
-    <ion-item-sliding *ngFor="let cliente of clientes">
+  <!-- Contenedor para captura de pantalla/PDF -->
+  <div id="printable-content" *ngIf="!cargando">
+    <!-- Información del cliente -->
+    <div class="client-info" *ngIf="cliente">
+      <!-- Header principal -->
+      <ion-card class="client-card">
+        <ion-card-header>
+          <div class="client-avatar">
+            <div class="avatar" [ngClass]="'avatar-' + colorAvatar">
+              {{ inicial }}
+            </div>
+          </div>
+          <ion-card-title class="client-name">
+            {{ nombreDisplay }}
+          </ion-card-title>
+          <ion-card-subtitle>
+            Cliente #{{ cliente.id }}
+          </ion-card-subtitle>
+        </ion-card-header>
 
-      <ion-grid>
-        <ion-row>
-          <ion-col size="6">
-            Cliente: {{ cliente.name }}
-          </ion-col>
-          <ion-col size="6">
-            Telefono: {{ paisCodigo }} {{ cliente.telefono }}
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-      <ion-grid>
-        <ion-row>
-          <ion-col size="6">
-            Cedula: {{ cliente.ci }}
-          </ion-col>
-          <ion-col size="6">
-            Direccion: {{ cliente.direccion }}
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+        <ion-card-content>
+          <!-- Información de contacto -->
+          <div class="info-section">
+            <div class="section-title">
+              <ion-icon name="call" color="primary"></ion-icon>
+              <span>Contacto</span>
+            </div>
+            <div class="info-item" *ngIf="tieneTelefono()">
+              <ion-icon name="call-outline" color="medium"></ion-icon>
+              <div class="info-details">
+                <span class="label">Teléfono</span>
+                <span class="value">{{ telefonoDisplay }}</span>
+              </div>
+            </div>
+            <div class="info-item" *ngIf="!tieneTelefono()">
+              <ion-icon name="alert-circle-outline" color="warning"></ion-icon>
+              <div class="info-details">
+                <span class="label">Teléfono</span>
+                <span class="value no-data">No registrado</span>
+              </div>
+            </div>
+          </div>
 
-    </ion-item-sliding>
-  </ion-list>
+          <!-- Información personal -->
+          <div class="info-section">
+            <div class="section-title">
+              <ion-icon name="person" color="primary"></ion-icon>
+              <span>Información Personal</span>
+            </div>
+            <div class="info-item">
+              <ion-icon [name]="tieneCi() ? 'card-outline' : 'alert-circle-outline'" [color]="tieneCi() ? 'medium' : 'warning'"></ion-icon>
+              <div class="info-details">
+                <span class="label">Cédula de Identidad</span>
+                <span class="value" [class.no-data]="!tieneCi()">{{ ciDisplay }}</span>
+              </div>
+            </div>
+            <div class="info-item">
+              <ion-icon [name]="tieneDireccion() ? 'location-outline' : 'alert-circle-outline'" [color]="tieneDireccion() ? 'medium' : 'warning'"></ion-icon>
+              <div class="info-details">
+                <span class="label">Dirección</span>
+                <span class="value" [class.no-data]="!tieneDireccion()">{{ direccionDisplay }}</span>
+              </div>
+            </div>
+          </div>
 
+          <!-- Estado del cliente -->
+          <div class="client-status">
+            <ion-chip color="success">
+              <ion-icon name="checkmark-circle"></ion-icon>
+              <ion-label>Cliente Activo</ion-label>
+            </ion-chip>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- Mensaje si no hay datos -->
+    <div class="empty-state" *ngIf="!cliente && !cargando">
+      <ion-icon name="person-outline" color="medium"></ion-icon>
+      <h3>No se encontró información</h3>
+      <p>No se pudo cargar la información del cliente</p>
+      <ion-button routerLink="/clientes" color="primary">
+        <ion-icon slot="start" name="arrow-back"></ion-icon>
+        Volver a Clientes
+      </ion-button>
+    </div>
+  </div>
+
+  <!-- Botones de acción principales -->
+  <div class="action-buttons" *ngIf="cliente && !cargando">
+    <ion-button expand="block" [href]="getWhatsAppUrl()" color="success" [disabled]="!tieneTelefono()">
+      <ion-icon slot="start" name="logo-whatsapp"></ion-icon>
+      WhatsApp
+    </ion-button>
+    <ion-button expand="block" (click)="tomarScreen()" color="primary">
+      <ion-icon slot="start" name="image"></ion-icon>
+      Capturar Imagen
+    </ion-button>
+    <ion-button expand="block" (click)="generatePdf()" color="secondary">
+      <ion-icon slot="start" name="document"></ion-icon>
+      Generar PDF
+    </ion-button>
+  </div>
 </ion-content>

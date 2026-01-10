@@ -2,33 +2,49 @@
   <ion-split-pane contentId="main-content">
     <ion-menu contentId="main-content" type="overlay">
       <ion-content>
-        <ion-list id="inbox-list">
-          <ion-list-header>Bello Bello Boutique</ion-list-header>
-          <ion-note>YP-Sistemas</ion-note>
-          <ion-note>V1.2.1</ion-note>
+        <div class="menu-header">
+          <ion-list-header>
+            <h2>Bello Bello Boutique</h2>
+          </ion-list-header>
+          <div class="menu-info">
+            <ion-note>YP-Sistemas</ion-note>
+            <ion-badge color="primary">V1.2.1</ion-badge>
+          </div>
+        </div>
 
-          <ion-menu-toggle
-            auto-hide="false"
-            *ngFor="let p of appPages; let i = index"
-          >
-            <ion-item
-              (click)="selectedIndex = i"
-              routerDirection="root"
-              [routerLink]="[p.url]"
-              lines="none"
-              detail="false"
-              [class.selected]="selectedIndex === i"
-            >
-              <ion-icon
-                slot="start"
-                [ios]="p.icon + '-outline'"
-                [md]="p.icon + '-sharp'"
-              ></ion-icon>
-              <ion-label>{{ p.title }}</ion-label>
-            </ion-item>
-          </ion-menu-toggle>
-        </ion-list>
+        <!-- Iterar por cada categoría -->
+        <div *ngFor="let category of menuCategories" class="menu-category">
+          <ion-list-header class="category-header">
+            <ion-label>{{ category.title }}</ion-label>
+          </ion-list-header>
 
+          <ion-list class="category-list">
+            <ion-menu-toggle auto-hide="false" *ngFor="let page of category.pages">
+              <ion-item
+                routerDirection="root"
+                [routerLink]="[page.url]"
+                routerLinkActive="selected"
+                lines="none"
+                detail="false"
+                class="menu-item"
+              >
+                <ion-icon
+                  slot="start"
+                  [ios]="page.icon + '-outline'"
+                  [md]="page.icon + '-sharp'"
+                ></ion-icon>
+                <ion-label>{{ page.title }}</ion-label>
+                <ion-badge
+                  *ngIf="page.badge !== undefined && page.badge > 0"
+                  [color]="page.badgeColor || 'primary'"
+                  slot="end"
+                >
+                  {{ page.badge }}
+                </ion-badge>
+              </ion-item>
+            </ion-menu-toggle>
+          </ion-list>
+        </div>
 
       </ion-content>
     </ion-menu>

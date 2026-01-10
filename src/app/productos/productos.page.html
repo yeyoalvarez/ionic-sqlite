@@ -4,33 +4,155 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>Productos</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="toggleFormulario()">
+        <ion-icon slot="icon-only" [name]="mostrarFormulario ? 'close-circle-outline' : 'add-circle-outline'"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
-  <ion-searchbar animated placeholder="Buscar Producto"
-                 showCancelButton="focus" cancelButtonText="Custom Cancel"
-                 [(ngModel)]="textoBuscar">
-  </ion-searchbar>
+
+  <!-- Barra de búsqueda -->
+  <ion-toolbar>
+    <ion-searchbar
+      animated
+      placeholder="Buscar producto..."
+      [(ngModel)]="textoBuscar"
+      (ionChange)="onBuscarChange()"
+      showCancelButton="focus"
+      cancelButtonText="Cancelar">
+    </ion-searchbar>
+  </ion-toolbar>
+
+  <!-- Ordenamiento -->
+  <ion-toolbar class="filter-toolbar" *ngIf="!mostrarFormulario">
+    <ion-segment [(ngModel)]="ordenamiento" (ionChange)="aplicarFiltrosYOrdenamiento()">
+      <ion-segment-button value="nombre-asc">
+        <ion-label>A-Z</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="nombre-desc">
+        <ion-label>Z-A</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="reciente">
+        <ion-label>Recientes</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-list>
-    <ion-item>
-      <ion-label position="floating">Productos</ion-label>
-      <ion-input [(ngModel)]="nombreProducto"></ion-input>
-    </ion-item>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
 
-    <ion-button expand="block" (click)="addProductos()">Guardar</ion-button>
-  </ion-list>
+  <!-- Formulario de agregar/editar -->
+  <ion-card *ngIf="mostrarFormulario" class="form-card">
+    <ion-card-header>
+      <ion-card-title>{{ editMode ? 'Editar Producto' : 'Nuevo Producto' }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-label position="floating">Nombre del Producto</ion-label>
+          <ion-input [(ngModel)]="nombreProducto"></ion-input>
+        </ion-item>
+      </ion-list>
 
-  <ion-list>
-    <ion-item-sliding *ngFor="let producto of productos | filter:textoBuscar">
-      <ion-item-options side="start">
-        <ion-item-option (click)="editProductos(producto)">Edit</ion-item-option>
-      </ion-item-options>
+      <div class="form-buttons">
+        <ion-button expand="block" (click)="addProductos()" color="primary">
+          <ion-icon slot="start" [name]="editMode ? 'checkmark-circle-outline' : 'add-circle-outline'"></ion-icon>
+          {{ editMode ? 'Actualizar' : 'Agregar' }}
+        </ion-button>
+        <ion-button expand="block" (click)="cancelarEdicion()" color="light">
+          <ion-icon slot="start" name="close-circle-outline"></ion-icon>
+          Cancelar
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
 
-      <ion-item>
-        <ion-label>{{ producto.name }}</ion-label>
+  <!-- Resumen rápido -->
+  <div class="summary-bar" *ngIf="!cargando && !mostrarFormulario">
+    <div class="summary-item">
+      <ion-icon name="pricetags-outline" color="secondary"></ion-icon>
+      <div>
+        <p>Total Productos</p>
+        <h3>{{ calcularTotalProductos() }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <!-- Skeleton mientras carga -->
+  <div *ngIf="cargando" class="skeleton-container">
+    <ion-card *ngFor="let i of [1,2,3,4,5]">
+      <ion-card-content>
+        <ion-skeleton-text animated style="width: 100%; height: 60px;"></ion-skeleton-text>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Lista de productos moderna -->
+  <div *ngIf="!cargando" class="productos-list">
+    <!-- Mensaje cuando no hay resultados -->
+    <div *ngIf="productosFiltrados.length === 0" class="empty-state">
+      <ion-icon name="pricetag-outline" color="medium"></ion-icon>
+      <h3>No hay productos</h3>
+      <p *ngIf="!textoBuscar">Agrega tu primer producto para comenzar</p>
+      <p *ngIf="textoBuscar">No se encontraron resultados</p>
+      <ion-button (click)="toggleFormulario()" *ngIf="!textoBuscar">
+        <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+        Agregar Producto
+      </ion-button>
+    </div>
+
+    <!-- Cards de productos -->
+    <ion-item-sliding *ngFor="let producto of productosFiltrados | paginate: { itemsPerPage: 50, currentPage: p }; let i = index">
+      <ion-item lines="none" class="producto-card">
+        <!-- Avatar con inicial -->
+        <div slot="start" class="avatar-container">
+          <div class="avatar" [ngClass]="'avatar-' + getColorPorIndice(i)">
+            {{ producto.inicial }}
+          </div>
+        </div>
+
+        <!-- Información del producto -->
+        <ion-label>
+          <h2 class="producto-nombre">{{ producto.nombreDisplay }}</h2>
+          <p class="producto-id">
+            <ion-icon name="barcode-outline" size="small"></ion-icon>
+            {{ producto.idDisplay }}
+          </p>
+        </ion-label>
+
+        <!-- Icono de categoría -->
+        <div slot="end" class="categoria-icon">
+          <ion-icon name="pricetag" [color]="getColorPorIndice(i)"></ion-icon>
+        </div>
       </ion-item>
 
+      <!-- Opciones de swipe -->
+      <ion-item-options side="start">
+        <ion-item-option color="primary" (click)="editProductos(producto)">
+          <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+
+      <ion-item-options side="end">
+        <ion-item-option color="danger" (click)="deleteProductos(producto.id)">
+          <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
     </ion-item-sliding>
-  </ion-list>
+  </div>
+
+  <!-- Paginación -->
+  <div class="pagination-container" *ngIf="productosFiltrados.length > 50">
+    <pagination-controls (pageChange)="p = $event"></pagination-controls>
+  </div>
+
+  <!-- Botón flotante para agregar -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="!mostrarFormulario">
+    <ion-fab-button (click)="toggleFormulario()" color="secondary">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

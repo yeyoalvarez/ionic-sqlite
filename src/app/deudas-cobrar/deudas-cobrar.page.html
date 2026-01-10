@@ -5,24 +5,142 @@
     </ion-buttons>
     <ion-title>Deudas por Cobrar</ion-title>
   </ion-toolbar>
+
+  <!-- Barra de búsqueda -->
+  <ion-toolbar>
+    <ion-searchbar
+      animated
+      placeholder="Buscar cliente o producto..."
+      [(ngModel)]="textoBuscar"
+      (ionChange)="onBuscarChange()"
+      showCancelButton="focus"
+      cancelButtonText="Cancelar">
+    </ion-searchbar>
+  </ion-toolbar>
+
+  <!-- Filtros -->
+  <ion-toolbar class="filter-toolbar">
+    <ion-segment [(ngModel)]="ordenamiento" (ionChange)="aplicarFiltrosYOrdenamiento()">
+      <ion-segment-button value="urgencia">
+        <ion-label>Más urgente</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="monto-desc">
+        <ion-label>Mayor monto</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="nombre-asc">
+        <ion-label>A-Z</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-list>
-  <ion-item-sliding *ngFor="let deuda of deudas | filter:textoBuscar" >
-    <ion-item *ngIf="testFecha(deuda.fecha, deuda.recordatorio)"
-              [routerLink]="['/deudas-reporte-pdf',deuda.id]" titulo ="loading">
-      <ion-item>
-        <ion-row>
-          <ion-col size="5">
-            Cliente: {{deuda.clientes}}
-          </ion-col>
-          <ion-col size="7">
-            Ultimo cobro: {{deuda.fecha}}
-          </ion-col>
-          </ion-row>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Resumen rápido -->
+  <div class="summary-bar" *ngIf="!cargando">
+    <div class="summary-item">
+      <ion-icon name="alarm-outline" color="danger"></ion-icon>
+      <div>
+        <p>Por Cobrar</p>
+        <h3>{{ deudasFiltradas.length }}</h3>
+      </div>
+    </div>
+    <div class="summary-item">
+      <ion-icon name="cash-outline" color="warning"></ion-icon>
+      <div>
+        <p>Total</p>
+        <h3>{{ moneda(calcularMontoTotal()) }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <!-- Skeleton mientras carga -->
+  <div *ngIf="cargando" class="skeleton-container">
+    <ion-card *ngFor="let i of [1,2,3,4,5]">
+      <ion-card-content>
+        <ion-skeleton-text animated style="width: 100%; height: 100px;"></ion-skeleton-text>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Lista de deudas por cobrar -->
+  <div *ngIf="!cargando" class="deudas-list">
+    <!-- Mensaje cuando no hay resultados -->
+    <div *ngIf="deudasFiltradas.length === 0" class="empty-state">
+      <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
+      <h3>¡Todo al día!</h3>
+      <p>No hay deudas pendientes por cobrar</p>
+    </div>
+
+    <!-- Cards de deudas -->
+    <ion-item-sliding *ngFor="let deuda of deudasFiltradas | paginate: { itemsPerPage: 50, currentPage: p }">
+      <ion-item lines="none" class="deuda-card" button (click)="navegarADetalle(deuda.id)">
+        <!-- Avatar con inicial y badge de urgencia -->
+        <div slot="start" class="avatar-container">
+          <div class="avatar" [ngClass]="'avatar-' + deuda.urgencia">
+            {{ getInicialCliente(deuda.clientes) }}
+          </div>
+          <div class="urgencia-indicator" [ngClass]="'urgencia-' + deuda.urgencia">
+            <ion-icon [name]="getIconoUrgencia(deuda.urgencia)"></ion-icon>
+          </div>
+        </div>
+
+        <!-- Información de la deuda -->
+        <ion-label>
+          <h2 class="cliente-nombre">{{ deuda.clientes }}</h2>
+          <p class="producto-nombre">
+            <ion-icon name="pricetag-outline" size="small"></ion-icon>
+            {{ deuda.productos }}
+          </p>
+
+          <!-- Info de vencimiento -->
+          <div class="vencimiento-info">
+            <ion-chip [color]="getColorUrgencia(deuda.urgencia)" size="small">
+              <ion-icon [name]="getIconoUrgencia(deuda.urgencia)"></ion-icon>
+              <ion-label>{{ getTextoUrgencia(deuda.diasRetraso, deuda.recordatorio) }}</ion-label>
+            </ion-chip>
+            <ion-chip color="medium" size="small">
+              <ion-icon name="calendar-outline"></ion-icon>
+              <ion-label>{{ deuda.recordatorio }}</ion-label>
+            </ion-chip>
+          </div>
+
+          <!-- Última fecha de cobro -->
+          <p class="fecha-cobro">
+            <ion-icon name="time-outline" size="small"></ion-icon>
+            Último cobro: {{ deuda.fecha }}
+          </p>
+        </ion-label>
+
+        <!-- Monto y urgencia -->
+        <div slot="end" class="monto-container">
+          <div class="monto" [ngClass]="'monto-' + getColorPorMonto(deuda.monto)">
+            <span class="currency">Gs.</span>
+            <span class="amount">{{ moneda(deuda.monto) }}</span>
+          </div>
+          <ion-badge
+            [color]="getColorUrgencia(deuda.urgencia)"
+            class="urgencia-badge"
+          >
+            {{ deuda.urgencia === 'alta' ? 'URGENTE' : deuda.urgencia === 'media' ? 'VENCIDO' : 'PRÓXIMO' }}
+          </ion-badge>
+        </div>
       </ion-item>
-    </ion-item>
-  </ion-item-sliding>
-  </ion-list>
+
+      <!-- Opciones de swipe -->
+      <ion-item-options side="end">
+        <ion-item-option color="primary" (click)="navegarADetalle(deuda.id)">
+          <ion-icon slot="icon-only" name="eye-outline"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </div>
+
+  <!-- Paginación -->
+  <div class="pagination-container" *ngIf="deudasFiltradas.length > 50">
+    <pagination-controls (pageChange)="p = $event"></pagination-controls>
+  </div>
 </ion-content>

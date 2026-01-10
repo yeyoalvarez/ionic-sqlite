@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 import { ContactosPageRoutingModule } from './contactos-routing.module';
 
 import { ContactosPage } from './contactos.page';
-import {Ng2SearchPipeModule} from "ng2-search-filter";
+import { FilterPipe } from '../pipes/filter.pipe';
 
 @NgModule({
     imports: [
@@ -15,7 +16,8 @@ import {Ng2SearchPipeModule} from "ng2-search-filter";
         FormsModule,
         IonicModule,
         ContactosPageRoutingModule,
-        Ng2SearchPipeModule
+        NgxPaginationModule,
+        FilterPipe
     ],
   declarations: [ContactosPage]
 })

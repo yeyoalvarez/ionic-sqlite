@@ -1,36 +1,131 @@
-<ion-header [translucent]="true"  no-border>
+<ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>Contactos</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="importarContactos()">
+        <ion-icon slot="icon-only" name="download-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
-  <ion-searchbar animated placeholder="Buscar Cliente"
-                 showCancelButton="focus" cancelButtonText="Custom Cancel"
-                 [(ngModel)]="textoBuscar">
-  </ion-searchbar>
 
+  <!-- Barra de búsqueda -->
+  <ion-toolbar>
+    <ion-searchbar
+      animated
+      placeholder="Buscar contacto..."
+      [(ngModel)]="textoBuscar"
+      (ionChange)="onBuscarChange()"
+      showCancelButton="focus"
+      cancelButtonText="Cancelar">
+    </ion-searchbar>
+  </ion-toolbar>
+
+  <!-- Ordenamiento -->
+  <ion-toolbar class="filter-toolbar">
+    <ion-segment [(ngModel)]="ordenamiento" (ionChange)="aplicarFiltrosYOrdenamiento()">
+      <ion-segment-button value="nombre-asc">
+        <ion-label>A-Z</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="nombre-desc">
+        <ion-label>Z-A</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
 </ion-header>
 
-
 <ion-content>
-  <ion-list>
-    <div class="ion-text-start">
-      <ion-button (click)="importarContactos()">Importar Contactos</ion-button>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Resumen rápido -->
+  <div class="summary-bar" *ngIf="!cargando">
+    <div class="summary-item">
+      <ion-icon name="people-outline" color="primary"></ion-icon>
+      <div>
+        <p>Total Contactos</p>
+        <h3>{{ calcularTotalContactos() }}</h3>
+      </div>
+    </div>
+    <div class="summary-item">
+      <ion-icon name="call-outline" color="success"></ion-icon>
+      <div>
+        <p>Con Teléfono</p>
+        <h3>{{ calcularContactosConTelefono() }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <!-- Skeleton mientras carga -->
+  <div *ngIf="cargando" class="skeleton-container">
+    <ion-card *ngFor="let i of [1,2,3,4,5]">
+      <ion-card-content>
+        <ion-skeleton-text animated style="width: 100%; height: 80px;"></ion-skeleton-text>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Lista de contactos moderna -->
+  <div *ngIf="!cargando" class="contactos-list">
+    <!-- Mensaje cuando no hay resultados -->
+    <div *ngIf="contactosFiltrados.length === 0" class="empty-state">
+      <ion-icon name="people-outline" color="medium"></ion-icon>
+      <h3>No hay contactos</h3>
+      <p *ngIf="!textoBuscar">No se encontraron contactos en el dispositivo</p>
+      <p *ngIf="textoBuscar">No se encontraron resultados</p>
     </div>
 
-    <ion-item *ngFor="let contact of contacts | filter:textoBuscar">
-        <ion-icon *ngIf="!contact.photoThumbnail" color="primary" slot="start" name="call"></ion-icon>
-        <ion-avatar *ngIf="contact.photoThumbnail"  slot="start">
-          <ion-img [src]="contact.photoThumbnail"></ion-img>
-        </ion-avatar>
-      <ion-label class="ion-text-wrap">
-      <ion-text *ngIf="contact.phoneNumbers.length > 0" color="dark">
-          <h3>{{contact.displayName}}</h3>
-          <h3>{{contact.phoneNumbers[0].number}}</h3>
-        </ion-text>
-      </ion-label>
-    </ion-item>
+    <!-- Cards de contactos -->
+    <ion-item-sliding *ngFor="let contacto of contactosFiltrados | paginate: { itemsPerPage: 50, currentPage: p }; let i = index">
+      <ion-item lines="none" class="contacto-card">
+        <!-- Avatar con inicial o foto -->
+        <div slot="start" class="avatar-container">
+          <div *ngIf="!contacto.image" class="avatar" [ngClass]="'avatar-' + getColorPorIndice(i)">
+            {{ contacto.inicial }}
+          </div>
+          <ion-avatar *ngIf="contacto.image?.base64String">
+            <ion-img [src]="'data:image/jpeg;base64,' + contacto.image.base64String"></ion-img>
+          </ion-avatar>
+        </div>
 
-  </ion-list>
+        <!-- Información del contacto -->
+        <ion-label>
+          <h2 class="contacto-nombre">{{ contacto.nombreDisplay }}</h2>
+          <p class="contacto-telefono" *ngIf="contacto.tieneTelefono">
+            <ion-icon name="call-outline" size="small"></ion-icon>
+            {{ contacto.telefonoDisplay }}
+          </p>
+          <p class="contacto-sin-telefono" *ngIf="!contacto.tieneTelefono">
+            <ion-icon name="alert-circle-outline" size="small"></ion-icon>
+            Sin teléfono
+          </p>
+        </ion-label>
+
+        <!-- Botones de acción rápida -->
+        <div slot="end" class="quick-actions" *ngIf="contacto.tieneTelefono">
+          <ion-button fill="clear" (click)="abrirWhatsApp(contacto.telefonoDisplay)">
+            <ion-icon slot="icon-only" name="logo-whatsapp" color="success"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" (click)="llamarTelefono(contacto.telefonoDisplay)">
+            <ion-icon slot="icon-only" name="call" color="primary"></ion-icon>
+          </ion-button>
+        </div>
+      </ion-item>
+    </ion-item-sliding>
+  </div>
+
+  <!-- Paginación -->
+  <div class="pagination-container" *ngIf="contactosFiltrados.length > 50">
+    <pagination-controls (pageChange)="p = $event"></pagination-controls>
+  </div>
+
+  <!-- Botón flotante para importar -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="importarContactos()" color="secondary">
+      <ion-icon name="download"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

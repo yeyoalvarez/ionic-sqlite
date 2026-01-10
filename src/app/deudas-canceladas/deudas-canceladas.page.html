@@ -1,45 +1,99 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
+  <ion-toolbar color="success">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Clientes con Deudas Canceladas</ion-title>
+    <ion-title>Deudas Canceladas</ion-title>
   </ion-toolbar>
-  <ion-searchbar
-    animated
-    placeholder="Buscar Deudor"
-    showCancelButton="focus"
-    cancelButtonText="Cancelar"
-    [(ngModel)]="textoBuscar">
-  </ion-searchbar>
+  <ion-toolbar color="success">
+    <ion-searchbar
+      animated
+      placeholder="Buscar por cliente, producto o fecha..."
+      showCancelButton="focus"
+      cancelButtonText="Cancelar"
+      [(ngModel)]="textoBuscar">
+    </ion-searchbar>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-list>
-    <ion-item>
-      <ion-grid>
-        <ion-row>
-          <ion-col size="6">Cliente</ion-col>
-          <ion-col size="6">Fecha</ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-item>
-  </ion-list>
+  <!-- Barra de resumen -->
+  <div class="summary-bar" *ngIf="!cargando">
+    <div class="summary-item">
+      <ion-icon name="checkmark-circle" color="success"></ion-icon>
+      <div class="summary-content">
+        <span class="summary-label">Deudas Canceladas</span>
+        <span class="summary-value">{{deudas.length}}</span>
+      </div>
+    </div>
+  </div>
 
-  <ion-list>
-    <ion-item-sliding
-      *ngFor="let deuda of deudas | filter:textoBuscar | paginate: { itemsPerPage: 20, currentPage: p }"
-      [routerLink]="['/deudas-canceladas-detalles', deuda.id]">
-      <ion-item>
-        <ion-grid>
-          <ion-row>
-            <ion-col size="6">{{ deuda.clientes }}</ion-col>
-            <ion-col size="6">{{ deuda.fecha }}</ion-col>
-          </ion-row>
-        </ion-grid>
-      </ion-item>
-    </ion-item-sliding>
-  </ion-list>
+  <!-- Skeleton mientras carga -->
+  <div *ngIf="cargando" class="skeleton-container">
+    <ion-card *ngFor="let i of [1,2,3,4,5]">
+      <ion-card-content>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <ion-skeleton-text animated style="width: 50px; height: 50px; border-radius: 50%;"></ion-skeleton-text>
+          <div style="flex: 1;">
+            <ion-skeleton-text animated style="width: 60%; height: 20px; margin-bottom: 8px;"></ion-skeleton-text>
+            <ion-skeleton-text animated style="width: 40%; height: 16px;"></ion-skeleton-text>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
 
-  <pagination-controls (pageChange)="p = $event"></pagination-controls>
+  <!-- Lista de deudas -->
+  <div class="deudas-list" *ngIf="!cargando">
+    <ion-card
+      *ngFor="let deuda of deudas | filter:textoBuscar | paginate: { itemsPerPage: 50, currentPage: p }"
+      [routerLink]="['/deudas-canceladas-detalles', deuda.id]"
+      class="deuda-card">
+      <ion-card-content>
+        <div class="card-content-wrapper">
+          <!-- Avatar -->
+          <div class="avatar-container">
+            <div class="avatar" [ngClass]="'avatar-' + deuda.colorAvatar">
+              {{deuda.inicial}}
+            </div>
+          </div>
+
+          <!-- Información -->
+          <div class="deuda-info">
+            <div class="deuda-header">
+              <h3 class="deuda-nombre">{{deuda.nombreDisplay}}</h3>
+              <ion-badge color="success">
+                <ion-icon name="checkmark-circle"></ion-icon>
+              </ion-badge>
+            </div>
+            <div class="deuda-details">
+              <div class="detail-item">
+                <ion-icon name="calendar" color="medium"></ion-icon>
+                <span>Cancelada: {{deuda.fechaDisplay}}</span>
+              </div>
+              <div class="detail-item" *ngIf="deuda.productos">
+                <ion-icon name="cube" color="medium"></ion-icon>
+                <span>{{deuda.productos}}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ícono de navegación -->
+          <ion-icon name="chevron-forward" class="nav-icon" color="medium"></ion-icon>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Empty state -->
+    <div class="empty-state" *ngIf="deudas.length === 0">
+      <ion-icon name="checkmark-done-circle-outline" color="success"></ion-icon>
+      <h3>No hay deudas canceladas</h3>
+      <p>Las deudas que se cancelen aparecerán aquí</p>
+    </div>
+  </div>
+
+  <!-- Paginación -->
+  <div class="pagination-container" *ngIf="!cargando && deudas.length > 50">
+    <pagination-controls (pageChange)="p = $event"></pagination-controls>
+  </div>
 </ion-content>

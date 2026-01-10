@@ -3,17 +3,150 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Home</ion-title>
+    <ion-title>Inicio</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding justify-content-center>
-  <ion-card>
-    <img src="assets\icon\logo.jpg" class="ion-text-center">
-    <ion-card-content>
-      <ion-card-title class="ion-text-center">
-        App de Deudas Bello Bello Boutique
-      </ion-card-title>
-    </ion-card-content>
-  </ion-card>
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Logo del Cliente -->
+  <div class="logo-section">
+    <img src="assets\icon\logo.jpg" alt="Bello Bello Boutique">
+    <h2>Bello Bello Boutique</h2>
+    <p>Sistema de Gestión de Deudas</p>
+  </div>
+
+  <!-- Skeleton mientras carga -->
+  <div *ngIf="cargando" class="skeleton-container">
+    <ion-card *ngFor="let i of [1,2,3]">
+      <ion-card-content>
+        <ion-skeleton-text animated style="width: 100%; height: 80px;"></ion-skeleton-text>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Dashboard de estadísticas -->
+  <div *ngIf="!cargando">
+    <!-- Resumen de Deudas -->
+    <div class="stats-grid">
+      <ion-card class="stat-card primary" (click)="navegar('/deudas-clientes')">
+        <ion-card-content>
+          <ion-icon name="wallet-outline"></ion-icon>
+          <h1>{{ totalDeudasActivas }}</h1>
+          <p>Deudas Activas</p>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="stat-card warning" (click)="navegar('/deudas-cobrar')">
+        <ion-card-content>
+          <ion-icon name="timer-outline"></ion-icon>
+          <h1>{{ totalDeudasPorCobrar }}</h1>
+          <p>Por Cobrar Hoy</p>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="stat-card success" (click)="navegar('/deudas-canceladas')">
+        <ion-card-content>
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          <h1>{{ totalDeudasCanceladas }}</h1>
+          <p>Canceladas</p>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- Monto Total Adeudado -->
+    <ion-card class="monto-card">
+      <ion-card-header>
+        <ion-card-subtitle>Total Adeudado</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="monto-total">
+          <span class="currency">Gs.</span>
+          <span class="amount">{{ moneda(montoTotalAdeudado) }}</span>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Estadísticas Generales -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Estadísticas Generales</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="general-stats">
+          <div class="stat-item" (click)="navegar('/clientes')">
+            <ion-icon name="people-circle-outline" color="primary"></ion-icon>
+            <div>
+              <h3>{{ totalClientes }}</h3>
+              <p>Clientes</p>
+            </div>
+          </div>
+          <div class="stat-item" (click)="navegar('/productos')">
+            <ion-icon name="pricetags-outline" color="secondary"></ion-icon>
+            <div>
+              <h3>{{ totalProductos }}</h3>
+              <p>Productos</p>
+            </div>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Próximas Deudas a Cobrar -->
+    <ion-card *ngIf="proximasDeudas.length > 0">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="alarm-outline" color="warning"></ion-icon>
+          Próximas a Cobrar
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list>
+          <ion-item
+            *ngFor="let deuda of proximasDeudas"
+            button
+            (click)="navegarADeuda(deuda.id)"
+            detail
+          >
+            <ion-avatar slot="start">
+              <div class="avatar-placeholder">{{ deuda.clientes?.charAt(0) }}</div>
+            </ion-avatar>
+            <ion-label>
+              <h3>{{ deuda.clientes }}</h3>
+              <p>{{ deuda.recordatorio }}</p>
+            </ion-label>
+            <ion-note slot="end" color="primary">
+              <strong>Gs. {{ moneda(deuda.monto) }}</strong>
+            </ion-note>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Accesos Rápidos -->
+    <ion-card class="quick-actions">
+      <ion-card-header>
+        <ion-card-title>Accesos Rápidos</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="action-buttons">
+          <ion-button expand="block" (click)="navegar('/deudas')">
+            <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+            Nueva Deuda
+          </ion-button>
+          <ion-button expand="block" color="secondary" (click)="navegar('/clientes')">
+            <ion-icon slot="start" name="person-add-outline"></ion-icon>
+            Nuevo Cliente
+          </ion-button>
+          <ion-button expand="block" color="tertiary" routerLink="/backup-bd">
+            <ion-icon slot="start" name="cloud-upload-outline"></ion-icon>
+            Backup
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
 </ion-content>

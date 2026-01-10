@@ -1,0 +1,302 @@
+ion-content {
+  --background: #f5f6fa;
+}
+
+// Barra de resumen
+.summary-bar {
+  padding: 16px;
+  background: linear-gradient(135deg, var(--ion-color-success) 0%, var(--ion-color-success-shade) 100%);
+  box-shadow: 0 4px 12px rgba(var(--ion-color-success-rgb), 0.3);
+  animation: slideDown 0.4s ease-out;
+
+  .summary-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    ion-icon {
+      font-size: 2.5rem;
+      color: white;
+    }
+
+    .summary-content {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      .summary-label {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.85);
+        font-weight: 500;
+      }
+
+      .summary-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: white;
+      }
+    }
+  }
+}
+
+// Skeleton container
+.skeleton-container {
+  padding: 12px;
+
+  ion-card {
+    border-radius: 12px;
+    margin-bottom: 10px;
+  }
+}
+
+// Lista de deudas
+.deudas-list {
+  padding: 12px;
+}
+
+// Card de deuda
+.deuda-card {
+  margin-bottom: 12px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.3s ease-out;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(var(--ion-color-success-rgb), 0.2);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  ion-card-content {
+    padding: 16px;
+  }
+
+  .card-content-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .avatar-container {
+    flex-shrink: 0;
+
+    .avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: white;
+      text-transform: uppercase;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+      &.avatar-success {
+        background: linear-gradient(135deg, var(--ion-color-success-tint) 0%, var(--ion-color-success) 100%);
+      }
+
+      &.avatar-primary {
+        background: linear-gradient(135deg, var(--ion-color-primary-tint) 0%, var(--ion-color-primary) 100%);
+      }
+
+      &.avatar-secondary {
+        background: linear-gradient(135deg, var(--ion-color-secondary-tint) 0%, var(--ion-color-secondary) 100%);
+      }
+
+      &.avatar-tertiary {
+        background: linear-gradient(135deg, var(--ion-color-tertiary-tint) 0%, var(--ion-color-tertiary) 100%);
+      }
+
+      &.avatar-medium {
+        background: linear-gradient(135deg, var(--ion-color-medium-tint) 0%, var(--ion-color-medium) 100%);
+      }
+    }
+  }
+
+  .deuda-info {
+    flex: 1;
+    min-width: 0;
+
+    .deuda-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      gap: 8px;
+
+      .deuda-nombre {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--ion-color-dark);
+        margin: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      ion-badge {
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.7rem;
+        flex-shrink: 0;
+
+        ion-icon {
+          font-size: 0.9rem;
+          margin-right: 2px;
+        }
+      }
+    }
+
+    .deuda-details {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      .detail-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.85rem;
+        color: var(--ion-color-medium);
+
+        ion-icon {
+          font-size: 1rem;
+          flex-shrink: 0;
+        }
+
+        span {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+
+  .nav-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    margin-left: 8px;
+  }
+}
+
+// Empty state
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  color: var(--ion-color-medium);
+
+  ion-icon {
+    font-size: 6rem;
+    margin-bottom: 20px;
+  }
+
+  h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0 0 12px 0;
+    color: var(--ion-color-dark);
+  }
+
+  p {
+    font-size: 1rem;
+    margin: 0;
+  }
+}
+
+// Paginación
+.pagination-container {
+  padding: 20px 16px;
+  display: flex;
+  justify-content: center;
+}
+
+// Animaciones
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Responsive
+@media (max-width: 576px) {
+  .summary-bar {
+    padding: 12px;
+
+    .summary-item {
+      ion-icon {
+        font-size: 2rem;
+      }
+
+      .summary-content {
+        .summary-label {
+          font-size: 0.85rem;
+        }
+
+        .summary-value {
+          font-size: 1.5rem;
+        }
+      }
+    }
+  }
+
+  .deuda-card {
+    .avatar-container {
+      .avatar {
+        width: 45px;
+        height: 45px;
+        font-size: 1.2rem;
+      }
+    }
+
+    .deuda-info {
+      .deuda-header {
+        .deuda-nombre {
+          font-size: 1rem;
+        }
+
+        ion-badge {
+          padding: 3px 6px;
+          font-size: 0.65rem;
+        }
+      }
+
+      .deuda-details {
+        .detail-item {
+          font-size: 0.8rem;
+
+          ion-icon {
+            font-size: 0.9rem;
+          }
+        }
+      }
+    }
+
+    .nav-icon {
+      font-size: 1.3rem;
+    }
+  }
+}

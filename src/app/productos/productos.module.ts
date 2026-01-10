@@ -7,7 +7,8 @@ import { IonicModule } from '@ionic/angular';
 import { ProductosPageRoutingModule } from './productos-routing.module';
 
 import { ProductosPage } from './productos.page';
-import {Ng2SearchPipeModule} from 'ng2-search-filter';
+import { FilterPipe } from '../pipes/filter.pipe';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import {Ng2SearchPipeModule} from 'ng2-search-filter';
     FormsModule,
     IonicModule,
     ProductosPageRoutingModule,
-    Ng2SearchPipeModule
+    FilterPipe,
+    NgxPaginationModule
   ],
   declarations: [ProductosPage]
 })

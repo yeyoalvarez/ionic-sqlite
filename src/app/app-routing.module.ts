@@ -36,7 +36,7 @@ const routes: Routes = [
     loadChildren: () => import('./deudas-clientes/deudas-clientes.module').then( m => m.DeudasClientesPageModule)
   },
   {
-    path: 'clientes-detalles',
+    path: 'clientes-detalles/:id',
     loadChildren: () => import('./clientes-detalles/clientes-detalles.module').then( m => m.ClientesDetallesPageModule)
   },
   {
@@ -58,6 +58,10 @@ const routes: Routes = [
   },  {
     path: 'deudas-total',
     loadChildren: () => import('./deudas-total/deudas-total.module').then( m => m.DeudasTotalPageModule)
+  },
+  {
+    path: 'backup-bd',
+    loadChildren: () => import('./backup-bd/backup-bd.module').then( m => m.BackupBdPageModule)
   },
 
 

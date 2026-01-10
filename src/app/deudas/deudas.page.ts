@@ -102,9 +102,9 @@ export class DeudasPage implements OnInit {
   getProductos() {
     this.database.getProductos().then((data) => {
       this.productos = [];
-      if (data.rows.length > 0) {
-        for (let i = 0; i < data.rows.length; i++) {
-          this.productos.push(data.rows.item(i));
+      if (data.values.length > 0) {
+        for (let i = 0; i < data.values.length; i++) {
+          this.productos.push(data.values[i]);
         }
       }
     });
@@ -113,9 +113,9 @@ export class DeudasPage implements OnInit {
   getClientes() {
     this.database.getClientes().then((data) => {
       this.clientes = [];
-      if (data.rows.length > 0) {
-        for (let i = 0; i < data.rows.length; i++) {
-          this.clientes.push(data.rows.item(i));
+      if (data.values.length > 0) {
+        for (let i = 0; i < data.values.length; i++) {
+          this.clientes.push(data.values[i]);
         }
       }
       console.log('clientes',this.clientes);
@@ -125,9 +125,9 @@ export class DeudasPage implements OnInit {
   getRecordatorio() {
     this.database.getRecordatorio().then((data) => {
       this.recordatorio = [];
-      if (data.rows.length > 0) {
-        for (let i = 0; i < data.rows.length; i++) {
-          this.recordatorio.push(data.rows.item(i));
+      if (data.values.length > 0) {
+        for (let i = 0; i < data.values.length; i++) {
+          this.recordatorio.push(data.values[i]);
         }
       }
       console.log('recordatorio',this.recordatorio);
@@ -137,9 +137,9 @@ export class DeudasPage implements OnInit {
   getMetodoPago() {
     this.database.getMetodoPago().then((data) => {
       this.metodoPago = [];
-      if (data.rows.length > 0) {
-        for (let i = 0; i < data.rows.length; i++) {
-          this.metodoPago.push(data.rows.item(i));
+      if (data.values.length > 0) {
+        for (let i = 0; i < data.values.length; i++) {
+          this.metodoPago.push(data.values[i]);
         }
       }
       console.log('metodoPago??',this.metodoPago);
@@ -236,9 +236,9 @@ export class DeudasPage implements OnInit {
   getDeudas() {
     this.database.getDeudas().then((data) => {
       this.deudas = [];
-      if (data.rows.length > 0) {
-        for (let i = 0; i < data.rows.length; i++) {
-          this.deudas.push(data.rows.item(i));
+      if (data.values.length > 0) {
+        for (let i = 0; i < data.values.length; i++) {
+          this.deudas.push(data.values[i]);
         }
       }
       console.log('deudas??',this.deudas);
