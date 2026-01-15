@@ -710,18 +710,19 @@ export class DeudasDetallesPage implements OnInit {
     const tablaHeader = document.createElement('div');
     tablaHeader.style.cssText = `
       display: grid;
-      grid-template-columns: 60px 1fr 75px;
+      grid-template-columns: 55px 1fr 70px 70px;
       gap: 4px;
       padding: 6px 0;
       border-bottom: 1px solid #ddd;
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       font-weight: 600;
       color: #666;
     `;
     tablaHeader.innerHTML = `
       <div>Fecha</div>
       <div>Detalle</div>
-      <div style="text-align: right;">Monto</div>
+      <div style="text-align: right;">+/-</div>
+      <div style="text-align: right;">Saldo</div>
     `;
     tabla.appendChild(tablaHeader);
 
@@ -730,46 +731,48 @@ export class DeudasDetallesPage implements OnInit {
       const fila = document.createElement('div');
       fila.style.cssText = `
         display: grid;
-        grid-template-columns: 60px 1fr 75px;
+        grid-template-columns: 55px 1fr 70px 70px;
         gap: 4px;
         padding: 5px 0;
         border-bottom: 1px dotted #eee;
-        font-size: 0.7rem;
+        font-size: 0.65rem;
       `;
 
       let detalle = '';
-      let monto = '';
-      let colorMonto = '#000';
+      let diferencia = '';
+      let colorDif = '#000';
 
       // Formatear fecha a formato corto (solo 2 dígitos del año)
       let fechaCorta = historial.fechas;
       if (fechaCorta.includes('/')) {
         const partes = fechaCorta.split('/');
         if (partes.length === 3 && partes[2].length === 4) {
-          // Si el año tiene 4 dígitos, tomar solo los últimos 2
           fechaCorta = `${partes[0]}/${partes[1]}/${partes[2].slice(-2)}`;
         }
       }
 
       if (i === 0) {
         detalle = historial.detalles || 'Deuda inicial';
-        monto = this.moneda(historial.montos);
-        colorMonto = '#3880ff';
+        diferencia = this.moneda(historial.montos);
+        colorDif = '#3880ff';
       } else if (historial.diferencia < 0) {
         detalle = historial.detalles || 'Pago';
-        monto = '- ' + this.moneda(historial.pagoAnterior);
-        colorMonto = '#28ba62';
+        diferencia = '- ' + this.moneda(historial.pagoAnterior);
+        colorDif = '#28ba62';
       } else {
         detalle = historial.detalles || 'Compra';
-        monto = '+ ' + this.moneda(historial.pagoAnterior);
-        colorMonto = '#eb445a';
+        diferencia = '+ ' + this.moneda(historial.pagoAnterior);
+        colorDif = '#eb445a';
       }
 
       fila.innerHTML = `
         <div style="color: #666;">${fechaCorta}</div>
-        <div style="color: #333;">${detalle}</div>
-        <div style="text-align: right; font-weight: 600; color: ${colorMonto};">
-          ${monto}
+        <div style="color: #333; overflow: hidden; text-overflow: ellipsis;">${detalle}</div>
+        <div style="text-align: right; font-weight: 600; color: ${colorDif};">
+          ${diferencia}
+        </div>
+        <div style="text-align: right; font-weight: 700; color: #000;">
+          ${this.moneda(historial.montos)}
         </div>
       `;
 
@@ -870,6 +873,154 @@ export class DeudasDetallesPage implements OnInit {
     }
   }
 
+  // Crear boleta solo con el último pago
+  crearBoletaUltimoPago(): HTMLElement {
+    const container = document.createElement('div');
+    container.style.cssText = `
+      width: 350px;
+      padding: 20px;
+      background: white;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    `;
 
+    if (this.historiales.length < 2) return container;
+
+    const ultimaTransaccion = this.historiales[this.historiales.length - 1];
+    const penultimaTransaccion = this.historiales[this.historiales.length - 2];
+
+    // Header
+    const header = document.createElement('div');
+    header.style.cssText = `
+      text-align: center;
+      border-bottom: 2px solid #3880ff;
+      padding-bottom: 15px;
+      margin-bottom: 15px;
+    `;
+    header.innerHTML = `
+      <div style="font-size: 1.3rem; font-weight: 700; color: #3880ff; margin-bottom: 10px;">
+        COMPROBANTE DE PAGO
+      </div>
+      <div style="font-size: 1rem; font-weight: 600; margin-bottom: 5px;">
+        ${this.clienteNombre}
+      </div>
+      <div style="font-size: 0.85rem; color: #666;">
+        ${this.productoNombre}
+      </div>
+      <div style="font-size: 0.8rem; color: #888; margin-top: 5px;">
+        ${ultimaTransaccion.fechas}
+      </div>
+    `;
+    container.appendChild(header);
+
+    // Detalle del pago
+    const detalle = document.createElement('div');
+    detalle.style.cssText = 'margin-bottom: 15px;';
+
+    const esPago = ultimaTransaccion.diferencia < 0;
+    const colorAccion = esPago ? '#28ba62' : '#eb445a';
+    const textoAccion = esPago ? 'PAGO REALIZADO' : 'MERCADERÍA AGREGADA';
+    const signo = esPago ? '-' : '+';
+
+    detalle.innerHTML = `
+      <div style="background: #f5f5f5; border-radius: 10px; padding: 15px; margin-bottom: 12px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+          <span style="color: #666; font-size: 0.9rem;">Saldo anterior:</span>
+          <span style="font-weight: 600; font-size: 1rem; color: #333;">Gs. ${this.moneda(penultimaTransaccion.montos)}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; background: ${colorAccion}15; padding: 10px; border-radius: 8px; margin-bottom: 10px;">
+          <span style="color: ${colorAccion}; font-weight: 600; font-size: 0.9rem;">${textoAccion}:</span>
+          <span style="color: ${colorAccion}; font-weight: 700; font-size: 1.1rem;">${signo} Gs. ${this.moneda(ultimaTransaccion.pagoAnterior)}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; border-top: 2px dashed #ddd; padding-top: 10px;">
+          <span style="font-weight: 700; font-size: 1rem; color: #333;">SALDO ACTUAL:</span>
+          <span style="font-weight: 700; font-size: 1.2rem; color: ${ultimaTransaccion.montos === 0 ? '#28ba62' : '#1a1a1a'};">
+            Gs. ${this.moneda(ultimaTransaccion.montos)}
+          </span>
+        </div>
+      </div>
+    `;
+    container.appendChild(detalle);
+
+    // Método de pago
+    const metodoPago = document.createElement('div');
+    metodoPago.style.cssText = 'text-align: center; margin-bottom: 15px;';
+    metodoPago.innerHTML = `
+      <span style="background: #e0e0e0; padding: 6px 15px; border-radius: 15px; font-size: 0.85rem; font-weight: 600;">
+        ${ultimaTransaccion.tipopago || 'N/A'}
+      </span>
+    `;
+    container.appendChild(metodoPago);
+
+    // Estado
+    const estado = document.createElement('div');
+    estado.style.cssText = 'text-align: center; padding-top: 10px; border-top: 1px solid #eee;';
+    if (ultimaTransaccion.montos === 0) {
+      estado.innerHTML = `
+        <div style="display: inline-block; background: #28ba62; color: white; padding: 8px 20px; border-radius: 20px; font-weight: 600;">
+          ✓ DEUDA CANCELADA
+        </div>
+      `;
+    } else {
+      estado.innerHTML = `
+        <div style="display: inline-block; background: #ffc409; color: white; padding: 8px 20px; border-radius: 20px; font-weight: 600;">
+          Deuda Pendiente
+        </div>
+      `;
+    }
+    container.appendChild(estado);
+
+    // Pie
+    const pie = document.createElement('div');
+    pie.style.cssText = 'text-align: center; margin-top: 15px; font-size: 0.7rem; color: #999;';
+    pie.innerHTML = `Tel: ${this.paisCodigo} ${this.historiales[0]?.telefono || ''}`;
+    container.appendChild(pie);
+
+    return container;
+  }
+
+  async capturarUltimoPago() {
+    let tempContainer: HTMLElement | null = null;
+    try {
+      console.log('capturarUltimoPago - Iniciando captura');
+
+      tempContainer = this.crearBoletaUltimoPago();
+      tempContainer.style.position = 'absolute';
+      tempContainer.style.left = '-9999px';
+      document.body.appendChild(tempContainer);
+
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      const canvas = await html2canvas(tempContainer, {
+        scale: 2.5,
+        backgroundColor: 'white',
+        logging: false
+      });
+
+      const imgData = canvas.toDataURL('image/png');
+      const base64 = imgData.split(',')[1];
+
+      const fileName = `ultimo_pago_${Date.now()}.png`;
+      const savedFile = await Filesystem.writeFile({
+        path: fileName,
+        data: base64,
+        directory: Directory.Cache
+      });
+
+      await Share.share({
+        title: 'Comprobante de Pago',
+        url: savedFile.uri,
+        dialogTitle: 'Compartir Comprobante'
+      });
+
+      console.log('capturarUltimoPago - Compartido exitosamente');
+    } catch (error) {
+      console.error('capturarUltimoPago - Error:', error);
+      alert('Error al capturar: ' + ((error as Error).message || 'desconocido'));
+    } finally {
+      if (tempContainer && tempContainer.parentNode) {
+        tempContainer.parentNode.removeChild(tempContainer);
+      }
+    }
+  }
 
 }

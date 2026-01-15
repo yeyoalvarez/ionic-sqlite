@@ -13,6 +13,7 @@ export class DeudasPage implements OnInit {
 
   textoBuscar = '';
   clientes: any = [];
+  clientesFiltrados: any = [];
   recordatorio: any = [];
   metodoPago: any = [];
   recordar = 0;
@@ -70,33 +71,39 @@ export class DeudasPage implements OnInit {
   }
 
   portChangeC(event: {
-    component: IonicSelectableComponent;value: any;
+    component: IonicSelectableComponent; value: any;
   }) {
-    this.aux = event.value;
-    this.clientesId = this.aux.id;
+    if (event.value) {
+      this.clientesId = event.value.id;
+      console.log('Cliente seleccionado:', event.value.name, 'ID:', this.clientesId);
+    }
   }
 
   portChangeP(event: {
-    component: IonicSelectableComponent;value: any;
+    component: IonicSelectableComponent; value: any;
   }) {
-    this.aux = event.value;
-    this.productosId = this.aux.id;
+    if (event.value) {
+      this.productosId = event.value.id;
+      console.log('Producto seleccionado:', event.value.name, 'ID:', this.productosId);
+    }
   }
 
   portChangeR(event: {
-    component: IonicSelectableComponent;value: any;
+    component: IonicSelectableComponent; value: any;
   }) {
-    this.aux = event.value;
-    this.recordar = this.aux.id;
+    if (event.value) {
+      this.recordar = event.value.id;
+      console.log('Recordatorio seleccionado:', this.recordar);
+    }
   }
 
-  // metodo de pago
-
   portChangeM(event: {
-    component: IonicSelectableComponent;value: any;
+    component: IonicSelectableComponent; value: any;
   }) {
-    this.aux = event.value;
-    this.tipopagoId = this.aux.id;
+    if (event.value) {
+      this.tipopagoId = event.value.id;
+      console.log('Método pago seleccionado:', this.tipopagoId);
+    }
   }
 
   getProductos() {
@@ -118,8 +125,33 @@ export class DeudasPage implements OnInit {
           this.clientes.push(data.values[i]);
         }
       }
-      console.log('clientes',this.clientes);
+      // Mostrar solo los primeros 20 inicialmente para carga rápida
+      this.clientesFiltrados = this.clientes.slice(0, 20);
+      console.log('clientes', this.clientes.length);
     });
+  }
+
+  // Búsqueda asíncrona de clientes
+  buscarClientes(event: { component: IonicSelectableComponent; text: string }) {
+    const texto = event.text.trim().toLowerCase();
+
+    // Si no hay texto, mostrar los primeros 20
+    if (!texto) {
+      event.component.items = this.clientes.slice(0, 20);
+      event.component.endSearch();
+      return;
+    }
+
+    // Filtrar clientes por nombre o teléfono
+    const filtrados = this.clientes.filter((cliente: any) => {
+      const nombre = (cliente.name || '').toLowerCase();
+      const telefono = (cliente.telefono || '').toString();
+      return nombre.includes(texto) || telefono.includes(texto);
+    });
+
+    // Limitar resultados a 50 para rendimiento
+    event.component.items = filtrados.slice(0, 50);
+    event.component.endSearch();
   }
 
   getRecordatorio() {

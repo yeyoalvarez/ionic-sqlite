@@ -74,27 +74,42 @@
         </div>
 
         <div class="transaction-details">
+          <!-- Monto inicial (primera transacción) -->
           <div class="detail-row" *ngIf="i === 0">
             <span class="label">Monto inicial:</span>
             <span class="value initial">Gs. {{moneda(historial.montos)}}</span>
           </div>
 
-          <div class="detail-row" *ngIf="i !== 0 && historial.diferencia < 0">
-            <span class="label">Pago realizado:</span>
-            <span class="value payment">Gs. {{moneda(historial.pagoAnterior)}}</span>
+          <!-- Transacciones posteriores con diferencia visible -->
+          <div *ngIf="i !== 0" class="transaction-summary">
+            <!-- Saldo anterior -->
+            <div class="detail-row">
+              <span class="label">Saldo anterior:</span>
+              <span class="value">Gs. {{moneda(historiales[i-1].montos)}}</span>
+            </div>
+
+            <!-- Diferencia (pago o aumento) -->
+            <div class="detail-row diferencia-row" *ngIf="historial.diferencia < 0">
+              <span class="label">Pago realizado:</span>
+              <span class="value payment">- Gs. {{moneda(historial.pagoAnterior)}}</span>
+            </div>
+
+            <div class="detail-row diferencia-row" *ngIf="historial.diferencia > 0">
+              <span class="label">Mercadería agregada:</span>
+              <span class="value merchandise">+ Gs. {{moneda(historial.pagoAnterior)}}</span>
+            </div>
           </div>
 
-          <div class="detail-row" *ngIf="i !== 0 && historial.diferencia > 0">
-            <span class="label">Mercadería agregada:</span>
-            <span class="value merchandise">Gs. {{moneda(historial.pagoAnterior)}}</span>
-          </div>
-
+          <!-- Saldo actual (siempre visible) -->
           <div class="detail-row total-row">
-            <span class="label">Saldo:</span>
-            <span class="value total">Gs. {{moneda(historial.montos)}}</span>
+            <span class="label">Saldo actual:</span>
+            <span class="value total" [ngClass]="{'saldo-cero': historial.montos === 0}">
+              Gs. {{moneda(historial.montos)}}
+            </span>
           </div>
 
-          <div class="detail-notes" *ngIf="historial.detalles && historial.diferencia > 0 && i !== 0">
+          <!-- Notas/detalles -->
+          <div class="detail-notes" *ngIf="historial.detalles && historial.detalles.trim() !== ''">
             <ion-icon name="document-text" color="medium"></ion-icon>
             <span>{{historial.detalles}}</span>
           </div>
@@ -137,7 +152,11 @@
     </ion-button>
     <ion-button expand="block" (click)="tomarScreen()" color="primary">
       <ion-icon slot="start" name="image"></ion-icon>
-      Capturar Boleta
+      Capturar Boleta Completa
+    </ion-button>
+    <ion-button expand="block" (click)="capturarUltimoPago()" color="tertiary" *ngIf="historiales.length > 1">
+      <ion-icon slot="start" name="receipt-outline"></ion-icon>
+      Capturar Último Pago
     </ion-button>
     <ion-button expand="block" (click)="generatePdf()" color="secondary">
       <ion-icon slot="start" name="document"></ion-icon>

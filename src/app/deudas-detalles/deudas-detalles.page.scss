@@ -205,6 +205,13 @@ ion-content {
     }
 
     .transaction-details {
+      .transaction-summary {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 8px;
+        margin-bottom: 6px;
+      }
+
       .detail-row {
         display: flex;
         justify-content: space-between;
@@ -227,15 +234,32 @@ ion-content {
 
           &.payment {
             color: var(--ion-color-success);
+            font-weight: 700;
           }
 
           &.merchandise {
             color: var(--ion-color-danger);
+            font-weight: 700;
           }
 
           &.total {
             color: var(--ion-color-dark);
             font-size: 1rem;
+          }
+
+          &.saldo-cero {
+            color: var(--ion-color-success);
+          }
+        }
+
+        &.diferencia-row {
+          background: rgba(var(--ion-color-light-rgb), 0.5);
+          padding: 6px 8px;
+          border-radius: 6px;
+          margin: 4px 0;
+
+          .label {
+            font-weight: 600;
           }
         }
 

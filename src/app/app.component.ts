@@ -51,6 +51,12 @@ export class AppComponent {
       pages: [
         { title: 'Resumen Total', url: '/deudas-total', icon: 'analytics' }
       ]
+    },
+    {
+      title: 'Configuración',
+      pages: [
+        { title: 'Backup y Restaurar', url: '/backup-bd', icon: 'cloud-upload' }
+      ]
     }
   ];
 

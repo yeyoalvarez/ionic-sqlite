@@ -1,108 +1,210 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
+      <ion-back-button defaultHref="/deudas-clientes"></ion-back-button>
     </ion-buttons>
-    <ion-title>Añadir Deuda</ion-title>
+    <ion-title>Nueva Deuda</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-list>
+  <!-- Header con icono -->
+  <div class="page-header">
+    <div class="header-icon">
+      <ion-icon name="receipt-outline"></ion-icon>
+    </div>
+    <h2>Registrar Nueva Deuda</h2>
+    <p>Complete los datos para crear una nueva deuda</p>
+  </div>
 
-    <ion-item>
-      <ion-label>Seleccionar Producto</ion-label>
-      <ionic-selectable
-        [(ngModel)]="seleccionarPro"
-        [items]="productos"
-        itemValueField="id"
-        itemTextField="name"
-        [canSearch]="true"
-        (onChange)="portChangeP($event)"
+  <!-- Formulario principal -->
+  <div class="form-container">
+    <!-- Sección: Cliente -->
+    <ion-card class="form-card">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="person-outline"></ion-icon>
+          Cliente
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item lines="none" class="selectable-item">
+          <ionic-selectable
+            #clienteSelect
+            [(ngModel)]="seleccionarCli"
+            [items]="clientesFiltrados"
+            itemValueField="id"
+            itemTextField="name"
+            [canSearch]="true"
+            [isOnSearchEnabled]="true"
+            (onSearch)="buscarClientes($event)"
+            (onChange)="portChangeC($event)"
+            searchPlaceholder="Buscar por nombre o teléfono..."
+            placeholder="Toque para seleccionar cliente"
+            closeButtonText="Cerrar"
+            searchFailText="No se encontraron clientes"
+          >
+          </ionic-selectable>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Sección: Producto -->
+    <ion-card class="form-card">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="cube-outline"></ion-icon>
+          Producto / Servicio
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item lines="none" class="selectable-item">
+          <ionic-selectable
+            #productoSelect
+            [(ngModel)]="seleccionarPro"
+            [items]="productos"
+            itemValueField="id"
+            itemTextField="name"
+            [canSearch]="true"
+            (onChange)="portChangeP($event)"
+            placeholder="Toque para seleccionar producto"
+            closeButtonText="Cerrar"
+            searchFailText="No se encontraron productos"
+          >
+          </ionic-selectable>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Sección: Monto y Fecha -->
+    <ion-card class="form-card">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="cash-outline"></ion-icon>
+          Monto y Fecha
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <!-- Monto -->
+        <div class="form-field">
+          <div class="field-label">
+            <ion-icon name="wallet-outline" color="success"></ion-icon>
+            <span>Monto de la Deuda (Gs.)</span>
+          </div>
+          <ion-item class="input-item" lines="none">
+            <ion-input
+              type="number"
+              [(ngModel)]="montoDeuda"
+              placeholder="Ej: 150000"
+              inputmode="numeric"
+            ></ion-input>
+          </ion-item>
+        </div>
+
+        <!-- Fecha -->
+        <div class="form-field">
+          <div class="field-label">
+            <ion-icon name="calendar-outline" color="tertiary"></ion-icon>
+            <span>Fecha de la Deuda</span>
+          </div>
+          <ion-item class="input-item" lines="none">
+            <ion-datetime
+              placeholder="Seleccionar fecha"
+              display-format="DD/MM/YYYY"
+              picker-format="DD MMM YYYY"
+              cancel-text="Cancelar"
+              done-text="Aceptar"
+              [ngModel]="auxfecha.toDateString()"
+              (ionChange)="cambioFecha($event)"
+            ></ion-datetime>
+          </ion-item>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Sección: Método de Pago -->
+    <ion-card class="form-card">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="card-outline"></ion-icon>
+          Método de Pago
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item lines="none" class="selectable-item">
+          <ionic-selectable
+            #metodoPagoSelect
+            [(ngModel)]="seleccionarMet"
+            [items]="metodoPago"
+            itemValueField="id"
+            itemTextField="name"
+            [canSearch]="false"
+            (onChange)="portChangeM($event)"
+            placeholder="Toque para seleccionar método"
+            closeButtonText="Cerrar"
+          >
+          </ionic-selectable>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Sección: Recordatorio -->
+    <ion-card class="form-card">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="notifications-outline"></ion-icon>
+          Recordatorio de Pago
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item lines="none" class="selectable-item">
+          <ionic-selectable
+            #recordatorioSelect
+            [(ngModel)]="seleccionarRec"
+            [items]="recordatorio"
+            itemValueField="id"
+            itemTextField="recordatorio"
+            [canSearch]="false"
+            (onChange)="portChangeR($event)"
+            placeholder="Toque para seleccionar recordatorio"
+            closeButtonText="Cerrar"
+          >
+          </ionic-selectable>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Sección: Detalles -->
+    <ion-card class="form-card">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="document-text-outline"></ion-icon>
+          Detalles (opcional)
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item class="input-item textarea-item" lines="none">
+          <ion-textarea
+            [(ngModel)]="detalles"
+            placeholder="Descripción adicional de la deuda..."
+            rows="2"
+          ></ion-textarea>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Botón de acción -->
+    <div class="action-section">
+      <ion-button
+        expand="block"
+        size="large"
+        (click)="addDeudas()"
+        [routerLink]="['/deudas-clientes']"
+        class="submit-button"
       >
-      </ionic-selectable>
-    </ion-item>
-
-    <ion-item>
-      <ion-label>Seleccionar un cliente</ion-label>
-      <ionic-selectable
-        [(ngModel)]="seleccionarCli"
-        [items]="clientes"
-        itemValueField="id"
-        itemTextField="name"
-        [canSearch]="true"
-        (onChange)="portChangeC($event)"
-      >
-      </ionic-selectable>
-    </ion-item>
-
-    <ion-item>
-      <ion-label>Seleccionar el recordatorio</ion-label>
-      <ionic-selectable
-        [(ngModel)]="seleccionarRec"
-        [items]="recordatorio"
-        itemValueField="id"
-        itemTextField="recordatorio"
-        [canSearch]="true"
-        (onChange)="portChangeR($event)"
-      >
-      </ionic-selectable>
-    </ion-item>
-
-
-    <ion-item>
-      <ion-label>Seleccionar el Metodo de Pago</ion-label>
-      <ionic-selectable
-        [(ngModel)]="seleccionarMet"
-        [items]="metodoPago"
-        itemValueField="id"
-        itemTextField="name"
-        [canSearch]="true"
-        (onChange)="portChangeM($event)"
-      >
-      </ionic-selectable>
-    </ion-item>
-
-
-    <ion-item>
-      <ion-label position="floating">Añade el monto adeudado</ion-label>
-      <ion-input [(ngModel)]="montoDeuda"></ion-input>
-    </ion-item>
-
-    <ion-item>
-      <ion-label>Fecha de la deuda</ion-label>
-      <ion-datetime placeholder="DD/MM/YYYY"
-                    display-format="DD-MMM-YYYY"
-                    cancel-text="atras"
-                    [ngModel]="auxfecha.toDateString()"
-                    (ionChange)="cambioFecha($event)"
-      ></ion-datetime>
-    </ion-item>
-
-    <ion-item>
-      <ion-label position="floating">Detalles de la deuda</ion-label>
-      <ion-input [(ngModel)]="detalles"></ion-input>
-    </ion-item>
-
-    <ion-item>
-      <ion-label position="floating">Añade el monto adeudado</ion-label>
-    </ion-item>
-
-    <ion-button expand="block" (click)="addDeudas()"
-                [routerLink]="['/deudas-detalles']" >Añadir</ion-button>
-  </ion-list>
-
-  <style>
-    table,th,td{
-      border: 2px solid black;
-    }
-    th, td{
-      padding: 10px;
-    }
-    th{
-      text-align: center;
-    }
-  </style>
-
-
+        <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+        Registrar Deuda
+      </ion-button>
+    </div>
+  </div>
 </ion-content>

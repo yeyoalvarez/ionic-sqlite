@@ -9,6 +9,7 @@ export class DatabaseService {
   private sqlite: SQLiteConnection;
   private db: SQLiteDBConnection;
   private platform: string;
+  private isNative: boolean;
   dbReady: boolean = false;
 
   tables = {
@@ -22,27 +23,55 @@ export class DatabaseService {
 
   constructor() {
     this.platform = Capacitor.getPlatform();
-    this.sqlite = new SQLiteConnection(CapacitorSQLite);
+    // Solo considerar nativo si es android o ios (no web)
+    this.isNative = this.platform === 'android' || this.platform === 'ios';
+
+    console.log('DatabaseService - Plataforma:', this.platform, '- Es nativo:', this.isNative);
   }
 
   async createDatabase() {
-    try {
-      // Crear o abrir la base de datos
-      const ret = await this.sqlite.checkConnectionsConsistency();
-      const isConn = (await this.sqlite.isConnection('database', false)).result;
+    // SQLite solo funciona en dispositivos nativos (Android/iOS)
+    if (!this.isNative) {
+      console.warn('⚠️ SQLite no disponible en navegador. Ejecuta en dispositivo Android/iOS.');
+      this.dbReady = false;
+      return;
+    }
 
-      if (ret.result && isConn) {
+    try {
+      console.log('Iniciando creación de base de datos SQLite...');
+
+      // Inicializar la conexión SQLite
+      this.sqlite = new SQLiteConnection(CapacitorSQLite);
+
+      // Verificar consistencia de conexiones
+      const retCC = await this.sqlite.checkConnectionsConsistency();
+      console.log('Consistencia de conexiones:', retCC.result);
+
+      const isConn = (await this.sqlite.isConnection('database', false)).result;
+      console.log('Conexión existente:', isConn);
+
+      if (retCC.result && isConn) {
         this.db = await this.sqlite.retrieveConnection('database', false);
+        console.log('Conexión recuperada');
       } else {
         this.db = await this.sqlite.createConnection('database', false, 'no-encryption', 1, false);
+        console.log('Nueva conexión creada');
       }
 
       await this.db.open();
+      console.log('Base de datos abierta');
+
       await this.createTables();
       await this.migrateDatabase();
       this.dbReady = true;
-    } catch (e) {
-      alert('error on creating database ' + JSON.stringify(e));
+      console.log('✅ Base de datos SQLite creada exitosamente');
+    } catch (e: any) {
+      console.error('❌ Error creando base de datos:', e);
+      console.error('❌ Stack:', e.stack);
+      // Solo mostrar alert en dispositivo real
+      if (this.isNative) {
+        alert('Error en base de datos: ' + (e.message || JSON.stringify(e)));
+      }
     }
   }
 
@@ -136,6 +165,16 @@ export class DatabaseService {
         WHERE NOT EXISTS(SELECT 1 FROM metodoPago WHERE abreviatura = 'TA');`
       );
 
+      // Unificar "Transferencia Bancaria" con "Transferencia" si existe
+      await this.db.execute(
+        `UPDATE ${this.tables.metodoPago} SET name = 'Transferencia' WHERE name = 'Transferencia Bancaria';`
+      );
+
+      // Eliminar duplicados de transferencia si existen
+      await this.db.execute(
+        `DELETE FROM ${this.tables.metodoPago} WHERE name = 'Transferencia' AND id NOT IN (SELECT MIN(id) FROM ${this.tables.metodoPago} WHERE name = 'Transferencia');`
+      );
+
       console.log('Migración de base de datos completada');
     } catch (e) {
       console.error('Error en migración de base de datos:', e);
@@ -157,6 +196,9 @@ export class DatabaseService {
   }
 
   async getProductos(): Promise<DBSQLiteValues> {
+    if (!this.isNative || !this.db) {
+      return { values: [] };
+    }
     try {
       const result = await this.db.query(
         `SELECT * FROM ${this.tables.productos} ORDER BY name ASC`
@@ -219,6 +261,9 @@ export class DatabaseService {
   }
 
   async getClientes(): Promise<DBSQLiteValues> {
+    if (!this.isNative || !this.db) {
+      return { values: [] };
+    }
     try {
       const result = await this.db.query(
         `SELECT * FROM ${this.tables.clientes} ORDER BY name ASC`
@@ -231,6 +276,9 @@ export class DatabaseService {
   }
 
   async getClienteDetalles(id: number): Promise<DBSQLiteValues> {
+    if (!this.isNative || !this.db) {
+      return { values: [] };
+    }
     try {
       const result = await this.db.query(
         `SELECT * FROM ${this.tables.clientes}
@@ -284,6 +332,9 @@ export class DatabaseService {
   }
 
   async getDeudas(): Promise<DBSQLiteValues> {
+    if (!this.isNative || !this.db) {
+      return { values: [] };
+    }
     try {
       const result = await this.db.query(
         `SELECT deudas.id, deudas.productosId,
@@ -308,6 +359,9 @@ export class DatabaseService {
   }
 
   async getDeudasCanceladas(): Promise<DBSQLiteValues> {
+    if (!this.isNative || !this.db) {
+      return { values: [] };
+    }
     try {
       const result = await this.db.query(
         `SELECT historial.idCliente,
@@ -379,6 +433,9 @@ export class DatabaseService {
   }
 
   async getHistorial(): Promise<DBSQLiteValues> {
+    if (!this.isNative || !this.db) {
+      return { values: [] };
+    }
     try {
       console.log('DatabaseService.getHistorial - Ejecutando consulta');
       const result = await this.db.query(
@@ -407,6 +464,9 @@ export class DatabaseService {
   }
 
   async getHistorialByDeuda(idDeuda: number): Promise<DBSQLiteValues> {
+    if (!this.isNative || !this.db) {
+      return { values: [] };
+    }
     try {
       console.log('DatabaseService.getHistorialByDeuda - Ejecutando consulta para deuda:', idDeuda);
       const result = await this.db.query(
@@ -450,6 +510,9 @@ export class DatabaseService {
   }
 
   async getLastMonto(idDeuda: number): Promise<DBSQLiteValues> {
+    if (!this.isNative || !this.db) {
+      return { values: [] };
+    }
     try {
       const result = await this.db.query(
         `SELECT montos AS monto
@@ -467,6 +530,9 @@ export class DatabaseService {
   }
 
   async getLastDeudaId(idDeuda: number): Promise<DBSQLiteValues> {
+    if (!this.isNative || !this.db) {
+      return { values: [] };
+    }
     try {
       const result = await this.db.query(
         `SELECT id AS id
@@ -484,6 +550,9 @@ export class DatabaseService {
   }
 
   async getFirstDeudaId(idDeuda: number): Promise<DBSQLiteValues> {
+    if (!this.isNative || !this.db) {
+      return { values: [] };
+    }
     try {
       const result = await this.db.query(
         `SELECT id AS id
@@ -501,6 +570,9 @@ export class DatabaseService {
   }
 
   async existenciaDeuda(id: number): Promise<DBSQLiteValues> {
+    if (!this.isNative || !this.db) {
+      return { values: [] };
+    }
     try {
       const result = await this.db.query(
         `SELECT COUNT(*) as cantDeudas
@@ -515,6 +587,9 @@ export class DatabaseService {
   }
 
   async getRecordatorio(): Promise<DBSQLiteValues> {
+    if (!this.isNative || !this.db) {
+      return { values: [] };
+    }
     try {
       const result = await this.db.query(
         `SELECT * FROM ${this.tables.recordatorioPagos}`
@@ -527,6 +602,9 @@ export class DatabaseService {
   }
 
   async getMetodoPago(): Promise<DBSQLiteValues> {
+    if (!this.isNative || !this.db) {
+      return { values: [] };
+    }
     try {
       const result = await this.db.query(
         `SELECT * from ${this.tables.metodoPago}`
@@ -539,6 +617,9 @@ export class DatabaseService {
   }
 
   async getDeudaTotal(): Promise<DBSQLiteValues> {
+    if (!this.isNative || !this.db) {
+      return { values: [] };
+    }
     await this.openDatabase();
     try {
       return await this.db.query(
@@ -582,6 +663,9 @@ export class DatabaseService {
   // Funciones de Backup y Restauración
 
   async getDatabaseInfo(): Promise<any> {
+    if (!this.isNative || !this.db) {
+      return { size: 0, records: 0, tables: 0 };
+    }
     try {
       // Retornar información básica de la BD
       const tables = Object.values(this.tables);
@@ -606,6 +690,9 @@ export class DatabaseService {
   }
 
   async exportDatabase(): Promise<any> {
+    if (!this.isNative || !this.db) {
+      throw new Error('SQLite no disponible en navegador');
+    }
     try {
       console.log('Exportando base de datos...');
 
@@ -632,6 +719,9 @@ export class DatabaseService {
   }
 
   async importDatabase(backupData: any): Promise<void> {
+    if (!this.isNative || !this.db) {
+      throw new Error('SQLite no disponible en navegador');
+    }
     try {
       console.log('Importando base de datos...');
 
